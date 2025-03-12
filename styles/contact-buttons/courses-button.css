@@ -1,8 +1,0 @@
-
-
-.courses-button__text {
-  @apply text-sm;
-  @apply font-bold;
-  @apply text-ia-aqua-4;
-  @apply hover:text-ia-aqua-1;
-}

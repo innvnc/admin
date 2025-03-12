@@ -3,7 +3,8 @@ import clsx from 'clsx';
 
 import '@/styles/globals.css';
 import { ibmPlexSans, spaceGrotesk, viewportConfig } from '@/config';
-import { Navbar, Footer, Providers, NextIntlProvider } from '@/components';
+import { Navbar, Providers, NextIntlProvider } from '@/components';
+import { ToolsMenu } from '@/components/shared/navbar/components';
 
 
 
@@ -34,8 +35,7 @@ export default function RootLayout( { children }: RootLayoutProps ) {
                 </div>
               </main>
 
-              <Footer />
-
+              <ToolsMenu />
             </div>
           </Providers>
         </NextIntlProvider>

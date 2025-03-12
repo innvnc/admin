@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 
-import { InputSearch, NavbarActions } from './components';
+import {  NavbarActions } from './components';
 import { LogoSvg } from '../ui/svg';
 import { useNavbarScroll } from './hooks';
 
@@ -17,8 +17,6 @@ export const Navbar = () => {
         <Link href="/" className="navbar__logo">
           <LogoSvg />
         </Link>
-
-        <InputSearch />
 
         <NavbarActions />
 
