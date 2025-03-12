@@ -1,0 +1,336 @@
+
+
+.learning_container {
+  @apply px-5;
+  @apply sm:px-9;
+  @apply max-w-screen-xl;
+  @apply w-full;
+  @apply flex;
+  @apply flex-col;
+  @apply gap-10;
+}
+
+.learning_title {
+  @apply font-display;
+  @apply font-bold;
+  @apply text-xl;
+  @apply md:text-2xl;
+  @apply lg:text-3xl;
+  @apply text-ia-aqua-4;
+}
+
+.learning_content {
+  @apply flex;
+  @apply flex-col;
+  @apply md:flex-row;
+  @apply justify-between;
+  @apply gap-3.5;
+  @apply xl:gap-7;
+}
+
+.learning_main-section {
+  @apply flex;
+  @apply flex-col;
+  @apply gap-12;
+  @apply pb-12;
+  @apply border-b;
+  @apply border-ia-aqua-4;
+  @apply md:w-8/12;
+  @apply xl:w-3/4;
+}
+
+.learning_course-highlight {
+  @apply flex;
+  @apply flex-col;
+  @apply sm:flex-row;
+  @apply gap-3.5;
+  @apply p-[14px];
+  @apply border;
+  @apply border-ia-aqua-4;
+}
+
+.learning_course-highlight-image-desktop {
+  @apply hidden;
+  @apply sm:block;
+  @apply w-[360px];
+  @apply h-[250px];
+  @apply border;
+  @apply border-ia-aqua-4;
+}
+
+.learning_course-highlight-image-mobile {
+  @apply block;
+  @apply sm:hidden;
+  @apply w-full;
+  @apply h-[250px];
+  @apply border;
+  @apply border-ia-aqua-4;
+}
+
+.learning_course-highlight-content {
+  @apply flex;
+  @apply flex-col;
+  @apply w-full;
+}
+
+.learning_course-highlight-header {
+  @apply flex;
+  @apply justify-between;
+  @apply items-center;
+  @apply mb-[21px];
+}
+
+.learning_course-category-badge {
+  @apply font-semibold;
+  @apply text-xs;
+  @apply text-ia-gray-2;
+  @apply border;
+  @apply border-ia-gray-2;
+  @apply px-2;
+  @apply py-1;
+  @apply rounded;
+}
+
+.learning_course-progress-indicator {
+  @apply font-semibold;
+  @apply text-xs;
+  @apply text-ia-aqua-4;
+}
+
+.learning_course-highlight-title {
+  @apply font-display;
+  @apply font-bold;
+  @apply text-base;
+  @apply md:text-xl;
+  @apply text-ia-aqua-4;
+  @apply pb-[21px];
+  @apply mb-[21px];
+  @apply border-b;
+  @apply border-ia-aqua-4;
+}
+
+.learning_course-highlight-description {
+  @apply font-light;
+  @apply text-sm;
+  @apply lg:text-lg;
+  @apply text-ia-aqua-4;
+  @apply mb-[21px];
+}
+
+.learning_course-highlight-footer {
+  @apply flex;
+  @apply items-end;
+  @apply gap-5;
+}
+
+.learning_progress-container {
+  @apply flex;
+  @apply flex-col;
+  @apply grow;
+}
+
+.learning_progress-text {
+  @apply text-xs;
+  @apply font-semibold;
+  @apply text-ia-aqua-1;
+  @apply mb-2;
+}
+
+.learning_progress-bar {
+  @apply w-full;
+  @apply h-2;
+  @apply bg-gray-300;
+  @apply rounded-full;
+  @apply overflow-hidden;
+}
+
+.learning_progress-bar-filled {
+  @apply bg-ia-aqua-1;
+  @apply h-full;
+}
+
+.learning_continue-button {
+  @apply bg-ia-aqua-1;
+  @apply text-white;
+  @apply text-[11px];
+  @apply font-semibold;
+  @apply rounded-full;
+  @apply h-7;
+  @apply px-4;
+}
+
+.learning_my-courses {
+  @apply flex;
+  @apply flex-col;
+}
+
+.learning_my-courses-header {
+  @apply mb-[21px];
+  @apply flex;
+  @apply items-center;
+}
+
+.learning_my-courses-title {
+  @apply font-bold;
+  @apply text-[28px];
+  @apply text-ia-aqua-4;
+  @apply mr-4;
+}
+
+.learning_my-courses-link {
+  @apply font-semibold;
+  @apply text-[11px];
+  @apply text-ia-aqua-4;
+}
+
+.learning_my-courses-grid {
+  @apply flex;
+  @apply gap-[14px];
+  @apply overflow-auto;
+}
+
+.learning_my-course-card {
+  @apply border;
+  @apply border-ia-aqua-4;
+  @apply p-3;
+  @apply w-[180px];
+  @apply flex;
+  @apply flex-col;
+  @apply justify-between;
+}
+
+.learning_my-course-progress {
+  @apply font-semibold;
+  @apply text-xs;
+  @apply text-ia-aqua-4;
+}
+
+.learning_my-course-title {
+  @apply font-bold;
+  @apply text-ia-aqua-4;
+}
+
+.learning_my-course-footer {
+  @apply mt-2;
+}
+
+.learning_my-course-percentage {
+  @apply font-semibold;
+  @apply text-xs;
+  @apply text-ia-aqua-1;
+}
+
+.learning_my-course-progress-bar {
+  @apply w-full;
+  @apply h-1;
+  @apply bg-gray-300;
+  @apply rounded-full;
+  @apply overflow-hidden;
+}
+
+.learning_my-course-progress-bar-filled {
+  @apply bg-ia-aqua-1;
+  @apply h-full;
+  @apply w-1/4;
+}
+
+.learning_sidebar {
+  @apply flex;
+  @apply flex-col;
+  @apply items-center;
+  @apply w-full;
+  @apply md:w-min;
+}
+
+.learning_sidebar-title {
+  @apply font-bold;
+  @apply text-[21px];
+  @apply text-ia-aqua-4;
+  @apply mb-[21px];
+}
+
+.learning_stats-container {
+  @apply flex;
+  @apply gap-3;
+  @apply mb-[14px];
+}
+
+.learning_stats-card {
+  @apply border;
+  @apply border-ia-aqua-4;
+  @apply py-[21px];
+  @apply px-[14px];
+  @apply w-[125px];
+  @apply flex;
+  @apply flex-col;
+  @apply items-center;
+}
+
+.learning_stats-card--highlighted {
+  @apply bg-yellow-300;
+}
+
+.learning_stats-card-label {
+  @apply font-semibold;
+  @apply text-[11px];
+  @apply text-ia-aqua-4;
+  @apply mb-[11px];
+}
+
+.learning_stats-card-value {
+  @apply font-bold;
+  @apply text-[21px];
+  @apply text-ia-aqua-4;
+}
+
+.learning_avatar-container {
+  @apply w-[260px];
+  @apply h-[200px];
+  @apply bg-yellow-300;
+  @apply border;
+  @apply border-ia-aqua-4;
+  @apply flex;
+  @apply justify-center;
+  @apply items-center;
+}
+
+.learning_recommended {
+  @apply flex;
+  @apply flex-col;
+  @apply w-full;
+}
+
+.learning_recommended-header {
+  @apply flex;
+  @apply justify-between;
+  @apply items-center;
+}
+
+.learning_recommended-title {
+  @apply font-bold;
+  @apply text-[21px];
+  @apply text-ia-aqua-4;
+  @apply mb-[21px];
+}
+
+.learning_navigation-buttons {
+  @apply flex;
+  @apply gap-[14px];
+}
+
+.learning_nav-button {
+  @apply border;
+  @apply border-ia-aqua-4;
+  @apply rounded-full;
+  @apply w-7;
+  @apply h-7;
+  @apply flex;
+  @apply items-center;
+  @apply justify-center;
+}
+
+.learning_recommended-courses {
+  @apply flex;
+  @apply gap-3.5;
+  @apply overflow-auto;
+}

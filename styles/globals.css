@@ -1,0 +1,24 @@
+
+
+@import './contact-buttons/contact-button.css';
+@import './contact-buttons/courses-button.css';
+@import './course/course.css';
+@import './courses/courses.css';
+@import './diploma-programs/diploma-programs.css';
+@import './enterprise/enterprise-categories-wrapper.css';
+@import './enterprise/enterprise-followship.css';
+@import './enterprise/enterprise.css';
+@import './footer/footer.css';
+@import './home/home-categories.css';
+@import './home/home-page.css';
+@import './home/page-welcome.css';
+@import './layouts/principal-layout.css';
+@import './learning/learning.css';
+@import './navbar/navbar.css';
+@import './students/students-faq.css';
+@import './students/students.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

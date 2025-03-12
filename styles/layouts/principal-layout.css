@@ -1,0 +1,17 @@
+
+
+.layout {
+  @apply min-h-screen bg-background font-sans antialiased;
+}
+
+.layout__container {
+  @apply relative min-h-screen;
+}
+
+.layout__main {
+  @apply pt-8 w-full overflow-x-hidden;
+}
+
+.layout__content {
+  @apply max-w-[1280px] mx-auto;
+}
