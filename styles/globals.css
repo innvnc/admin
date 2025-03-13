@@ -1,5 +1,9 @@
+
+
+
 @import './layouts/principal-layout.css';
 @import './navbar/navbar.css';
+@import './tools-menu/tools-menu.css';
 
 
 @tailwind base;
