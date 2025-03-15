@@ -57,6 +57,8 @@ export const AdminLayout = ( { children }: { children?: React.ReactNode; } ) => 
   return (
     <div className="admin-layout">
       <WorkWindow />
+      <WorkWindow />
+      <WorkWindow />
       { children }
     </div>
   );
