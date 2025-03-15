@@ -36,12 +36,12 @@ export const AuthButtons = () => {
       <SignedIn>
         <div className="flex items-center">
           <UserButton afterSignOutUrl="/" />
-          <button
+          {/* <button
             onClick={ handleSignOut }
             className="ml-4 text-xs text-gray-400 hover:text-gray-200"
           >
             Cerrar sesión
-          </button>
+          </button> */}
         </div>
       </SignedIn>
     </div>

@@ -4,3 +4,4 @@ export * from '../footer/Footer';
 export * from './navbar/Navbar';
 export * from './ui';
 export * from './utils';
+export * from './work-window';

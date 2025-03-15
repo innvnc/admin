@@ -3,6 +3,7 @@
 import { Spinner } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { JwtService } from '../shared/services';
+import { WorkWindow } from '../shared';
 
 
 
@@ -55,6 +56,7 @@ export const AdminLayout = ( { children }: { children?: React.ReactNode; } ) => 
 
   return (
     <div className="admin-layout">
+      <WorkWindow />
       { children }
     </div>
   );
