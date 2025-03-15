@@ -9,7 +9,7 @@
 }
 
 .layout__main {
-  @apply pt-8 w-full overflow-x-hidden;
+  @apply pt-4 w-full overflow-x-hidden;
 }
 
 .layout__content {
