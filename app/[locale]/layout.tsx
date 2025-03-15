@@ -25,17 +25,15 @@ export default function RootLayout( { children }: RootLayoutProps ) {
         <NextIntlProvider>
           <Providers themeProps={ { attribute: 'class', defaultTheme: 'light' } }>
 
+            <Navbar />
+            
             <div className="layout__container">
 
-              <Navbar />
 
-              <main className="layout__main">
-                <div className="layout__content">
-                  { children }
-                </div>
-              </main>
+              { children }
 
               <ToolsMenu />
+
             </div>
           </Providers>
         </NextIntlProvider>

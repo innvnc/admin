@@ -1,4 +1,3 @@
-
 import { CoursesLayout } from '@/components';
 import { metadataHome } from './meta';
 
