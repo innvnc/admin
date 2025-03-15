@@ -1,5 +1,5 @@
 
-import { CoursesLayout } from '@/components';
+import { SalesLayout } from '@/components';
 import { metadataHome } from './meta';
 
 
@@ -8,6 +8,6 @@ export const metadata = metadataHome;
 
 export default function Page() {
   return (
-    <h2>Ventas</h2>
+    <SalesLayout />
   );
 }

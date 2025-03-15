@@ -1,27 +1,19 @@
-import { UI } from '../shared';
+import { PageView } from '../layouts';
 
 export const CoursesLayout = () => {
   return (
-    <div className="p-4">
-      <UI.Card isBlurred shadow="sm">
-        <UI.CardHeader className="flex gap-3">
-          <UI.Image
-            alt="heroui logo"
-            height={ 40 }
-            radius="sm"
-            src="https://i.imgur.com/kuaBMr3.png"
-            width={ 40 }
-          />
-          <div className="flex flex-col">
-            <p className="text-md">Cursos</p>
-            <p className="text-small text-default-500">Panel de editor de cursos</p>
-          </div>
-        </UI.CardHeader>
-        <UI.Divider />
-        <UI.CardBody>
-          <p>Make beautiful websites regardless of your design experience.</p>
-        </UI.CardBody>
-      </UI.Card>
-    </div>
+    <PageView
+      content={
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold">Cursos Disponibles</h2>
+          <p className="text-gray-600">
+            Explora nuestra selección de cursos diseñados para mejorar tus habilidades.
+          </p>
+        </div>
+      }
+      imageUrl="https://i.imgur.com/kuaBMr3.png"
+      subtitle="Administra y edita los cursos en esta sección"
+      title="Panel de Cursos"
+    />
   );
 };
