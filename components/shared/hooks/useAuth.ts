@@ -1,50 +1,79 @@
 'use client';
 
-import { useAuth as useClerkAuth } from '@clerk/nextjs';
+import { useClerk, useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
+
+
+import { JwtUserPayload } from '../../../interfaces/auth-types';
 import { JwtService } from '../services';
 
 
 
-
-
 export const useAuth = () => {
-  const { userId, isLoaded } = useClerkAuth();
+  const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
+  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
   const [ isAuthenticating, setIsAuthenticating ] = useState<boolean>( false );
+  const [ isClient, setIsClient ] = useState<boolean>( false );
 
   useEffect( () => {
-    const handleClerkAuth = async () => {
-      if ( !isLoaded || isAuthenticating ) return;
+    setIsClient( true );
+
+    const token = JwtService.getStoredToken();
+    setIsAuthenticated( !!token );
+
+    const handleStorageChange = () => {
+      const token = JwtService.getStoredToken();
+      setIsAuthenticated( !!token );
+    };
+
+    window.addEventListener( 'storage', handleStorageChange );
+
+    return () => {
+      window.removeEventListener( 'storage', handleStorageChange );
+    };
+  }, [] );
+
+  useEffect( () => {
+    const setupUserAuth = async () => {
+      if ( !isLoaded || !user || isAuthenticating ) return;
 
       const token = JwtService.getStoredToken();
 
-      if ( !token && userId ) {
+      if ( !token ) {
         try {
           setIsAuthenticating( true );
 
-          const userData = {
-            id: userId,
-            firstName: '',
-            lastName: '',
-            email: ''
+          const userData: JwtUserPayload = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.primaryEmailAddress?.emailAddress || ''
           };
 
-          const tokenData = await JwtService.createUserToken( userData );
-          JwtService.storeToken( tokenData.token );
+          const { token } = await JwtService.createUserToken( userData );
+          JwtService.storeToken( token );
         } catch ( error ) {
-          console.error( 'Authentication failed:', error );
+          console.error( 'Authentication setup failed:', error );
         } finally {
           setIsAuthenticating( false );
         }
-      } else if ( !userId && token ) {
-        JwtService.removeToken();
       }
     };
 
-    handleClerkAuth();
-  }, [ userId, isLoaded, isAuthenticating ] );
+    setupUserAuth();
+  }, [ user, isLoaded, isAuthenticating ] );
 
-  const isAuthenticated = !!JwtService.getStoredToken();
+  useEffect( () => {
+    if ( !isLoaded ) return;
 
-  return { isAuthenticated };
+    if ( !user && JwtService.getStoredToken() ) {
+      JwtService.removeToken();
+    }
+  }, [ user, isLoaded ] );
+
+  return {
+    isAuthenticated: !!JwtService.getStoredToken(),
+    isClient
+  };
 };

@@ -1,73 +1,55 @@
-import { JwtUserPayload, JwtResponse, AuthError } from '@/interfaces';
+'use client';
+
+import { JwtUserPayload } from '../../../interfaces/auth-types';
 
 
 
 export class JwtService {
-
   private static readonly TOKEN_KEY = 'token';
 
-  static async createUserToken( userData: JwtUserPayload ): Promise<JwtResponse> {
+  static async createUserToken( userData: JwtUserPayload ): Promise<{ token: string; expiresIn: number; }> {
     try {
-      const response = await fetch( '/es/api/auth/token', {
+      const response = await fetch( '/api/auth/token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify( userData )
+        body: JSON.stringify( userData ),
       } );
 
       if ( !response.ok ) {
-        throw new Error( 'Token creation failed' );
+        throw new Error( 'Failed to generate token' );
       }
 
-      const tokenData = await response.json();
-
-      await this.validateTokenWithBackend( tokenData.token );
-
-      return tokenData;
+      return await response.json();
     } catch ( error ) {
-      throw {
-        message: 'Failed to create authentication token',
-        statusCode: 500
-      } as AuthError;
+      console.error( 'Error creating user token:', error );
+      throw error;
     }
   }
 
-  static async validateTokenWithBackend( token: string ): Promise<void> {
-    try {
-      const backendUrl = `${ process.env.NEXT_PUBLIC_BACKEND }/api/auth/validate-token`;
-
-      const response = await fetch( backendUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify( { token } )
-      } );
-
-      if ( !response.ok ) {
-        throw new Error( 'Token validation failed' );
-      }
-    } catch ( error ) {
-      throw {
-        message: 'Failed to validate token with backend',
-        statusCode: 500
-      } as AuthError;
+  static storeToken( token: string ): void {
+    if ( typeof window !== 'undefined' ) {
+      localStorage.setItem( this.TOKEN_KEY, token );
+      window.dispatchEvent( new Event( 'storage' ) );
     }
   }
 
   static getStoredToken(): string | null {
-    if ( typeof window === 'undefined' ) return null;
-    return localStorage.getItem( this.TOKEN_KEY );
-  }
-
-  static storeToken( token: string ): void {
-    localStorage.setItem( this.TOKEN_KEY, token );
-    window.dispatchEvent( new Event( 'storage' ) );
+    if ( typeof window !== 'undefined' ) {
+      return localStorage.getItem( this.TOKEN_KEY );
+    }
+    return null;
   }
 
   static removeToken(): void {
-    localStorage.removeItem( this.TOKEN_KEY );
-    window.dispatchEvent( new Event( 'storage' ) );
+    if ( typeof window !== 'undefined' ) {
+      localStorage.removeItem( this.TOKEN_KEY );
+      window.dispatchEvent( new Event( 'storage' ) );
+    }
+  }
+
+  static isTokenValid(): boolean {
+    return !!this.getStoredToken();
   }
 }

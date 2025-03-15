@@ -1,19 +1,23 @@
 'use client';
 
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { SignInButton, SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
+import { useEffect } from 'react';
 
-import { useAuth } from '@/components/shared/hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 
 
 export const AuthButtons = () => {
-  const { isAuthenticated } = useAuth();
-  const [ isClient, setIsClient ] = useState( false );
+  const { isAuthenticated, isClient } = useAuth();
+  const { signOut } = useClerk();
 
-  useEffect( () => {
-    setIsClient( true );
-  }, [] );
+  const handleSignOut = async () => {
+    if ( typeof window !== 'undefined' ) {
+      localStorage.removeItem( 'token' );
+      window.dispatchEvent( new Event( 'storage' ) );
+    }
+    await signOut();
+  };
 
   if ( !isClient ) {
     return null;
@@ -30,7 +34,15 @@ export const AuthButtons = () => {
       </SignedOut>
 
       <SignedIn>
-        <UserButton afterSignOutUrl="/" />
+        <div className="flex items-center">
+          <UserButton afterSignOutUrl="/" />
+          <button
+            onClick={ handleSignOut }
+            className="ml-4 text-xs text-gray-400 hover:text-gray-200"
+          >
+            Cerrar sesión
+          </button>
+        </div>
       </SignedIn>
     </div>
   );

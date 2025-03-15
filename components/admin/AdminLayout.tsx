@@ -1,16 +1,20 @@
 'use client';
 
+import { Spinner } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { JwtService } from '../shared/services';
 
 
 
 
-export const AdminLayout = () => {
+export const AdminLayout = ( { children }: { children?: React.ReactNode; } ) => {
   const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
   const [ isLoading, setIsLoading ] = useState<boolean>( true );
+  const [ isClient, setIsClient ] = useState<boolean>( false );
 
   useEffect( () => {
+    setIsClient( true );
+
     const checkToken = () => {
       const token = JwtService.getStoredToken();
       setIsAuthenticated( !!token );
@@ -30,10 +34,10 @@ export const AdminLayout = () => {
     };
   }, [] );
 
-  if ( isLoading ) {
+  if ( !isClient || isLoading ) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="animate-pulse text-2xl">Cargando...</div>
+        <Spinner size="lg" color="primary" />
       </div>
     );
   }
@@ -50,6 +54,8 @@ export const AdminLayout = () => {
   }
 
   return (
-    <div>AdminLayout</div>
+    <div className="admin-layout">
+      { children }
+    </div>
   );
 };
