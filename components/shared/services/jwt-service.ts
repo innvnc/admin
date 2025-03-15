@@ -1,6 +1,7 @@
 import { JwtUserPayload, JwtResponse, AuthError } from '@/interfaces';
 
 
+
 export class JwtService {
 
   private static readonly TOKEN_KEY = 'token';
@@ -62,9 +63,11 @@ export class JwtService {
 
   static storeToken( token: string ): void {
     localStorage.setItem( this.TOKEN_KEY, token );
+    window.dispatchEvent( new Event( 'storage' ) );
   }
 
   static removeToken(): void {
     localStorage.removeItem( this.TOKEN_KEY );
+    window.dispatchEvent( new Event( 'storage' ) );
   }
 }
