@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow
 } from '@nextui-org/react';
-import { Icons } from '..';
+import { Icons } from '../';
 
 export interface ColumnDefinition {
   name: string;
@@ -81,13 +81,11 @@ export const GenericTable = <T extends object>( {
     if ( hasSearchFilter ) {
       const searchText = filterValue.toLowerCase();
       filteredData = filteredData.filter( item => {
-        // Buscar en campos específicos definidos en searchFields
         if ( searchFields.length > 0 ) {
           return searchFields.some( field => {
             const value = item[ field as keyof T ];
             if ( value === undefined ) return false;
 
-            // Manejar diferentes tipos de datos
             if ( typeof value === 'string' ) {
               return value.toLowerCase().includes( searchText );
             } else if ( typeof value === 'number' ) {
@@ -119,7 +117,6 @@ export const GenericTable = <T extends object>( {
             return false;
           } );
         } else {
-          // Si no se especifican searchFields, buscar en todas las propiedades
           return Object.entries( item ).some( ( [ key, value ] ) => {
             if ( value === undefined ) return false;
 
@@ -152,7 +149,6 @@ export const GenericTable = <T extends object>( {
       const first = a[ sortDescriptor.column as keyof T ];
       const second = b[ sortDescriptor.column as keyof T ];
 
-      // Manejar diferentes tipos de datos
       if ( typeof first === 'number' && typeof second === 'number' ) {
         return sortDescriptor.direction === 'ascending'
           ? first - second
@@ -179,13 +175,11 @@ export const GenericTable = <T extends object>( {
   }, [ page, sortedItems, rowsPerPage ] );
 
   const renderCell = useCallback( ( item: T, columnKey: string ) => {
-    // Buscar si hay una función de renderizado personalizada para esta columna
     const column = columns.find( col => col.uid === columnKey );
     if ( column?.renderCell ) {
       return column.renderCell( item, columnKey );
     }
 
-    // Renderizado predeterminado
     const value = item[ columnKey as keyof T ];
 
     if ( typeof value === 'boolean' ) {
