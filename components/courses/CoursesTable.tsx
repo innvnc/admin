@@ -212,7 +212,6 @@ type CourseKey = 'title' | 'slug' | 'description' | 'price' | 'isPublic' | 'cate
 
 export const CoursesTable = ( { courseStatus }: Props ) => {
   const [ filterValue, setFilterValue ] = useState( '' );
-  const [ selectedKeys, setSelectedKeys ] = useState<Selection>( new Set( [] ) );
   const [ visibleColumns, setVisibleColumns ] = useState<Selection>( new Set( columns.map( column => column.uid ) ) );
   const [ rowsPerPage, setRowsPerPage ] = useState( 5 );
   const [ sortDescriptor, setSortDescriptor ] = useState<SortDescriptor>( {
@@ -234,25 +233,39 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
     let filteredCourses = [ ...mockCourses ];
 
     if ( hasSearchFilter ) {
-      filteredCourses = filteredCourses.filter( course =>
-        Object.entries( course ).some( ( [ key, value ] ) => {
-          if ( key === 'categories' && Array.isArray( value ) ) {
-            return value.some( category =>
-              category.title.toLowerCase().includes( filterValue.toLowerCase() )
-            );
-          }
+      filteredCourses = filteredCourses.filter( course => {
+        const searchText = filterValue.toLowerCase();
 
-          if ( typeof value === 'string' ) {
-            return value.toLowerCase().includes( filterValue.toLowerCase() );
-          }
+        // Búsqueda en título, slug y descripción
+        if (
+          course.title.toLowerCase().includes( searchText ) ||
+          course.slug.toLowerCase().includes( searchText ) ||
+          course.description.toLowerCase().includes( searchText ) ||
+          course.price.toString().includes( searchText )
+        ) {
+          return true;
+        }
 
-          if ( typeof value === 'number' ) {
-            return value.toString().includes( filterValue );
-          }
+        // Búsqueda en público/privado
+        if (
+          ( course.isPublic && "público".includes( searchText ) ) ||
+          ( course.isPublic && "publico".includes( searchText ) ) ||
+          ( !course.isPublic && "privado".includes( searchText ) )
+        ) {
+          return true;
+        }
 
-          return false;
-        } )
-      );
+        // Búsqueda en categorías
+        if (
+          course.categories.some( category =>
+            category.title.toLowerCase().includes( searchText )
+          )
+        ) {
+          return true;
+        }
+
+        return false;
+      } );
     }
 
     return filteredCourses;
@@ -312,40 +325,36 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
         return <p className="text-medium">${ course.price.toFixed( 2 ) }</p>;
       case 'isPublic':
         return (
-          <Chip
-            className="capitalize flex items-center gap-1"
-            color={ course.isPublic ? 'success' : 'danger' }
-            size="sm"
-            variant="flat"
-            startContent={
-              course.isPublic
-                ? <Icons.IoEyeOutline className="text-sm" />
-                : <Icons.IoEyeOffOutline className="text-sm" />
-            }
-          >
-            { course.isPublic ? 'Público' : 'Privado' }
-          </Chip>
+          <div className="flex justify-center">
+            { course.isPublic ? (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                <Icons.IoEyeOutline className="w-3.5 h-3.5 mr-1" />
+                Público
+              </div>
+            ) : (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                <Icons.IoEyeOffOutline className="w-3.5 h-3.5 mr-1" />
+                Privado
+              </div>
+            ) }
+          </div>
         );
       case 'categories':
         return (
           <div className="flex flex-wrap gap-1">
             { course.categories.map( ( category ) => (
-              <Chip
+              <div
                 key={ category.id }
-                className="capitalize text-xs"
-                color="primary"
-                size="sm"
-                variant="bordered"
-                startContent={ <Icons.IoLayersOutline className="text-xs" /> }
+                className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100 transition-colors"
               >
                 { category.title }
-              </Chip>
+              </div>
             ) ) }
           </div>
         );
       case 'actions':
         return (
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center justify-center">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
@@ -458,7 +467,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
           <label className="flex items-center text-default-400 text-small">
             Filas por página:
             <select
-              className="bg-transparent outline-none text-default-400 text-small"
+              className="bg-transparent outline-none text-default-400 text-small ml-2"
               onChange={ ( e ) => setRowsPerPage( Number( e.target.value ) ) }
               value={ rowsPerPage }
             >
@@ -504,12 +513,9 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
         classNames={ {
           wrapper: "max-h-[600px]",
         } }
-        selectedKeys={ selectedKeys }
-        selectionMode="multiple"
         sortDescriptor={ sortDescriptor as any }
         topContent={ topContent }
         topContentPlacement="outside"
-        onSelectionChange={ setSelectedKeys }
         onSortChange={ setSortDescriptor as any }
       >
         <TableHeader columns={ headerColumns }>
