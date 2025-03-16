@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useMemo, useState, useRef, Key } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 import {
   Button,
   Chip,
@@ -313,12 +313,17 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
       case 'isPublic':
         return (
           <Chip
-            className="capitalize"
+            className="capitalize flex items-center gap-1"
             color={ course.isPublic ? 'success' : 'danger' }
             size="sm"
             variant="flat"
+            startContent={
+              course.isPublic
+                ? <Icons.IoEyeOutline className="text-sm" />
+                : <Icons.IoEyeOffOutline className="text-sm" />
+            }
           >
-            { course.isPublic ? 'Sí' : 'No' }
+            { course.isPublic ? 'Público' : 'Privado' }
           </Chip>
         );
       case 'categories':
@@ -327,10 +332,11 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
             { course.categories.map( ( category ) => (
               <Chip
                 key={ category.id }
-                className="capitalize"
+                className="capitalize text-xs"
                 color="primary"
                 size="sm"
-                variant="flat"
+                variant="bordered"
+                startContent={ <Icons.IoLayersOutline className="text-xs" /> }
               >
                 { category.title }
               </Chip>
@@ -343,13 +349,28 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
-                  <Icons.IoCheckmarkOutline className="text-default-500" />
+                  <Icons.IoEllipsisVerticalOutline className="text-default-500" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Acciones disponibles">
-                <DropdownItem key="view">Ver detalles</DropdownItem>
-                <DropdownItem key="edit">Editar</DropdownItem>
-                <DropdownItem key="delete" className="text-danger" color="danger">
+                <DropdownItem
+                  key="view"
+                  startContent={ <Icons.IoEyeOutline className="text-default-500" /> }
+                >
+                  Ver detalles
+                </DropdownItem>
+                <DropdownItem
+                  key="edit"
+                  startContent={ <Icons.IoPencilOutline className="text-default-500" /> }
+                >
+                  Editar
+                </DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  startContent={ <Icons.IoTrashOutline className="text-danger" /> }
+                >
                   Eliminar
                 </DropdownItem>
               </DropdownMenu>
@@ -391,19 +412,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
             } }
             placeholder="Buscar cursos..."
             size="sm"
-            startContent={ <Icons.IoSearchCircleOutline className="text-default-300" /> }
-            endContent={
-              filterValue ? (
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={ onClear }
-                >
-                  <Icons.IoIdCardOutline className="text-default-500" />
-                </Button>
-              ) : null
-            }
+            startContent={ <Icons.IoSearchOutline className="text-default-300" /> }
             value={ filterValue }
             onValueChange={ onSearchChange }
           />
@@ -411,7 +420,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
-                  endContent={ <Icons.IoCheckmarkOutline className="text-small" /> }
+                  endContent={ <Icons.IoChevronDownOutline className="text-small" /> }
                   size="sm"
                   variant="flat"
                 >
@@ -465,7 +474,6 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
     filterValue,
     onSearchChange,
     visibleColumns,
-    onClear,
     filteredItems.length,
     rowsPerPage,
   ] );
