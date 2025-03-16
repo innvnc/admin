@@ -31,11 +31,13 @@ export const CoursesList = () => {
                   </div>
                 }
               >
+
                 <UI.Card>
                   <UI.CardBody>
                     <CoursesTable courseStatus={ option.status } />
                   </UI.CardBody>
                 </UI.Card>
+
               </UI.Tab>
             ) )
           }
