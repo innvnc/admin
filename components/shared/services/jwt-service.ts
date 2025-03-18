@@ -2,10 +2,9 @@
 
 import { JwtUserPayload } from '../../../interfaces/auth-types';
 
-
-
 export class JwtService {
   private static readonly TOKEN_KEY = 'token';
+  private static readonly BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND || 'http://localhost:3010';
 
   static async createUserToken( userData: JwtUserPayload ): Promise<{ token: string; expiresIn: number; }> {
     try {
@@ -24,6 +23,36 @@ export class JwtService {
       return await response.json();
     } catch ( error ) {
       console.error( 'Error creating user token:', error );
+      throw error;
+    }
+  }
+
+  static async validateTokenWithBackend( token: string ): Promise<any> {
+    try {
+      const response = await fetch( `${ this.BACKEND_URL }/api/auth/validate-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( { token } ),
+      } );
+
+      if ( !response.ok ) {
+        const errorData = await response.json();
+        console.error( 'Token validation error:', errorData );
+        throw new Error( errorData.message || 'Token validation failed' );
+      }
+
+      const data = await response.json();
+      if ( data.token ) {
+        this.storeToken( data.token );
+        return data;
+      } else if ( data.isValid === false ) {
+        throw new Error( data.message || 'Invalid token' );
+      }
+      return data;
+    } catch ( error ) {
+      console.error( 'Error validating token:', error );
       throw error;
     }
   }

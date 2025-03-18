@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import { JwtUserPayload } from '@/interfaces';
 
-
 export async function POST( request: Request ) {
   try {
     const userData: JwtUserPayload = await request.json();
@@ -24,8 +23,9 @@ export async function POST( request: Request ) {
       expiresIn: 3600
     } );
   } catch ( error ) {
+    console.error( 'Token generation error:', error );
     return NextResponse.json(
-      { error: 'Token generation failed' },
+      { error: 'Token generation failed', details: error },
       { status: 500 }
     );
   }
