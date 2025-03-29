@@ -35,7 +35,8 @@
     "react-dom": "18.3.1",
     "react-draggable": "^4.4.6",
     "react-icons": "^5.4.0",
-    "react-rnd": "^10.5.2"
+    "react-rnd": "^10.5.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.0.4",
@@ -62,5 +63,6 @@
     "tailwind-variants": "0.1.20",
     "tailwindcss": "3.4.16",
     "typescript": "5.6.3"
-  }
+  },
+  "packageManager": "yarn@4.8.0+sha512.85ec3149b1ec48f47c2690e13b29197a8a84b09c2c936cc596dddfb49c517e3bc3b1881ec52b5d35ca4b7c437c3f0daae3a80e39438c93bbcc5fcece2df5f15a"
 }

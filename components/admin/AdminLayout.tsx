@@ -46,7 +46,7 @@ export const AdminLayout = ( { children }: { children?: React.ReactNode; } ) => 
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="rounded-lg bg-red-100 p-8 text-center shadow-md">
-          <h2 className="mb-4 text-2xl font-bold text-red-700">Acceso Denegado ok</h2>
+          <h2 className="mb-4 text-2xl font-bold text-red-700">Acceso Denegado</h2>
           <p className="text-lg text-red-600">Debe iniciar sesión para acceder a esta sección.</p>
         </div>
       </div>
