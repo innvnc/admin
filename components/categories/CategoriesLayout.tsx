@@ -7,7 +7,7 @@ export const CategoriesLayout = () => {
   return (
     <PageView
       content={ <CategoriesList /> }
-      imageUrl="https://imgur.com/JYBEust"
+      imageUrl="https://i.imgur.com/0dnxdux.png"
       subtitle="Administra y edita las categorías en esta sección"
       title="Panel de Categorías"
     />
