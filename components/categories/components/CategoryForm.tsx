@@ -38,7 +38,8 @@ export const CategoryForm = ( { id, triggerElement, isOpen: externalIsOpen, onOp
                 }
               </UI.ModalHeader>
               <UI.ModalBody>
-
+                <UI.Input name="title" />
+                
               </UI.ModalBody>
               <UI.ModalFooter className="justify-center flex items-center space-x-3">
                 <UI.Button color="danger" variant="light" onPress={ onClose } startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }>
