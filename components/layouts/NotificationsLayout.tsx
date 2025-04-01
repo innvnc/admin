@@ -1,4 +1,4 @@
-import { PageView } from '../layouts';
+import { PageView } from '.';
 
 export const NotificationsLayout = () => {
   return (

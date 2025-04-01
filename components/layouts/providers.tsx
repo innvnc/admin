@@ -1,12 +1,17 @@
 'use client';
+
 import * as React from 'react';
-import { NextUIProvider } from '@nextui-org/system';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { usePathname, useRouter } from 'next/navigation';
-import type { ThemeProviderProps } from 'next-themes';
+
 import { ClerkProvider } from '@clerk/nextjs';
-
-
+import { HeroUIProvider } from '@heroui/react';
+import { ToastProvider } from '@heroui/toast';
+import {
+  QueryClient,
+  QueryClientProvider
+} from '@tanstack/react-query';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import type { ThemeProviderProps } from 'next-themes';
+import { usePathname, useRouter } from 'next/navigation';
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -21,8 +26,9 @@ declare module '@react-types/shared' {
   }
 }
 
-export function Providers( { children, themeProps }: ProvidersProps ) {
+const queryClient = new QueryClient();
 
+export function Providers( { children, themeProps }: ProvidersProps ) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -31,12 +37,15 @@ export function Providers( { children, themeProps }: ProvidersProps ) {
   }, [ pathname ] );
 
   return (
-    <NextUIProvider navigate={ router.push }>
+    <HeroUIProvider navigate={ router.push }>
       <NextThemesProvider { ...themeProps }>
+        <ToastProvider />
         <ClerkProvider>
-          { children }
+          <QueryClientProvider client={ queryClient }>
+            { children }
+          </QueryClientProvider>
         </ClerkProvider>
       </NextThemesProvider>
-    </NextUIProvider>
+    </HeroUIProvider>
   );
 }

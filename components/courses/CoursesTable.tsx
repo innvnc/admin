@@ -17,13 +17,12 @@ import {
   TableColumn,
   TableHeader,
   TableRow
-} from '@nextui-org/react';
+} from '@heroui/react';
 import { ICoursesResponse } from '../../interfaces/courses-response';
 import { Icons } from '../shared/ui';
 
 
 
-// Ejemplo de datos para la tabla
 const mockCourses: ICoursesResponse[] = [
   {
     id: '1',

@@ -16,8 +16,8 @@ import {
   TableColumn,
   TableHeader,
   TableRow
-} from '@nextui-org/react';
-import { Icons } from '../';
+} from '@heroui/react';
+import { Icons } from '..';
 
 export interface ColumnDefinition {
   name: string;
