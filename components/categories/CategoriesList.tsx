@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { Category } from '@/interfaces';
 import { ColumnDefinition, GenericTable, Icons } from '../shared/ui';
 import { UI } from '../shared';
@@ -7,6 +8,13 @@ import { CategoryForm } from './components';
 
 export const CategoriesList = () => {
   const { categories } = useGetCategories();
+  const { isOpen, onOpen, onOpenChange } = UI.useDisclosure();
+  const [ selectedCategoryId, setSelectedCategoryId ] = useState<string | undefined>( undefined );
+
+  const handleEditCategory = ( id: string ) => {
+    setSelectedCategoryId( id );
+    onOpen();
+  };
 
   const categoryColumns: ColumnDefinition[] = [
     { name: 'TÍTULO', uid: 'title', sortable: true, searchable: true },
@@ -67,8 +75,10 @@ export const CategoriesList = () => {
               <UI.DropdownItem
                 key="edit"
                 startContent={ <Icons.IoPencilOutline className="text-default-500" /> }
+                onPress={ () => handleEditCategory( item.id ) }
+                textValue="Editar"
               >
-                <CategoryForm id={ item.id } triggerElement="Editar" />
+                Editar
               </UI.DropdownItem>
               <UI.DropdownItem
                 key="delete"
@@ -115,6 +125,7 @@ export const CategoriesList = () => {
           </UI.CardBody>
         </UI.Card>
       </div>
+      { isOpen && <CategoryForm id={ selectedCategoryId } isOpen={ isOpen } onOpenChange={ onOpenChange } /> }
     </div>
   );
 };

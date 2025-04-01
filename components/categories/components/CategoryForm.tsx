@@ -3,10 +3,16 @@ import { UI } from '@/components';
 interface Props {
   id?: string;
   triggerElement?: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: ( isOpen: boolean ) => void;
 }
 
-export const CategoryForm = ( { id, triggerElement }: Props ) => {
-  const { isOpen, onOpen, onOpenChange } = UI.useDisclosure();
+export const CategoryForm = ( { id, triggerElement, isOpen: externalIsOpen, onOpenChange: externalOnOpenChange }: Props ) => {
+  const internalDisclosure = UI.useDisclosure();
+
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
+  const onOpen = externalOnOpenChange ? () => externalOnOpenChange( true ) : internalDisclosure.onOpen;
+  const onOpenChange = externalOnOpenChange || internalDisclosure.onOpenChange;
 
   return (
     <>
