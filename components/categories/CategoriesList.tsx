@@ -107,7 +107,7 @@ export const CategoriesList = () => {
               primaryKey="id"
               searchFields={ [ 'title', 'slug' ] }
               onAdd={ () => { } }
-              addButtonComponent={ <CategoryForm /> }
+              addButtonComponent={ <CategoryForm name="categoría" /> }
               addButtonText="Agregar Categoría"
               noItemsMessage="No se encontraron categorías"
               initialVisibleColumns={ [
@@ -125,7 +125,7 @@ export const CategoriesList = () => {
           </UI.CardBody>
         </UI.Card>
       </div>
-      { isOpen && <CategoryForm id={ selectedCategoryId } isOpen={ isOpen } onOpenChange={ onOpenChange } /> }
+      { isOpen && <CategoryForm id={ selectedCategoryId } isOpen={ isOpen } onOpenChange={ onOpenChange } name="categoría" /> }
     </div>
   );
 };
