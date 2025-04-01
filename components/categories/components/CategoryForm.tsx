@@ -1,29 +1,29 @@
 import { UI } from '@/components';
 
-
 interface Props {
   id?: string;
+  triggerElement?: React.ReactNode;
 }
 
-export const CategoryForm = ( { id }: Props ) => {
-
+export const CategoryForm = ( { id, triggerElement }: Props ) => {
   const { isOpen, onOpen, onOpenChange } = UI.useDisclosure();
 
   return (
     <>
-
-      {
-        id ?
-          <UI.Button onPress={ onOpen } variant="light">Editar</UI.Button>
-          : <UI.Button onPress={ onOpen }>Crear</UI.Button>
-      }
-
-
+      { triggerElement ? (
+        <span onClick={ onOpen } className="w-full cursor-pointer">
+          { triggerElement }
+        </span>
+      ) : (
+        <UI.Button onPress={ onOpen }>Crear</UI.Button>
+      ) }
       <UI.Modal isOpen={ isOpen } onOpenChange={ onOpenChange } backdrop="blur" isDismissable={ false }>
         <UI.ModalContent>
           { ( onClose ) => (
             <>
-              <UI.ModalHeader className="flex flex-col gap-1">Modal Title</UI.ModalHeader>
+              <UI.ModalHeader className="flex flex-col gap-1">
+                { id ? 'Editar Categoría' : 'Crear Categoría' }
+              </UI.ModalHeader>
               <UI.ModalBody>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar risus non

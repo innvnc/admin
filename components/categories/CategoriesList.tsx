@@ -6,7 +6,6 @@ import { useGetCategories } from './hooks';
 import { CategoryForm } from './components';
 
 export const CategoriesList = () => {
-
   const { categories } = useGetCategories();
 
   const categoryColumns: ColumnDefinition[] = [
@@ -69,7 +68,7 @@ export const CategoriesList = () => {
                 key="edit"
                 startContent={ <Icons.IoPencilOutline className="text-default-500" /> }
               >
-                Editar
+                <CategoryForm id={ item.id } triggerElement="Editar" />
               </UI.DropdownItem>
               <UI.DropdownItem
                 key="delete"
@@ -81,7 +80,6 @@ export const CategoriesList = () => {
               </UI.DropdownItem>
             </UI.DropdownMenu>
           </UI.Dropdown>
-          <CategoryForm id={ item.id } />
         </div>
       ),
     },
