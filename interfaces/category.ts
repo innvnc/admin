@@ -1,12 +1,10 @@
-import { CreatedBy } from '../../../interfaces/courses-response';
+import { CreatedBy } from './courses-response';
 
-export interface CategoriesResponse {
+export interface Category {
   id:           string;
   status:       boolean;
-  visible:      boolean;
   creationDate: string;
   title:        string;
   slug:         string;
   createdBy:    CreatedBy;
 }
-

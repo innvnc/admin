@@ -1,3 +1,5 @@
+import { Category } from './category';
+
 export interface ICoursesResponse {
   id:           string;
   status:       boolean;
@@ -9,15 +11,6 @@ export interface ICoursesResponse {
   isPublic:     boolean;
   createdBy:    CreatedBy;
   categories:   Category[];
-}
-
-export interface Category {
-  id:           string;
-  status:       boolean;
-  creationDate: string;
-  title:        string;
-  slug:         string;
-  createdBy:    CreatedBy;
 }
 
 export interface CreatedBy {

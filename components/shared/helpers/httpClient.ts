@@ -1,7 +1,15 @@
 const API_URL = process.env.NEXT_PUBLIC_BACKEND;
 
+const getToken = () => {
+  if ( typeof window !== 'undefined' ) {
+    return localStorage.getItem( 'token' );
+  }
+  return null;
+};
+
 const headers = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${ getToken() }`
 };
 
 export const request = async <T>(
