@@ -35,6 +35,7 @@ interface GenericTableProps<T> {
   searchFields?: string[];
   onAdd?: () => void;
   addButtonText?: string;
+  addButtonComponent?: ReactNode;
   noItemsMessage?: string;
   initialVisibleColumns?: string[];
   initialSortColumn?: string;
@@ -50,6 +51,7 @@ export const GenericTable = <T extends object>( {
   searchFields = [],
   onAdd,
   addButtonText = "Agregar Nuevo",
+  addButtonComponent,
   noItemsMessage = "No se encontraron elementos",
   initialVisibleColumns,
   initialSortColumn,
@@ -286,7 +288,7 @@ export const GenericTable = <T extends object>( {
                 ) ) }
               </DropdownMenu>
             </Dropdown>
-            { onAdd && (
+            { addButtonComponent || ( onAdd && (
               <Button
                 className="bg-primary text-white"
                 endContent={ <Icons.IoAddOutline /> }
@@ -295,7 +297,7 @@ export const GenericTable = <T extends object>( {
               >
                 { addButtonText }
               </Button>
-            ) }
+            ) ) }
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -328,6 +330,7 @@ export const GenericTable = <T extends object>( {
     columns,
     onAdd,
     addButtonText,
+    addButtonComponent,
   ] );
 
   const bottomContent = useMemo( () => {

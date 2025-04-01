@@ -3,6 +3,7 @@ import { Category } from '@/interfaces';
 import { ColumnDefinition, GenericTable, Icons } from '../shared/ui';
 import { UI } from '../shared';
 import { useGetCategories } from './hooks';
+import { CategoryForm } from './components';
 
 export const CategoriesList = () => {
 
@@ -80,6 +81,7 @@ export const CategoriesList = () => {
               </UI.DropdownItem>
             </UI.DropdownMenu>
           </UI.Dropdown>
+          <CategoryForm id={ item.id } />
         </div>
       ),
     },
@@ -96,7 +98,8 @@ export const CategoriesList = () => {
               items={ categories || [] }
               primaryKey="id"
               searchFields={ [ 'title', 'slug' ] }
-              onAdd={ () => console.log( 'Agregar nueva categoría' ) }
+              onAdd={ () => { } }
+              addButtonComponent={ <CategoryForm /> }
               addButtonText="Agregar Categoría"
               noItemsMessage="No se encontraron categorías"
               initialVisibleColumns={ [
