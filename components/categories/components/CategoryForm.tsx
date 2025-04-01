@@ -32,8 +32,8 @@ export const CategoryForm = ( { id, triggerElement, isOpen: externalIsOpen, onOp
           { ( onClose ) => (
             <>
               <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-                { id ?
-                  ( <><Icons.IoPencilOutline /> Editar { name } </> )
+                { id
+                  ? ( <><Icons.IoPencilOutline /> Editar { name } </> )
                   : ( <><Icons.IoAddOutline /> Crear { name } </> )
                 }
               </UI.ModalHeader>
