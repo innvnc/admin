@@ -1,27 +1,32 @@
-import { Category } from '@/interfaces';
 import { ColumnDefinition, Icons } from '@/components/shared/ui';
 import { UI } from '@/components/shared';
+import { Category } from '@/interfaces';
 
 interface Props {
-  onEdit: ( id: string ) => void;
   onDelete: ( id: string ) => void;
+  onEdit: ( id: string ) => void;
 }
 
 export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDefinition[] => [
-  { name: 'TÍTULO', uid: 'title', sortable: true, searchable: true },
-  { name: 'SLUG', uid: 'slug', sortable: true, searchable: true },
   {
-    name: 'VISIBLE',
-    uid: 'status',
+    name: 'TÍTULO',
+    uid: 'title',
+    searchable: true,
+    sortable: true,
+  },
+  {
+    name: 'SLUG',
+    uid: 'slug',
+    searchable: true,
     sortable: true,
     renderCell: ( item: Category ) => (
-      <div
-        className={ `inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${ item.status
-            ? 'bg-green-50 text-green-700 border border-green-100 hover:bg-green-100'
-            : 'bg-red-50 text-red-700 border border-red-100 hover:bg-red-100'
-          } transition-colors` }
-      >
-        { item.status ? 'Visible' : 'Oculto' }
+      <div className="flex items-center gap-2">
+        { item.visible ? (
+          <Icons.IoEyeOutline className="text-success-500" size={ 20 } />
+        ) : (
+          <Icons.IoEyeOffOutline className="text-danger-500" size={ 20 } />
+        ) }
+        <span>{ item.slug }</span>
       </div>
     ),
   },
@@ -29,7 +34,9 @@ export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDef
     name: 'FECHA DE CREACIÓN',
     uid: 'creationDate',
     sortable: true,
-    renderCell: ( item: Category ) => <span>{ item.creationDate }</span>,
+    renderCell: ( item: Category ) => (
+      <span>{ item.creationDate }</span>
+    ),
   },
   {
     name: 'CREADO POR',
