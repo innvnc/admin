@@ -1,69 +1,56 @@
 'use client';
-
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { UI } from '@/components';
+import { CategoryInputs, categorySchema, UI } from '@/components';
+import { useCategoriesFormHelper } from '../helpers';
 
-import { useAddCategory } from '../hooks/useAddCategory';
-import { useUpdateCategory } from '../hooks/useUpdateCategory';
-import { getCategoryById } from '../services/actions';
-import { CategoryInputs, categorySchema } from '../validators/categorySchema';
 
 interface Props {
-  id?: string;
+  id?:     string;
   onClose: () => void;
 }
 
 export const CategoryForm = ( { id, onClose }: Props ) => {
-  const { addNewCategory } = useAddCategory();
-  const { categoryUpdate } = useUpdateCategory();
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue
-  } = useForm<CategoryInputs>( {
-    mode: 'onSubmit',
-    resolver: zodResolver( categorySchema ),
-    defaultValues: { title: '' }
+  const form = useForm<CategoryInputs>( {
+    defaultValues: { title: '' },
+    mode:          'onSubmit',
+    resolver:      zodResolver( categorySchema )
   } );
 
-  useEffect( () => {
-    if ( id ) {
-      getCategoryById( id ).then( ( data ) => {
-        setValue( 'title', data.title );
-      } );
-    } else {
-      reset();
-    }
-  }, [ id, setValue, reset ] );
-
-  const onSubmit = async ( data: CategoryInputs ) => {
-    if ( id ) {
-      await categoryUpdate( data, id );
-    } else {
-      await addNewCategory( data );
-    }
-    onClose();
-  };
+  const { handleSave, validateUniqueTitle, existingTitles } = useCategoriesFormHelper( id, form );
 
   return (
-    <UI.Form id="category-form" onSubmit={ handleSubmit( onSubmit ) }>
+    <UI.Form id="category-form" onSubmit={ form.handleSubmit( ( data ) => handleSave( data, onClose ) ) }>
       <Controller
+        control={ form.control }
         name="title"
-        control={ control }
         render={ ( { field } ) => (
           <UI.Input
+
             { ...field }
+
+            errorMessage={
+              form.formState.errors.title?.message ||
+              ( existingTitles.includes( field.value.toLowerCase() )
+                ? 'Esta categoría ya existe.'
+                : undefined )
+            }
+
+            isInvalid={
+              Boolean( form.formState.errors.title ) ||
+              existingTitles.includes( field.value.toLowerCase() )
+            }
+
             label="Título"
             labelPlacement="outside"
             placeholder="Ingresa un título"
-            isInvalid={ !!errors.title }
-            errorMessage={ errors.title?.message }
+            
+            onValueChange={ ( value ) => {
+              field.onChange( value );
+              validateUniqueTitle( value );
+            } }
           />
         ) }
       />
