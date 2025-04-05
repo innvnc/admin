@@ -1,10 +1,10 @@
 import { ColumnDefinition, Icons } from '@/components/shared/ui';
-import { UI } from '@/components/shared';
 import { Category } from '@/interfaces';
+import { UI } from '@/components/shared';
 
 interface Props {
-  onDelete: ( id: string ) => void;
   onEdit: ( id: string ) => void;
+  onDelete: ( id: string, title: string ) => void;
 }
 
 export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDefinition[] => [
@@ -19,14 +19,18 @@ export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDef
     uid: 'slug',
     searchable: true,
     sortable: true,
+  },
+  {
+    name: 'VISIBLE',
+    uid: 'visible',
+    sortable: true,
     renderCell: ( item: Category ) => (
-      <div className="flex items-center gap-2">
+      <div className="flex justify-center items-center">
         { item.visible ? (
           <Icons.IoEyeOutline className="text-success-500" size={ 20 } />
         ) : (
           <Icons.IoEyeOffOutline className="text-danger-500" size={ 20 } />
         ) }
-        <span>{ item.slug }</span>
       </div>
     ),
   },
@@ -34,9 +38,7 @@ export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDef
     name: 'FECHA DE CREACIÓN',
     uid: 'creationDate',
     sortable: true,
-    renderCell: ( item: Category ) => (
-      <span>{ item.creationDate }</span>
-    ),
+    renderCell: ( item: Category ) => <span>{ item.creationDate }</span>,
   },
   {
     name: 'CREADO POR',
@@ -75,7 +77,7 @@ export const CategoriesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDef
               className="text-danger"
               color="danger"
               startContent={ <Icons.IoTrashOutline className="text-danger" /> }
-              onPress={ () => onDelete( item.id ) }
+              onPress={ () => onDelete( item.id, item.title ) }
               textValue="Eliminar"
             >
               Eliminar

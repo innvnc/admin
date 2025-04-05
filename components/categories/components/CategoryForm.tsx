@@ -40,15 +40,19 @@ export const CategoryForm = ( { id, onClose }: Props ) => {
         },
         onClose,
       );
+
       addToast( {
         title: 'Éxito',
-        description: id ? 'La categoría se ha actualizado correctamente.' : 'La categoría se ha creado correctamente.',
+        description: id
+          ? `La categoría "${ data.title }" se ha actualizado correctamente.`
+          : `La categoría "${ data.title }" se ha creado correctamente.`,
         color: 'success',
       } );
+
     } catch ( error ) {
       addToast( {
         title: 'Error',
-        description: 'Hubo un problema al guardar la categoría.',
+        description: `Hubo un problema al guardar la categoría "${ data.title }".`,
         color: 'danger',
       } );
     }

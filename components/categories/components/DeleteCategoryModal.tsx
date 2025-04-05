@@ -1,15 +1,15 @@
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
 
-
 interface Props {
-  isOpen:    boolean;
+  isOpen: boolean;
   isPending: boolean;
-  onCancel:  () => void;
+  categoryTitle: string;
+  onCancel: () => void;
   onConfirm: () => void;
 }
 
-export const DeleteCategoryModal = ( { isOpen, isPending, onCancel, onConfirm }: Props ) => (
+export const DeleteCategoryModal = ( { isOpen, isPending, categoryTitle, onCancel, onConfirm }: Props ) => (
   <UI.Modal isOpen={ isOpen } onOpenChange={ onCancel }>
     <UI.ModalContent>
       <UI.ModalHeader className="flex flex-row justify-center space-x-2">
@@ -17,7 +17,9 @@ export const DeleteCategoryModal = ( { isOpen, isPending, onCancel, onConfirm }:
         <h3 className="text-lg font-semibold">Confirmar eliminación</h3>
       </UI.ModalHeader>
       <UI.ModalBody>
-        <p>¿Estás seguro que deseas eliminar esta categoría? Esta acción no se puede deshacer.</p>
+        <p>
+          ¿Estás seguro que deseas eliminar la categoría <strong>{ categoryTitle }</strong>? Esta acción no se puede deshacer.
+        </p>
       </UI.ModalBody>
       <UI.ModalFooter className="flex flex-row justify-center space-x-2">
         <UI.Button variant="flat" color="default" onPress={ onCancel } startContent={ <Icons.IoArrowBackOutline size={ 20 } /> }>

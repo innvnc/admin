@@ -11,6 +11,7 @@ export const useCategoriesListHelper = () => {
 
   const [ selectedCategoryId, setSelectedCategoryId ] = useState<string | undefined>( undefined );
   const [ categoryToDelete, setCategoryToDelete ] = useState<string | undefined>( undefined );
+  const [ categoryTitle, setCategoryTitle ] = useState<string | undefined>( undefined );
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
 
   const handleEditCategory = ( id: string ) => {
@@ -18,13 +19,14 @@ export const useCategoriesListHelper = () => {
     onOpen();
   };
 
-  const handleDeleteCategory = ( id: string ) => {
+  const handleDeleteCategory = ( id: string, title: string ) => {
     setCategoryToDelete( id );
+    setCategoryTitle( title );
     setIsDeleteModalOpen( true );
   };
 
   const onConfirmDelete = async () => {
-    if ( !categoryToDelete ) return;
+    if ( !categoryToDelete || !categoryTitle ) return;
 
     try {
       await deleteCategoryById( categoryToDelete );
@@ -32,16 +34,17 @@ export const useCategoriesListHelper = () => {
 
       addToast( {
         title: 'Éxito',
-        description: 'La categoría ha sido eliminada correctamente.',
+        description: `La categoría "${ categoryTitle }" ha sido eliminada correctamente.`,
         color: 'success',
       } );
 
       setIsDeleteModalOpen( false );
       setCategoryToDelete( undefined );
+      setCategoryTitle( undefined );
     } catch ( error ) {
       addToast( {
         title: 'Error',
-        description: 'Hubo un problema al eliminar la categoría.',
+        description: `Hubo un problema al eliminar la categoría "${ categoryTitle }".`,
         color: 'danger',
       } );
     }
@@ -58,5 +61,6 @@ export const useCategoriesListHelper = () => {
     onOpenChange,
     selectedCategoryId,
     setIsDeleteModalOpen,
+    categoryTitle,
   };
 };

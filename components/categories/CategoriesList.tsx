@@ -6,7 +6,6 @@ import { GenericTable } from '@/components/shared/ui';
 import { CategoriesTableColumns, CategoryFormLayout, DeleteCategoryModal } from './components';
 import { useCategoriesListHelper } from './helpers';
 
-
 export const CategoriesList = () => {
   const {
     categories,
@@ -19,6 +18,7 @@ export const CategoriesList = () => {
     onOpenChange,
     selectedCategoryId,
     setIsDeleteModalOpen,
+    categoryTitle,
   } = useCategoriesListHelper();
 
   return (
@@ -42,7 +42,7 @@ export const CategoriesList = () => {
               initialVisibleColumns={ [
                 'title',
                 'slug',
-                'status',
+                'visible',
                 'creationDate',
                 'createdBy',
                 'actions',
@@ -69,6 +69,7 @@ export const CategoriesList = () => {
         isPending={ isPending }
         onCancel={ () => setIsDeleteModalOpen( false ) }
         onConfirm={ onConfirmDelete }
+        categoryTitle={ categoryTitle || '' }
       />
     </div>
   );
