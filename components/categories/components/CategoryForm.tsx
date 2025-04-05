@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,16 +10,14 @@ import { Icons } from '@/components/shared/ui';
 import { useCategoriesFormHelper } from '../helpers';
 import { useGetCategory } from '../hooks';
 
-
 interface Props {
   id?: string;
   onClose: () => void;
 }
 
 export const CategoryForm = ( { id, onClose }: Props ) => {
-  
   const form = useForm<CategoryInputs>( {
-    defaultValues: { title: '', visible: true },
+    defaultValues: { title: '', visible: false },
     mode: 'onSubmit',
     resolver: zodResolver( categorySchema ),
   } );
@@ -28,23 +27,22 @@ export const CategoryForm = ( { id, onClose }: Props ) => {
 
   useEffect( () => {
     if ( id && category ) {
-      form.reset( {
-        title: category.title,
-        visible: category.visible,
-      } );
-    } else if ( !id ) {
-      form.reset( { title: '', visible: true } );
+      form.reset( { title: category.title, visible: category.visible } );
     }
   }, [ id, category, form ] );
 
   const onSubmit = async ( data: CategoryInputs ) => {
     try {
-      await handleSave( data, onClose );
+      await handleSave(
+        {
+          title: data.title,
+          visible: id ? data.visible : false,
+        },
+        onClose,
+      );
       addToast( {
         title: 'Éxito',
-        description: id
-          ? 'La categoría se ha actualizado correctamente.'
-          : 'La categoría se ha creado correctamente.',
+        description: id ? 'La categoría se ha actualizado correctamente.' : 'La categoría se ha creado correctamente.',
         color: 'success',
       } );
     } catch ( error ) {
@@ -74,7 +72,7 @@ export const CategoryForm = ( { id, onClose }: Props ) => {
               Boolean( form.formState.errors.title ) ||
               existingTitles.includes( field.value.toLowerCase() )
             }
-            label="Título de la categoría"
+            label="Título"
             labelPlacement="outside"
             placeholder="Ingresa un título"
             onValueChange={ ( value ) => {
@@ -85,27 +83,29 @@ export const CategoryForm = ( { id, onClose }: Props ) => {
         ) }
       />
 
-      <Controller
-        control={ form.control }
-        name="visible"
-        render={ ( { field } ) => (
-          <UI.Switch
-            isSelected={ field.value }
-            onValueChange={ field.onChange }
-            size="lg"
-            color={ field.value ? 'success' : 'danger' }
-            thumbIcon={ ( { isSelected, className } ) =>
-              isSelected ? (
-                <Icons.IoEyeOutline className={ className } />
-              ) : (
-                <Icons.IoEyeOffOutline className={ className } />
-              )
-            }
-          >
-            { field.value ? 'Categoría visible' : 'Categoría invisible' }
-          </UI.Switch>
-        ) }
-      />
+      { id && (
+        <Controller
+          control={ form.control }
+          name="visible"
+          render={ ( { field: { value, onChange } } ) => (
+            <UI.Switch
+              isSelected={ value }
+              onValueChange={ ( checked ) => onChange( checked ) }
+              color={ value ? 'success' : 'danger' }
+              size="lg"
+              thumbIcon={ ( { isSelected, className } ) =>
+                isSelected ? (
+                  <Icons.IoEyeOutline className={ className } />
+                ) : (
+                  <Icons.IoEyeOffOutline className={ className } />
+                )
+              }
+            >
+              { value ? 'Categoría visible' : 'Categoría invisible' }
+            </UI.Switch>
+          ) }
+        />
+      ) }
     </UI.Form>
   );
 };
