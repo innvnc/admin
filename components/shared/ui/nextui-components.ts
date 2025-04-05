@@ -17,6 +17,7 @@ export {
   DropdownMenu,
   DropdownSection,
   DropdownTrigger,
+  Form,
   Image,
   Input,
   Listbox,

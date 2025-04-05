@@ -1,58 +1,72 @@
-import { UI } from '@/components';
-import { Icons } from '@/components/shared/ui';
+'use client';
 
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { UI } from '@/components';
+
+import { useAddCategory } from '../hooks/useAddCategory';
+import { useUpdateCategory } from '../hooks/useUpdateCategory';
+import { getCategoryById } from '../services/actions';
+import { CategoryInputs, categorySchema } from '../validators/categorySchema';
 
 interface Props {
   id?: string;
-  isOpen?: boolean;
-  name: string;
-  triggerElement?: React.ReactNode;
-  onOpenChange?: ( isOpen: boolean ) => void;
+  onClose: () => void;
 }
 
-export const CategoryForm = ( { id, triggerElement, isOpen: externalIsOpen, onOpenChange: externalOnOpenChange, name }: Props ) => {
+export const CategoryForm = ( { id, onClose }: Props ) => {
+  const { addNewCategory } = useAddCategory();
+  const { categoryUpdate } = useUpdateCategory();
 
-  const internalDisclosure = UI.useDisclosure();
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    setValue
+  } = useForm<CategoryInputs>( {
+    mode: 'onSubmit',
+    resolver: zodResolver( categorySchema ),
+    defaultValues: { title: '' }
+  } );
 
-  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
-  const onOpen = externalOnOpenChange ? () => externalOnOpenChange( true ) : internalDisclosure.onOpen;
-  const onOpenChange = externalOnOpenChange || internalDisclosure.onOpenChange;
+  useEffect( () => {
+    if ( id ) {
+      getCategoryById( id ).then( ( data ) => {
+        setValue( 'title', data.title );
+      } );
+    } else {
+      reset();
+    }
+  }, [ id, setValue, reset ] );
+
+  const onSubmit = async ( data: CategoryInputs ) => {
+    if ( id ) {
+      await categoryUpdate( data, id );
+    } else {
+      await addNewCategory( data );
+    }
+    onClose();
+  };
 
   return (
-    <>
-      { triggerElement ? (
-        <span onClick={ onOpen } className="w-full cursor-pointer">
-          { triggerElement }
-        </span>
-      ) : (
-        <UI.Button onPress={ onOpen } variant="light" startContent={ <Icons.IoAddOutline size={ 24 } /> }>Crear { name }</UI.Button>
-      ) }
-      <UI.Modal isOpen={ isOpen } onOpenChange={ onOpenChange } backdrop="blur" isDismissable={ false }>
-        <UI.ModalContent>
-          { ( onClose ) => (
-            <>
-              <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-                { id
-                  ? ( <><Icons.IoPencilOutline /> Editar { name } </> )
-                  : ( <><Icons.IoAddOutline /> Crear { name } </> )
-                }
-              </UI.ModalHeader>
-              <UI.ModalBody>
-                <UI.Input name="title" />
-                
-              </UI.ModalBody>
-              <UI.ModalFooter className="justify-center flex items-center space-x-3">
-                <UI.Button color="danger" variant="light" onPress={ onClose } startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }>
-                  Cerrar
-                </UI.Button>
-                <UI.Button color="secondary" onPress={ onClose } startContent={ <Icons.IoSaveOutline size={ 24 } /> }>
-                  Guardar
-                </UI.Button>
-              </UI.ModalFooter>
-            </>
-          ) }
-        </UI.ModalContent>
-      </UI.Modal>
-    </>
+    <UI.Form id="category-form" onSubmit={ handleSubmit( onSubmit ) }>
+      <Controller
+        name="title"
+        control={ control }
+        render={ ( { field } ) => (
+          <UI.Input
+            { ...field }
+            label="Título"
+            labelPlacement="outside"
+            placeholder="Ingresa un título"
+            isInvalid={ !!errors.title }
+            errorMessage={ errors.title?.message }
+          />
+        ) }
+      />
+    </UI.Form>
   );
 };

@@ -1,10 +1,13 @@
 'use client';
 import { useState } from 'react';
+
+
 import { Category } from '@/interfaces';
 import { ColumnDefinition, GenericTable, Icons } from '../shared/ui';
 import { UI } from '../shared';
 import { useGetCategories } from './hooks';
-import { CategoryForm } from './components';
+import { CategoryForm, CategoryFormLayout } from './components';
+
 
 export const CategoriesList = () => {
   const { categories } = useGetCategories();
@@ -107,7 +110,7 @@ export const CategoriesList = () => {
               primaryKey="id"
               searchFields={ [ 'title', 'slug' ] }
               onAdd={ () => { } }
-              addButtonComponent={ <CategoryForm name="categoría" /> }
+              addButtonComponent={ <CategoryFormLayout name="categoría" /> }
               addButtonText="Agregar Categoría"
               noItemsMessage="No se encontraron categorías"
               initialVisibleColumns={ [
@@ -125,7 +128,7 @@ export const CategoriesList = () => {
           </UI.CardBody>
         </UI.Card>
       </div>
-      { isOpen && <CategoryForm id={ selectedCategoryId } isOpen={ isOpen } onOpenChange={ onOpenChange } name="categoría" /> }
+      { isOpen && <CategoryFormLayout id={ selectedCategoryId } isOpen={ isOpen } onOpenChange={ onOpenChange } name="categoría" /> }
     </div>
   );
 };

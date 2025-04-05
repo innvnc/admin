@@ -1,6 +1,6 @@
-import { CategoryInputs, request } from '@/components';
+import { request } from '@/components';
+import { CategoryInputs } from '../validators/categorySchema';
 import { Category } from '@/interfaces';
-
 
 export const createCategory = ( data: CategoryInputs ): Promise<Category> =>
   request<Category>( '/categories/', 'POST', data );
