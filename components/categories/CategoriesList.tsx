@@ -6,7 +6,7 @@ import { Category } from '@/interfaces';
 import { ColumnDefinition, GenericTable, Icons } from '../shared/ui';
 import { UI } from '../shared';
 import { useGetCategories } from './hooks';
-import { CategoryForm, CategoryFormLayout } from './components';
+import { CategoryFormLayout } from './components';
 
 
 export const CategoriesList = () => {
