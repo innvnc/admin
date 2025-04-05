@@ -5,9 +5,10 @@ import { getCategories } from '../services';
 
 export const useGetCategories = () => {
 
-  const { isLoading, isFetching, isError, error, data: categories, } = useQuery( {
+  const { isLoading, isFetching, isError, error, data: categories, refetch } = useQuery( {
     queryKey: [ 'categories' ],
-    queryFn: () => getCategories()
+    queryFn: () => getCategories(),
+    refetchOnWindowFocus: false
   } );
 
   return {
@@ -15,6 +16,7 @@ export const useGetCategories = () => {
     isFetching,
     isError,
     error,
-    categories
+    categories,
+    refetch
   };
 };

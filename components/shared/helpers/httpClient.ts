@@ -7,16 +7,16 @@ const getToken = () => {
   return null;
 };
 
-const headers = {
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${ getToken() }`
-};
-
 export const request = async <T>(
   endpoint: string,
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
   data?: unknown
 ): Promise<T> => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${ getToken() }`
+  };
+
   try {
     const res = await fetch( `${ API_URL }${ endpoint }`, {
       body: data ? JSON.stringify( data ) : undefined,
@@ -29,7 +29,13 @@ export const request = async <T>(
       throw new Error( errorData || 'Request error' );
     }
 
-    return res.status !== 204 ? await res.json() : ( {} as T );
+    if ( res.status === 204 ) {
+      return {} as T;
+    }
+
+    const textResponse = await res.text();
+
+    return textResponse ? JSON.parse( textResponse ) : ( {} as T );
   } catch ( error ) {
     throw new Error( error instanceof Error ? error.message : 'Network error' );
   }

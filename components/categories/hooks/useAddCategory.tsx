@@ -4,22 +4,15 @@ import { createCategory } from '../services';
 import { CategoryInputs } from '../validators';
 import { Category } from '@/interfaces';
 
-
-
 export const useAddCategory = () => {
-
   const queryClient = useQueryClient();
 
   const mutation = useMutation( {
-
     mutationFn: ( category: CategoryInputs ) => createCategory( category ),
-
     onSuccess: ( data ) => {
-
       queryClient.invalidateQueries( {
         queryKey: [ 'categories' ]
       } );
-
       return data;
     }
   } );

@@ -4,29 +4,20 @@ import { Category } from '@/interfaces';
 import { CategoryInputs } from '../validators';
 import { updateCategory } from '../services';
 
-
-
 export const useUpdateCategory = () => {
-
   const queryClient = useQueryClient();
 
   const mutation = useMutation<Category, Error, { category: CategoryInputs; id: string; }>( {
-
     mutationFn: ( { id, category } ) => updateCategory( id, category ),
-
     onSuccess: ( data ) => {
-
       queryClient.invalidateQueries( {
         queryKey: [ 'category' ]
       } );
-
       queryClient.invalidateQueries( {
         queryKey: [ 'categories' ]
       } );
-
       return data;
     }
-
   } );
 
   const categoryUpdate = async ( category: CategoryInputs, id: string ): Promise<Category> => {

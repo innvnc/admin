@@ -5,8 +5,9 @@ import { Category } from '@/interfaces';
 export const createCategory = ( data: CategoryInputs ): Promise<Category> =>
   request<Category>( '/categories/', 'POST', data );
 
-export const deleteCategory = ( id: string ): Promise<void> =>
-  request<void>( `/categories/${ id }`, 'DELETE' );
+export const deleteCategory = async ( id: string ): Promise<void> => {
+  await request( `/categories/${ id }`, 'DELETE' );
+};
 
 export const getCategories = (): Promise<Category[]> =>
   request<Category[]>( '/categories/', 'GET' );
