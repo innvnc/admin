@@ -1,0 +1,31 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { CourseInputs } from '../validators';
+import { ICoursesResponse } from '@/interfaces';
+import { createCourse } from '../services';
+
+export const useAddCourse = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation( {
+    mutationFn: ( course: CourseInputs ) => createCourse( course ),
+    onSuccess: ( data ) => {
+      queryClient.invalidateQueries( {
+        queryKey: [ 'courses' ]
+      } );
+      return data;
+    }
+  } );
+
+  const addNewCourse = async ( course: CourseInputs ): Promise<ICoursesResponse> => {
+    const result = await mutation.mutateAsync( course );
+    return result;
+  };
+
+  return {
+    addNewCourse,
+    isPending: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error
+  };
+};
