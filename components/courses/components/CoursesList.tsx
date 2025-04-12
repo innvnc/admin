@@ -1,90 +1,41 @@
 'use client';
-import { useCallback, useMemo } from 'react';
 
-import { UI } from '../../shared';
-import { ICoursesResponse } from '../../../interfaces/courses-response';
-import { ColumnDefinition, GenericTable, Icons } from '../../shared/ui';
-import { useGetCourses } from '../hooks';
+import { useMemo } from 'react';
+
+import { UI } from '@/components/shared';
+import { GenericTable, Icons } from '@/components/shared/ui';
+
+
+import { useCoursesListHelper } from '../helpers';
+import { CoursesTableColumns } from './CoursesTableColumns';
+import { CourseFormLayout } from './CourseFormLayout';
+import { DeleteCourseModal } from './DeleteCourseModal';
 
 export const CoursesList = () => {
-  const { courses } = useGetCourses();
-
-  const handleAddCourse = useCallback( () => {
-    console.log( 'Agregar nuevo curso' );
-    // Aquí iría la lógica para agregar un nuevo curso
-  }, [] );
-
-  const courseColumns: ColumnDefinition[] = [
-    { name: 'TÍTULO', uid: 'title', sortable: true, searchable: true },
-    { name: 'SLUG', uid: 'slug', sortable: true, searchable: true },
-    { name: 'DESCRIPCIÓN', uid: 'description', sortable: true, searchable: true },
-    { name: 'PRECIO', uid: 'price', sortable: true, searchable: true },
-    { name: 'PÚBLICO', uid: 'isPublic', sortable: true },
-    {
-      name: 'CATEGORÍAS',
-      uid: 'categories',
-      sortable: false,
-      renderCell: ( item: ICoursesResponse ) => (
-        <div className="flex flex-wrap gap-1">
-          { item.categories.map( ( category ) => (
-            <div
-              key={ category.id }
-              className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100 transition-colors"
-            >
-              { category.title }
-            </div>
-          ) ) }
-        </div>
-      ),
-    },
-    {
-      name: 'ACCIONES',
-      uid: 'actions',
-      sortable: false,
-      renderCell: ( item: ICoursesResponse ) => (
-        <div className="relative flex items-center justify-center">
-          <UI.Dropdown>
-            <UI.DropdownTrigger>
-              <UI.Button isIconOnly size="sm" variant="light">
-                <Icons.IoEllipsisVerticalOutline className="text-default-500" />
-              </UI.Button>
-            </UI.DropdownTrigger>
-            <UI.DropdownMenu aria-label="Acciones disponibles">
-              <UI.DropdownItem
-                key="view"
-                startContent={ <Icons.IoEyeOutline className="text-default-500" /> }
-              >
-                Ver detalles
-              </UI.DropdownItem>
-              <UI.DropdownItem
-                key="edit"
-                startContent={ <Icons.IoPencilOutline className="text-default-500" /> }
-              >
-                Editar
-              </UI.DropdownItem>
-              <UI.DropdownItem
-                key="delete"
-                className="text-danger"
-                color="danger"
-                startContent={ <Icons.IoTrashOutline className="text-danger" /> }
-              >
-                Eliminar
-              </UI.DropdownItem>
-            </UI.DropdownMenu>
-          </UI.Dropdown>
-        </div>
-      ),
-    },
-  ];
+  const {
+    courses,
+    handleDeleteCourse,
+    handleEditCourse,
+    isDeleteModalOpen,
+    isOpen,
+    isPending,
+    onConfirmDelete,
+    onOpenChange,
+    selectedCourseId,
+    setIsDeleteModalOpen,
+    courseTitle,
+  } = useCoursesListHelper();
 
   const publishedCourses = useMemo(
     () => courses?.filter( ( course ) => course.isPublic ),
     [ courses ]
   );
+
   const draftCourses = useMemo(
     () => courses?.filter( ( course ) => !course.isPublic && course.status ),
     [ courses ]
   );
+
   const deletedCourses = useMemo(
     () => courses?.filter( ( course ) => !course.status ),
     [ courses ]
@@ -127,13 +78,17 @@ export const CoursesList = () => {
             >
               <UI.Card>
                 <UI.CardBody>
-                  <GenericTable<ICoursesResponse>
+                  <GenericTable
                     title={ option.label }
-                    columns={ courseColumns }
+                    columns={ CoursesTableColumns( {
+                      onEdit: handleEditCourse,
+                      onDelete: handleDeleteCourse,
+                    } ) }
                     items={ option.items }
                     primaryKey="id"
-                    searchFields={ [ 'title', 'slug', 'description', 'price', 'isPublic' ] }
-                    onAdd={ handleAddCourse }
+                    searchFields={ [ 'title', 'slug', 'description', 'price' ] }
+                    onAdd={ () => { } }
+                    addButtonComponent={ <CourseFormLayout name="curso" /> }
                     addButtonText="Agregar Curso"
                     noItemsMessage={ `No se encontraron cursos ${ option.label.toLowerCase() }` }
                     initialVisibleColumns={ [
@@ -143,6 +98,8 @@ export const CoursesList = () => {
                       'price',
                       'isPublic',
                       'categories',
+                      'creationDate',
+                      'createdBy',
                       'actions',
                     ] }
                     initialSortColumn="title"
@@ -155,6 +112,23 @@ export const CoursesList = () => {
           ) ) }
         </UI.Tabs>
       </div>
+
+      { isOpen && (
+        <CourseFormLayout
+          id={ selectedCourseId }
+          isOpen={ isOpen }
+          onOpenChange={ onOpenChange }
+          name="curso"
+        />
+      ) }
+
+      <DeleteCourseModal
+        isOpen={ isDeleteModalOpen }
+        isPending={ isPending }
+        onCancel={ () => setIsDeleteModalOpen( false ) }
+        onConfirm={ onConfirmDelete }
+        courseTitle={ courseTitle || '' }
+      />
     </div>
   );
 };
