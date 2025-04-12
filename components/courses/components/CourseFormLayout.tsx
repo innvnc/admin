@@ -1,7 +1,7 @@
 import { UI } from '@/components';
 import { Icons } from '@/components/shared/ui';
-import { CourseForm } from './CourseForm';
 
+import { CourseForm } from './CourseForm';
 
 interface Props {
   id?: string;

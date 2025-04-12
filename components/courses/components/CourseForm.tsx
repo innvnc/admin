@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addToast } from '@heroui/react';
 
 import { CourseInputs, courseSchema, UI } from '@/components';
 import { Icons } from '@/components/shared/ui';
-import { useGetCategory } from '@/components/categories/hooks';
 import { useGetCategories } from '@/components/categories/hooks';
 import { useCoursesFormHelper } from '../helpers';
 
@@ -32,12 +30,6 @@ export const CourseForm = ( { id, onClose }: Props ) => {
 
   const { handleSave } = useCoursesFormHelper( id, form );
   const { categories = [] } = useGetCategories();
-
-  useEffect( () => {
-    if ( id ) {
-      form.setValue( 'isPublic', false );
-    }
-  }, [ id, form ] );
 
   const onSubmit = async ( data: CourseInputs ) => {
     try {
