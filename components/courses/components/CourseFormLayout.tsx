@@ -1,3 +1,6 @@
+'use client';
+import { useState } from 'react';
+
 import { UI } from '@/components';
 import { Icons } from '@/components/shared/ui';
 
@@ -19,6 +22,7 @@ export const CourseFormLayout = ( {
   triggerElement
 }: Props ) => {
   const internalDisclosure = UI.useDisclosure();
+  const [ isSubmitting, setIsSubmitting ] = useState( false );
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
   const onOpen = externalOnOpenChange ? () => externalOnOpenChange( true ) : internalDisclosure.onOpen;
@@ -42,45 +46,45 @@ export const CourseFormLayout = ( {
 
       <UI.Modal backdrop="blur" isDismissable={ false } isOpen={ isOpen } onOpenChange={ onOpenChange }>
         <UI.ModalContent>
-          { ( onClose ) => (
-            <>
-              <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-                { id ? (
-                  <>
-                    <Icons.IoPencilOutline size={ 24 } /> Editar { name }
-                  </>
-                ) : (
-                  <>
-                    <Icons.IoAddOutline size={ 24 } /> Crear { name }
-                  </>
-                ) }
-              </UI.ModalHeader>
+          <>
+            <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
+              { id ? (
+                <>
+                  <Icons.IoPencilOutline size={ 24 } /> Editar { name }
+                </>
+              ) : (
+                <>
+                  <Icons.IoAddOutline size={ 24 } /> Crear { name }
+                </>
+              ) }
+            </UI.ModalHeader>
 
-              <UI.ModalBody>
-                <CourseForm id={ id } onClose={ onClose } />
-              </UI.ModalBody>
+            <UI.ModalBody>
+              <CourseForm id={ id } onClose={ () => onOpenChange( false ) } setIsSubmitting={ setIsSubmitting } />
 
-              <UI.ModalFooter className="justify-center flex items-center space-x-3">
-                <UI.Button
-                  color="danger"
-                  onPress={ onClose }
-                  startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }
-                  variant="light"
-                >
-                  Cerrar
-                </UI.Button>
+            </UI.ModalBody>
 
-                <UI.Button
-                  color="secondary"
-                  form="course-form"
-                  startContent={ <Icons.IoSaveOutline size={ 24 } /> }
-                  type="submit"
-                >
-                  Guardar
-                </UI.Button>
-              </UI.ModalFooter>
-            </>
-          ) }
+            <UI.ModalFooter className="justify-center flex items-center space-x-3">
+              <UI.Button
+                color="danger"
+                onPress={ () => onOpenChange( false ) }
+                startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }
+                variant="light"
+              >
+                Cerrar
+              </UI.Button>
+
+              <UI.Button
+                color="secondary"
+                form="course-form"
+                startContent={ <Icons.IoSaveOutline size={ 24 } /> }
+                type="submit"
+                isLoading={ isSubmitting }
+              >
+                Guardar
+              </UI.Button>
+            </UI.ModalFooter>
+          </>
         </UI.ModalContent>
       </UI.Modal>
     </>

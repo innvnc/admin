@@ -12,9 +12,10 @@ import { useCoursesFormHelper } from '../helpers';
 interface Props {
   id?: string;
   onClose: () => void;
+  setIsSubmitting?: ( loading: boolean ) => void;
 }
 
-export const CourseForm = ( { id, onClose }: Props ) => {
+export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
   const form = useForm<CourseInputs>( {
     defaultValues: {
       title: '',
@@ -32,6 +33,8 @@ export const CourseForm = ( { id, onClose }: Props ) => {
   const { categories = [] } = useGetCategories();
 
   const onSubmit = async ( data: CourseInputs ) => {
+    setIsSubmitting?.( true );
+
     try {
       await handleSave( data, onClose );
 
@@ -48,6 +51,8 @@ export const CourseForm = ( { id, onClose }: Props ) => {
         description: `Hubo un problema al guardar el curso "${ data.title }".`,
         color: 'danger',
       } );
+    } finally {
+      setIsSubmitting?.( false );
     }
   };
 
