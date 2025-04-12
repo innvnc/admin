@@ -1,4 +1,4 @@
-import { CoursesList } from './CoursesList';
+import { CoursesList } from './components';
 import { PageView } from '../layouts';
 
 

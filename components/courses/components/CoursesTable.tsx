@@ -18,8 +18,8 @@ import {
   TableHeader,
   TableRow
 } from '@heroui/react';
-import { ICoursesResponse } from '../../interfaces/courses-response';
-import { Icons } from '../shared/ui';
+import { ICoursesResponse } from '../../../interfaces/courses-response';
+import { Icons } from '../../shared/ui';
 
 
 
