@@ -1,15 +1,13 @@
 'use client';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { UI } from '../../shared';
-import { getCourseMenuOptions } from '../helpers';
 import { ICoursesResponse } from '../../../interfaces/courses-response';
 import { ColumnDefinition, GenericTable, Icons } from '../../shared/ui';
 import { useGetCourses } from '../hooks';
 
 export const CoursesList = () => {
   const { courses } = useGetCourses();
-  const courseMenuOptions = getCourseMenuOptions();
 
   const handleAddCourse = useCallback( () => {
     console.log( 'Agregar nuevo curso' );
@@ -79,6 +77,40 @@ export const CoursesList = () => {
     },
   ];
 
+  const publishedCourses = useMemo(
+    () => courses?.filter( ( course ) => course.isPublic ),
+    [ courses ]
+  );
+  const draftCourses = useMemo(
+    () => courses?.filter( ( course ) => !course.isPublic && course.status ),
+    [ courses ]
+  );
+  const deletedCourses = useMemo(
+    () => courses?.filter( ( course ) => !course.status ),
+    [ courses ]
+  );
+
+  const courseMenuOptions = [
+    {
+      key: 'published',
+      label: 'Publicados',
+      icon: <Icons.IoBookmarkOutline className="text-default-500" />,
+      items: publishedCourses || [],
+    },
+    {
+      key: 'draft',
+      label: 'Borradores',
+      icon: <Icons.IoFolderOutline className="text-default-500" />,
+      items: draftCourses || [],
+    },
+    {
+      key: 'deleted',
+      label: 'Eliminados',
+      icon: <Icons.IoTrashOutline className="text-default-500" />,
+      items: deletedCourses || [],
+    },
+  ];
+
   return (
     <div className="courses-list">
       <div className="courses-list__container">
@@ -96,14 +128,14 @@ export const CoursesList = () => {
               <UI.Card>
                 <UI.CardBody>
                   <GenericTable<ICoursesResponse>
-                    title="Cursos"
+                    title={ option.label }
                     columns={ courseColumns }
-                    items={ courses || [] }
+                    items={ option.items }
                     primaryKey="id"
                     searchFields={ [ 'title', 'slug', 'description', 'price', 'isPublic' ] }
                     onAdd={ handleAddCourse }
                     addButtonText="Agregar Curso"
-                    noItemsMessage="No se encontraron cursos"
+                    noItemsMessage={ `No se encontraron cursos ${ option.label.toLowerCase() }` }
                     initialVisibleColumns={ [
                       'title',
                       'slug',
@@ -115,7 +147,7 @@ export const CoursesList = () => {
                     ] }
                     initialSortColumn="title"
                     initialSortDirection="ascending"
-                    initialRowsPerPage={ 15 }
+                    initialRowsPerPage={ 5 }
                   />
                 </UI.CardBody>
               </UI.Card>
