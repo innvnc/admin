@@ -2,16 +2,19 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { CourseInputs } from '../validators';
 import { ICoursesResponse } from '@/interfaces';
-import { updateCourse } from '../services';
+import { updateCourse as updateCourseService } from '../services';
 
 export const useUpdateCourse = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation( {
-    mutationFn: ( { id, data }: { id: string; data: CourseInputs; } ) => updateCourse( id, data ),
+    mutationFn: ( { id, data }: { id: string; data: CourseInputs; } ) => updateCourseService( id, data ),
     onSuccess: ( data ) => {
       queryClient.invalidateQueries( {
         queryKey: [ 'courses' ]
+      } );
+      queryClient.invalidateQueries( {
+        queryKey: [ 'course' ]
       } );
       return data;
     }

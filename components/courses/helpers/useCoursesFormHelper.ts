@@ -11,7 +11,7 @@ export const useCoursesFormHelper = ( id: string | undefined, form: UseFormRetur
   const { course, isLoading } = useGetCourse( id || '' );
 
   useEffect( () => {
-    if ( course && !isLoading ) {
+    if ( id && course && !isLoading ) {
       form.reset( {
         title: course.title,
         slug: course.slug,

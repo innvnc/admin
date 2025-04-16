@@ -46,6 +46,7 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
         color: 'success',
       } );
     } catch ( error ) {
+      console.error( 'Error al guardar el curso:', error );
       addToast( {
         title: 'Error',
         description: `Hubo un problema al guardar el curso "${ data.title }".`,
