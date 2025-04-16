@@ -1,15 +1,14 @@
 'use client';
-
 import { useMemo, useState } from 'react';
 
-import { UI } from '@/components/shared';
-import { GenericTable, Icons } from '@/components/shared/ui';
-
-import { useCoursesListHelper } from '../helpers';
-import { CoursesTableColumns } from './CoursesTableColumns';
-import { CourseFormLayout } from './CourseFormLayout';
-import { DeleteCourseModal } from './DeleteCourseModal';
 import { CourseContentModal } from '@/components/course-content';
+import { CourseFormLayout } from './CourseFormLayout';
+import { CoursesTableColumns } from './CoursesTableColumns';
+import { DeleteCourseModal } from './DeleteCourseModal';
+import { GenericTable, Icons } from '@/components/shared/ui';
+import { UI } from '@/components/shared';
+import { useCoursesListHelper } from '../helpers';
+
 
 export const CoursesList = () => {
   const {

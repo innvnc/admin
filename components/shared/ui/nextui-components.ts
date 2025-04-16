@@ -1,6 +1,8 @@
 'use client';
 export {
   Avatar,
+  Accordion,
+  AccordionItem,
   Badge,
   Button,
   Calendar,

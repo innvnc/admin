@@ -43,7 +43,7 @@ export const CourseContentModal = ( {
             </UI.ModalHeader>
 
             <UI.ModalBody>
-              <CourseContentLayout />
+              <CourseContentLayout courseId={ courseId } courseTitle={ courseTitle } />
             </UI.ModalBody>
           </>
         ) }
