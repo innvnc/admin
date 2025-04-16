@@ -11,6 +11,8 @@ export const useDeleteCourse = () => {
       queryClient.invalidateQueries( { queryKey: [ 'courses' ] } );
       queryClient.invalidateQueries( { queryKey: [ 'course' ] } );
     },
+    retry: 2,
+    retryDelay: attemptIndex => Math.min( 1000 * 2 ** attemptIndex, 10000 )
   } );
 
   const courseDelete = async ( id: string ): Promise<void> => {

@@ -1,7 +1,6 @@
 import { CourseInputs, request } from '@/components';
 import { ICoursesResponse } from '@/interfaces';
 
-
 export const getCourses = (): Promise<ICoursesResponse[]> =>
   request<ICoursesResponse[]>( '/courses/', 'GET' );
 

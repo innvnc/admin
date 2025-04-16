@@ -32,11 +32,22 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
   const { handleSave } = useCoursesFormHelper( id, form );
   const { categories = [] } = useGetCategories();
 
+  const availableCategoryIds = categories.map( category => category.id );
+
+  const selectedCategoryIds = form.watch( 'categoryIds' ).filter( id =>
+    availableCategoryIds.includes( id )
+  );
+
   const onSubmit = async ( data: CourseInputs ) => {
     setIsSubmitting?.( true );
 
     try {
-      await handleSave( data, onClose );
+      const validData = {
+        ...data,
+        categoryIds: data.categoryIds.filter( id => availableCategoryIds.includes( id ) )
+      };
+
+      await handleSave( validData, onClose );
 
       addToast( {
         title: 'Éxito',
@@ -46,10 +57,12 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
         color: 'success',
       } );
     } catch ( error ) {
-      console.error( 'Error al guardar el curso:', error );
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      console.error( `Error al guardar el curso "${ data.title }":`, errorMessage );
+
       addToast( {
         title: 'Error',
-        description: `Hubo un problema al guardar el curso "${ data.title }".`,
+        description: `No se pudo ${ id ? 'actualizar' : 'crear' } el curso. Verifique su conexión al servidor.`,
         color: 'danger',
       } );
     } finally {
@@ -125,14 +138,14 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
       <Controller
         control={ form.control }
         name="categoryIds"
-        render={ ( { field: { value, onChange } } ) => (
+        render={ ( { field: { onChange } } ) => (
           <UI.Select
             items={ categories }
             label="Categorías"
             labelPlacement="outside"
             placeholder="Selecciona una o más categorías"
             selectionMode="multiple"
-            selectedKeys={ new Set( value ) }
+            selectedKeys={ new Set( selectedCategoryIds ) }
             onSelectionChange={ ( selected ) =>
               onChange( Array.from( selected as Set<string> ) )
             }

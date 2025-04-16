@@ -17,7 +17,9 @@ export const useUpdateCourse = () => {
         queryKey: [ 'course' ]
       } );
       return data;
-    }
+    },
+    retry: 2,
+    retryDelay: attemptIndex => Math.min( 1000 * 2 ** attemptIndex, 10000 )
   } );
 
   const updateCourse = async ( id: string, data: CourseInputs ): Promise<ICoursesResponse> => {

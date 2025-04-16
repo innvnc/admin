@@ -68,7 +68,6 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
       filteredCourses = filteredCourses.filter( course => {
         const searchText = filterValue.toLowerCase();
 
-        // Búsqueda en título, slug y descripción
         if (
           course.title.toLowerCase().includes( searchText ) ||
           course.slug.toLowerCase().includes( searchText ) ||
@@ -78,7 +77,6 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
           return true;
         }
 
-        // Búsqueda en público/privado
         if (
           ( course.isPublic && "público".includes( searchText ) ) ||
           ( course.isPublic && "publico".includes( searchText ) ) ||
@@ -87,7 +85,6 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
           return true;
         }
 
-        // Búsqueda en categorías
         if (
           course.categories.some( category =>
             category.title.toLowerCase().includes( searchText )
