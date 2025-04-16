@@ -10,7 +10,9 @@ import { UI } from '@/components/shared';
 import { useCoursesListHelper } from '../helpers';
 
 
+
 export const CoursesList = () => {
+
   const {
     courses,
     handleDeleteCourse,
