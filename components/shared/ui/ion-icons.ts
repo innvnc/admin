@@ -32,6 +32,7 @@ export {
   IoIdCardOutline,
   IoInformationCircleOutline,
   IoLayersOutline,
+  IoListOutline,
   IoLockClosedOutline,
   IoMenuOutline,
   IoMoonOutline,

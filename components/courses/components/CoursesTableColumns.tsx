@@ -5,9 +5,10 @@ import { UI } from '@/components/shared';
 interface Props {
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
+  onViewContent: ( id: string, title: string ) => void;
 }
 
-export const CoursesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDefinition[] => [
+export const CoursesTableColumns = ( { onEdit, onDelete, onViewContent }: Props ): ColumnDefinition[] => [
   {
     name: 'TÍTULO',
     uid: 'title',
@@ -96,6 +97,14 @@ export const CoursesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDefini
             </UI.Button>
           </UI.DropdownTrigger>
           <UI.DropdownMenu aria-label="Acciones disponibles">
+            <UI.DropdownItem
+              key="content"
+              startContent={ <Icons.IoListOutline className="text-default-500" /> }
+              onPress={ () => onViewContent( item.id, item.title ) }
+              textValue="Contenido del curso"
+            >
+              Contenido del curso
+            </UI.DropdownItem>
             <UI.DropdownItem
               key="edit"
               startContent={ <Icons.IoPencilOutline className="text-default-500" /> }
