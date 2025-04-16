@@ -2,17 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteCourse } from '../services';
 
-
-
-
 export const useDeleteCourse = () => {
-
   const queryClient = useQueryClient();
 
   const mutation = useMutation( {
-
     mutationFn: ( id: string ) => deleteCourse( id ),
-
     onSuccess: () => {
       queryClient.invalidateQueries( { queryKey: [ 'courses' ] } );
       queryClient.invalidateQueries( { queryKey: [ 'course' ] } );

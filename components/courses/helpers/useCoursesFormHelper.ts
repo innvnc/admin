@@ -2,24 +2,23 @@
 
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-
 import { useAddCourse, useGetCourse, useUpdateCourse } from '../hooks';
 import { CourseInputs } from '@/components';
 
 export const useCoursesFormHelper = ( id: string | undefined, form: UseFormReturn<CourseInputs> ) => {
   const { addNewCourse } = useAddCourse();
-  const { courseUpdate } = useUpdateCourse();
+  const { updateCourse } = useUpdateCourse();
   const { course, isLoading } = useGetCourse( id || '' );
 
   useEffect( () => {
-    if ( id && course && !isLoading ) {
+    if ( course && !isLoading ) {
       form.reset( {
         title: course.title,
         slug: course.slug,
         description: course.description,
         price: course.price,
         isPublic: course.isPublic,
-        categoryIds: course.categories.map( ( c ) => c.id ),
+        categoryIds: course.categories?.map( ( c: { id: string; } ) => c.id ) ?? [],
       } );
     }
 
@@ -30,17 +29,21 @@ export const useCoursesFormHelper = ( id: string | undefined, form: UseFormRetur
         description: '',
         price: 0,
         isPublic: false,
-        categoryIds: []
+        categoryIds: [],
       } );
     }
-  }, [ id, course, isLoading, form ] );
+  }, [ course, isLoading, form, id ] );
 
   const handleSave = async ( data: CourseInputs, onClose: () => void ) => {
-    await ( id ? courseUpdate( data, id ) : addNewCourse( data ) );
+    if ( id ) {
+      await updateCourse( id, data );
+    } else {
+      await addNewCourse( data );
+    }
     onClose();
   };
 
   return {
-    handleSave
+    handleSave,
   };
 };

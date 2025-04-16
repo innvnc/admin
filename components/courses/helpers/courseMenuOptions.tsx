@@ -1,7 +1,6 @@
 import { Icons } from '@/components/shared/ui';
 import { CourseMenuTabOption } from '@/interfaces';
 
-
 export const getCourseMenuOptions = (): CourseMenuTabOption[] => {
   return [
     {

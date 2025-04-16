@@ -1,40 +1,29 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ICoursesResponse } from '@/interfaces';
 import { CourseInputs } from '../validators';
+import { ICoursesResponse } from '@/interfaces';
 import { updateCourse } from '../services';
 
-
-
 export const useUpdateCourse = () => {
-
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ICoursesResponse, Error, { course: CourseInputs; id: string; }>( {
-
-    mutationFn: ( { id, course } ) => updateCourse( id, course ),
-
+  const mutation = useMutation( {
+    mutationFn: ( { id, data }: { id: string; data: CourseInputs; } ) => updateCourse( id, data ),
     onSuccess: ( data ) => {
-
-      queryClient.invalidateQueries( {
-        queryKey: [ 'course' ]
-      } );
-
       queryClient.invalidateQueries( {
         queryKey: [ 'courses' ]
       } );
-
       return data;
     }
   } );
 
-  const courseUpdate = async ( course: CourseInputs, id: string ): Promise<ICoursesResponse> => {
-    const result = await mutation.mutateAsync( { id, course } );
+  const updateCourse = async ( id: string, data: CourseInputs ): Promise<ICoursesResponse> => {
+    const result = await mutation.mutateAsync( { id, data } );
     return result;
   };
 
   return {
-    courseUpdate,
+    updateCourse,
     isPending: mutation.isPending,
     isError: mutation.isError,
     error: mutation.error

@@ -15,7 +15,5 @@ export const deleteCourse = async ( id: string ): Promise<void> => {
 export const getCourseById = ( id: string ): Promise<ICoursesResponse> =>
   request<ICoursesResponse>( `/courses/${ id }`, 'GET' );
 
-
-
 export const updateCourse = ( id: string, data: CourseInputs ): Promise<ICoursesResponse> =>
   request<ICoursesResponse>( `/courses/${ id }`, 'PATCH', data );

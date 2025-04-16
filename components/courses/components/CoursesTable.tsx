@@ -1,8 +1,8 @@
 'use client';
+
 import { useCallback, useMemo, useState, useRef } from 'react';
 import {
   Button,
-  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -20,178 +20,7 @@ import {
 } from '@heroui/react';
 import { ICoursesResponse } from '../../../interfaces/courses-response';
 import { Icons } from '../../shared/ui';
-
-
-
-const mockCourses: ICoursesResponse[] = [
-  {
-    id: '1',
-    status: true,
-    creationDate: '2023-01-15T10:30:00Z',
-    title: 'Desarrollo Web con React',
-    slug: 'desarrollo-web-react',
-    description: 'Aprende a crear aplicaciones web modernas con React desde cero',
-    price: 499,
-    isPublic: true,
-    createdBy: {
-      id: 'user1',
-      creationDate: '2022-05-10T08:15:00Z',
-      lastActivity: '2023-08-20T14:45:00Z',
-      isActive: true,
-      username: 'profesor_react',
-      clerkId: 'clerk123',
-      name: 'Juan',
-      lastName: 'García',
-      phone: null,
-      roles: [ 'instructor' ]
-    },
-    categories: [
-      {
-        id: 'cat1',
-        status: true,
-        creationDate: '2022-01-05T11:20:00Z',
-        title: 'Desarrollo Web',
-        slug: 'desarrollo-web',
-        createdBy: {
-          id: 'admin1',
-          creationDate: '2021-12-01T10:00:00Z',
-          lastActivity: '2023-08-22T16:30:00Z',
-          isActive: true,
-          username: 'admin',
-          clerkId: 'clerk456',
-          name: 'Admin',
-          lastName: 'Sistema',
-          phone: null,
-          roles: [ 'admin' ]
-        }
-      },
-      {
-        id: 'cat2',
-        status: true,
-        creationDate: '2022-01-05T11:25:00Z',
-        title: 'JavaScript',
-        slug: 'javascript',
-        createdBy: {
-          id: 'admin1',
-          creationDate: '2021-12-01T10:00:00Z',
-          lastActivity: '2023-08-22T16:30:00Z',
-          isActive: true,
-          username: 'admin',
-          clerkId: 'clerk456',
-          name: 'Admin',
-          lastName: 'Sistema',
-          phone: null,
-          roles: [ 'admin' ]
-        }
-      }
-    ]
-  },
-  {
-    id: '2',
-    status: true,
-    creationDate: '2023-02-20T14:45:00Z',
-    title: 'TypeScript Avanzado',
-    slug: 'typescript-avanzado',
-    description: 'Domina TypeScript y lleva tus habilidades de desarrollo al siguiente nivel',
-    price: 599,
-    isPublic: true,
-    createdBy: {
-      id: 'user2',
-      creationDate: '2022-03-15T09:30:00Z',
-      lastActivity: '2023-08-21T11:20:00Z',
-      isActive: true,
-      username: 'typescript_master',
-      clerkId: 'clerk789',
-      name: 'María',
-      lastName: 'Rodríguez',
-      phone: null,
-      roles: [ 'instructor', 'author' ]
-    },
-    categories: [
-      {
-        id: 'cat3',
-        status: true,
-        creationDate: '2022-01-06T10:15:00Z',
-        title: 'TypeScript',
-        slug: 'typescript',
-        createdBy: {
-          id: 'admin1',
-          creationDate: '2021-12-01T10:00:00Z',
-          lastActivity: '2023-08-22T16:30:00Z',
-          isActive: true,
-          username: 'admin',
-          clerkId: 'clerk456',
-          name: 'Admin',
-          lastName: 'Sistema',
-          phone: null,
-          roles: [ 'admin' ]
-        }
-      }
-    ]
-  },
-  {
-    id: '3',
-    status: true,
-    creationDate: '2023-03-10T09:15:00Z',
-    title: 'Next.js para Aplicaciones Modernas',
-    slug: 'nextjs-aplicaciones-modernas',
-    description: 'Construye aplicaciones web rápidas y SEO-friendly con Next.js',
-    price: 749,
-    isPublic: false,
-    createdBy: {
-      id: 'user1',
-      creationDate: '2022-05-10T08:15:00Z',
-      lastActivity: '2023-08-20T14:45:00Z',
-      isActive: true,
-      username: 'profesor_react',
-      clerkId: 'clerk123',
-      name: 'Juan',
-      lastName: 'García',
-      phone: null,
-      roles: [ 'instructor' ]
-    },
-    categories: [
-      {
-        id: 'cat1',
-        status: true,
-        creationDate: '2022-01-05T11:20:00Z',
-        title: 'Desarrollo Web',
-        slug: 'desarrollo-web',
-        createdBy: {
-          id: 'admin1',
-          creationDate: '2021-12-01T10:00:00Z',
-          lastActivity: '2023-08-22T16:30:00Z',
-          isActive: true,
-          username: 'admin',
-          clerkId: 'clerk456',
-          name: 'Admin',
-          lastName: 'Sistema',
-          phone: null,
-          roles: [ 'admin' ]
-        }
-      },
-      {
-        id: 'cat4',
-        status: true,
-        creationDate: '2022-01-07T13:40:00Z',
-        title: 'React',
-        slug: 'react',
-        createdBy: {
-          id: 'admin1',
-          creationDate: '2021-12-01T10:00:00Z',
-          lastActivity: '2023-08-22T16:30:00Z',
-          isActive: true,
-          username: 'admin',
-          clerkId: 'clerk456',
-          name: 'Admin',
-          lastName: 'Sistema',
-          phone: null,
-          roles: [ 'admin' ]
-        }
-      }
-    ]
-  }
-];
+import { useGetCourses } from '../hooks';
 
 interface Props {
   courseStatus: 'published' | 'deleted' | 'hidden';
@@ -220,6 +49,8 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
   const [ page, setPage ] = useState( 1 );
   const searchInputRef = useRef<HTMLInputElement>( null );
 
+  const { courses, isLoading, isError, error, refetch } = useGetCourses();
+
   const hasSearchFilter = Boolean( filterValue );
 
   const headerColumns = useMemo( () => {
@@ -229,7 +60,9 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
   }, [ visibleColumns ] );
 
   const filteredItems = useMemo( () => {
-    let filteredCourses = [ ...mockCourses ];
+    if ( !courses ) return [];
+
+    let filteredCourses = [ ...courses ];
 
     if ( hasSearchFilter ) {
       filteredCourses = filteredCourses.filter( course => {
@@ -268,7 +101,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
     }
 
     return filteredCourses;
-  }, [ mockCourses, filterValue ] );
+  }, [ courses, filterValue ] );
 
   const sortedItems = useMemo( () => {
     if ( !sortDescriptor.column ) return filteredItems;
@@ -422,6 +255,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
             size="sm"
             startContent={ <Icons.IoSearchOutline className="text-default-300" /> }
             value={ filterValue }
+            onClear={ onClear }
             onValueChange={ onSearchChange }
           />
           <div className="flex gap-3">
@@ -481,6 +315,7 @@ export const CoursesTable = ( { courseStatus }: Props ) => {
   }, [
     filterValue,
     onSearchChange,
+    onClear,
     visibleColumns,
     filteredItems.length,
     rowsPerPage,
