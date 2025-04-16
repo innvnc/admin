@@ -31,6 +31,9 @@ export const CoursesTableColumns = ( { onEdit, onDelete }: Props ): ColumnDefini
     uid: 'price',
     searchable: true,
     sortable: true,
+    renderCell: ( item: ICoursesResponse ) => (
+      <span>${ item.price.toFixed( 2 ) }</span>
+    ),
   },
   {
     name: 'PÚBLICO',
