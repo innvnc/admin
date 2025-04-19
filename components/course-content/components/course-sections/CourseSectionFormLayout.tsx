@@ -23,23 +23,32 @@ export const CourseSectionFormLayout = ({
     onOpenChange: externalOnOpenChange,
     triggerElement
 }: Props) => {
-
     const internalDisclosure = UI.useDisclosure();
-    const [modalKey, setModalKey] = useState(Date.now());
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
 
-    const onOpen = externalOnOpenChange
-        ? () => { setModalKey(Date.now()); externalOnOpenChange(true); }
-        : () => { setModalKey(Date.now()); internalDisclosure.onOpen(); };
+    const onOpen = () => {
+        setIsSubmitting(false);
+        if (externalOnOpenChange) {
+            externalOnOpenChange(true);
+        } else {
+            internalDisclosure.onOpen();
+        }
+    };
 
-    const handleOpenChange = () => {
-        setModalKey(Date.now());
+    const handleClose = () => {
+        if (isSubmitting) return;
+
         if (externalOnOpenChange) {
             externalOnOpenChange(false);
         } else {
             internalDisclosure.onClose();
         }
+
+        setTimeout(() => {
+            setIsSubmitting(false);
+        }, 100);
     };
 
     return (
@@ -58,60 +67,55 @@ export const CourseSectionFormLayout = ({
                 </UI.Button>
             )}
 
-            <UI.Modal
-                key={modalKey}
-                backdrop="blur"
-                isDismissable={false}
-                isOpen={isOpen}
-                onClose={handleOpenChange}
-                classNames={{
-                    base: "max-w-md",
-                    body: "px-6 py-6 w-full"
-                }}
-                hideCloseButton
-            >
-                <UI.ModalContent>
-                    {(onClose) => (
-                        <>
-                            <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-                                {id ? (
-                                    <>
-                                        <Icons.IoPencilOutline size={24} /> Editar {name}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Icons.IoAddOutline size={24} /> Crear {name}
-                                    </>
-                                )}
-                            </UI.ModalHeader>
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-md">
+                        <div className="p-4 border-b flex items-center justify-center gap-2">
+                            {id ? (
+                                <>
+                                    <Icons.IoPencilOutline size={24} /> <span className="text-lg font-semibold">Editar {name}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Icons.IoAddOutline size={24} /> <span className="text-lg font-semibold">Crear {name}</span>
+                                </>
+                            )}
+                        </div>
 
-                            <UI.ModalBody className="w-full">
-                                <CourseSectionForm id={id} courseId={courseId} onClose={onClose} />
-                            </UI.ModalBody>
+                        <div className="p-6">
+                            <CourseSectionForm
+                                id={id}
+                                courseId={courseId}
+                                onClose={handleClose}
+                                isSubmitting={isSubmitting}
+                                setIsSubmitting={setIsSubmitting}
+                            />
+                        </div>
 
-                            <UI.ModalFooter className="justify-center flex items-center space-x-3">
-                                <UI.Button
-                                    color="danger"
-                                    onPress={onClose}
-                                    startContent={<Icons.IoArrowBackOutline size={24} />}
-                                    variant="light"
-                                >
-                                    Cerrar
-                                </UI.Button>
+                        <div className="p-4 border-t flex justify-center space-x-3">
+                            <UI.Button
+                                color="danger"
+                                onPress={handleClose}
+                                startContent={<Icons.IoArrowBackOutline size={24} />}
+                                variant="light"
+                                isDisabled={isSubmitting}
+                            >
+                                Cerrar
+                            </UI.Button>
 
-                                <UI.Button
-                                    color="secondary"
-                                    form="section-form"
-                                    startContent={<Icons.IoSaveOutline size={24} />}
-                                    type="submit"
-                                >
-                                    Guardar
-                                </UI.Button>
-                            </UI.ModalFooter>
-                        </>
-                    )}
-                </UI.ModalContent>
-            </UI.Modal>
+                            <UI.Button
+                                color="secondary"
+                                form="section-form"
+                                startContent={isSubmitting ? null : <Icons.IoSaveOutline size={24} />}
+                                type="submit"
+                                isLoading={isSubmitting}
+                            >
+                                {isSubmitting ? "Guardando..." : "Guardar"}
+                            </UI.Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

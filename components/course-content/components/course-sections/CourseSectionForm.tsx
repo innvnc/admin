@@ -11,9 +11,11 @@ interface Props {
     id?: string;
     courseId: string;
     onClose: () => void;
+    isSubmitting: boolean;
+    setIsSubmitting: (value: boolean) => void;
 }
 
-export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
+export const CourseSectionForm = ({ id, courseId, onClose, isSubmitting, setIsSubmitting }: Props) => {
     const { addNewCourseSection } = useAddCourseSection();
     const { updateSection } = useUpdateCourseSection();
     const { courseSection } = useGetCourseSection(id || '');
@@ -23,7 +25,6 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
     const [description, setDescription] = useState('');
     const [slug, setSlug] = useState('');
     const [isSlugDuplicate, setIsSlugDuplicate] = useState(false);
-    const [isFormLoaded, setIsFormLoaded] = useState(false);
     const [errors, setErrors] = useState<{
         title?: string;
         description?: string;
@@ -31,13 +32,12 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
     }>({});
 
     useEffect(() => {
-        if (id && courseSection && !isFormLoaded) {
+        if (id && courseSection) {
             setTitle(courseSection.title || '');
             setDescription(courseSection.description || '');
             setSlug(courseSection.slug || '');
-            setIsFormLoaded(true);
         }
-    }, [courseSection, id, isFormLoaded]);
+    }, [courseSection, id]);
 
     const checkSlugDuplicate = (slug: string) => {
         if (!slug) return false;
@@ -50,6 +50,8 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (isSubmitting) return;
 
         const newErrors: {
             title?: string;
@@ -74,6 +76,8 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
             });
             return;
         }
+
+        setIsSubmitting(true);
 
         try {
             const data = {
@@ -104,6 +108,7 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
                 description: `Hubo un problema al guardar la sección.`,
                 color: 'danger',
             });
+            setIsSubmitting(false);
         }
     };
 
@@ -111,7 +116,7 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
         setTitle(value);
         setErrors({ ...errors, title: undefined });
 
-        if (!id && !isFormLoaded) {
+        if (!id) {
             const newSlug = value
                 .toLowerCase()
                 .normalize('NFD')
@@ -153,6 +158,7 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
                             inputWrapper: "w-full"
                         }}
                         fullWidth
+                        isDisabled={isSubmitting}
                     />
                 </div>
 
@@ -170,6 +176,7 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
                         }}
                         minRows={3}
                         fullWidth
+                        isDisabled={isSubmitting}
                     />
                 </div>
 
@@ -190,6 +197,7 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
                         }}
                         fullWidth
                         color={isSlugDuplicate ? "danger" : undefined}
+                        isDisabled={isSubmitting}
                     />
                 </div>
             </div>
