@@ -99,7 +99,7 @@ export const CoursesList = () => {
                     items={option.items}
                     primaryKey="id"
                     searchFields={['title', 'slug', 'description', 'price']}
-                    onAdd={() => {}}
+                    onAdd={() => { }}
                     addButtonComponent={<CourseFormLayout name="curso" />}
                     addButtonText="Agregar Curso"
                     noItemsMessage={`No se encontraron cursos ${option.label.toLowerCase()}`}

@@ -1,12 +1,11 @@
 import { ReactNode } from 'react';
-
 import { UI } from '../shared';
 
 interface PageViewProps {
-	subtitle:  string;
-	title:     string;
-	imageUrl:  string;
-	content:   ReactNode;
+	subtitle: string;
+	title: string;
+	imageUrl: string;
+	content: ReactNode;
 }
 
 export const PageView = ({ content, subtitle, title, imageUrl }: PageViewProps) => {
@@ -29,7 +28,7 @@ export const PageView = ({ content, subtitle, title, imageUrl }: PageViewProps) 
 					</div>
 				</UI.CardHeader>
 				<UI.Divider />
-				<UI.CardBody className="flex flex-grow overflow-auto">
+				<UI.CardBody className="flex flex-grow overflow-auto w-full">
 					{content}
 				</UI.CardBody>
 			</UI.Card>
