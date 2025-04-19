@@ -45,7 +45,18 @@ export const CourseSectionFormLayout = ({
                 </UI.Button>
             )}
 
-            <UI.Modal backdrop="blur" isDismissable={false} isOpen={isOpen} onOpenChange={onOpenChange}>
+            <UI.Modal
+                backdrop="blur"
+                isDismissable={false}
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                classNames={{
+                    base: "max-w-md",
+                    body: "px-6 py-6 w-full"
+                }}
+                size="md"
+                autoFocus={false}
+            >
                 <UI.ModalContent>
                     {(onClose) => (
                         <>
@@ -61,7 +72,7 @@ export const CourseSectionFormLayout = ({
                                 )}
                             </UI.ModalHeader>
 
-                            <UI.ModalBody>
+                            <UI.ModalBody className="w-full">
                                 <CourseSectionForm id={id} courseId={courseId} onClose={onClose} />
                             </UI.ModalBody>
 
