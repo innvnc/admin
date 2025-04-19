@@ -1,13 +1,21 @@
 'use client';
+
 import { useState } from 'react';
+import { addToast } from '@heroui/react';
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
-import { useGetCourseSectionsByCourseId } from '../hooks';
+import { useDeleteCourseSection, useGetCourseSectionsByCourseId } from '../hooks';
+import { CourseSectionFormLayout, DeleteCourseSectionModal } from './course-sections';
 
 export const CourseContentLayout = ({ courseId, courseTitle }: { courseId?: string, courseTitle?: string; }) => {
-  const { courseSections = [], isLoading } = useGetCourseSectionsByCourseId(courseId || '');
+  const { courseSections = [], isLoading, refetch } = useGetCourseSectionsByCourseId(courseId || '');
+  const { courseSectionDelete, isPending } = useDeleteCourseSection();
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | undefined>(undefined);
+  const [sectionToDelete, setSectionToDelete] = useState<string | undefined>(undefined);
+  const [sectionTitle, setSectionTitle] = useState<string | undefined>(undefined);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const mockClasses = {
     "1": [
@@ -43,9 +51,52 @@ export const CourseContentLayout = ({ courseId, courseTitle }: { courseId?: stri
     };
   };
 
+  const handleEditSection = (id: string) => {
+    setSelectedSectionId(id);
+  };
+
+  const handleDeleteSection = (id: string, title: string) => {
+    setSectionToDelete(id);
+    setSectionTitle(title);
+    setIsDeleteModalOpen(true);
+  };
+
+  const onConfirmDelete = async () => {
+    if (!sectionToDelete || !sectionTitle) return;
+
+    try {
+      await courseSectionDelete(sectionToDelete);
+      await refetch();
+
+      addToast({
+        title: 'Éxito',
+        description: `La sección "${sectionTitle}" ha sido eliminada correctamente.`,
+        color: 'success',
+      });
+
+      setIsDeleteModalOpen(false);
+      setSectionToDelete(undefined);
+      setSectionTitle(undefined);
+    } catch (error) {
+      addToast({
+        title: 'Error',
+        description: `Hubo un problema al eliminar la sección "${sectionTitle}".`,
+        color: 'danger',
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Contenido del curso</h2>
+          <CourseSectionFormLayout
+            courseId={courseId || ''}
+            name="sección"
+          />
+        </div>
+
         {isLoading ? (
           <div className="flex justify-center items-center h-40">
             <UI.Spinner size="lg" color="primary" />
@@ -62,23 +113,39 @@ export const CourseContentLayout = ({ courseId, courseTitle }: { courseId?: stri
             </UI.CardBody>
           </UI.Card>
         ) : (
-          <UI.Accordion selectionMode="multiple" defaultExpandedKeys={[courseSections[0]?.id]}>
+          <div className="space-y-2">
             {courseSections.map((section) => {
               const classes = getClassesForSection(section.id);
               return (
-                <UI.AccordionItem
-                  key={section.id}
-                  aria-label={section.title}
-                  title={
-                    <div className="flex justify-between items-center">
-                      <span>{section.title}</span>
+                <UI.Card key={section.id} className="w-full">
+                  <UI.CardHeader className="flex justify-between items-center pb-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{section.title}</span>
                       <UI.Chip size="sm" color="primary">
                         {classes.length} clases
                       </UI.Chip>
                     </div>
-                  }
-                >
-                  <div className="px-1">
+                    <div className="flex items-center gap-1">
+                      <UI.Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleEditSection(section.id)}
+                      >
+                        <Icons.IoPencilOutline className="text-default-500" size={16} />
+                      </UI.Button>
+                      <UI.Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        color="danger"
+                        onPress={() => handleDeleteSection(section.id, section.title)}
+                      >
+                        <Icons.IoTrashOutline className="text-danger" size={16} />
+                      </UI.Button>
+                    </div>
+                  </UI.CardHeader>
+                  <UI.CardBody>
                     <UI.Listbox
                       aria-label={`Clases de ${section.title}`}
                       variant="flat"
@@ -103,11 +170,11 @@ export const CourseContentLayout = ({ courseId, courseTitle }: { courseId?: stri
                         </UI.ListboxItem>
                       ))}
                     </UI.Listbox>
-                  </div>
-                </UI.AccordionItem>
+                  </UI.CardBody>
+                </UI.Card>
               );
             })}
-          </UI.Accordion>
+          </div>
         )}
       </div>
 
@@ -159,6 +226,26 @@ export const CourseContentLayout = ({ courseId, courseTitle }: { courseId?: stri
           </UI.Card>
         )}
       </div>
+
+      {selectedSectionId && (
+        <CourseSectionFormLayout
+          id={selectedSectionId}
+          courseId={courseId || ''}
+          isOpen={!!selectedSectionId}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) setSelectedSectionId(undefined);
+          }}
+          name="sección"
+        />
+      )}
+
+      <DeleteCourseSectionModal
+        isOpen={isDeleteModalOpen}
+        isPending={isPending}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onConfirm={onConfirmDelete}
+        sectionTitle={sectionTitle || ''}
+      />
     </div>
   );
 };

@@ -72,8 +72,11 @@ export const createSectionSchema = sectionSchema.omit({
   resources: true 
 });
 
-export const updateSectionSchema = sectionSchema.partial().omit({
-  courseId: true
+export const updateSectionSchema = z.object({
+  title:          titleValidation.optional(),
+  description:    descriptionValidation.optional(),
+  slug:           slugValidation.optional(),
+  courseId:       courseIdValidation
 });
 
 export interface CreateSectionInputs extends z.infer<typeof createSectionSchema> { }
