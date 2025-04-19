@@ -2,6 +2,7 @@
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
+import { useState } from 'react';
 
 import { CourseSectionForm } from './CourseSectionForm';
 
@@ -24,10 +25,22 @@ export const CourseSectionFormLayout = ({
 }: Props) => {
 
     const internalDisclosure = UI.useDisclosure();
+    const [modalKey, setModalKey] = useState(Date.now());
 
     const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
-    const onOpen = externalOnOpenChange ? () => externalOnOpenChange(true) : internalDisclosure.onOpen;
-    const onOpenChange = externalOnOpenChange || internalDisclosure.onOpenChange;
+
+    const onOpen = externalOnOpenChange
+        ? () => { setModalKey(Date.now()); externalOnOpenChange(true); }
+        : () => { setModalKey(Date.now()); internalDisclosure.onOpen(); };
+
+    const handleOpenChange = () => {
+        setModalKey(Date.now());
+        if (externalOnOpenChange) {
+            externalOnOpenChange(false);
+        } else {
+            internalDisclosure.onClose();
+        }
+    };
 
     return (
         <>
@@ -46,16 +59,16 @@ export const CourseSectionFormLayout = ({
             )}
 
             <UI.Modal
+                key={modalKey}
                 backdrop="blur"
                 isDismissable={false}
                 isOpen={isOpen}
-                onOpenChange={onOpenChange}
+                onClose={handleOpenChange}
                 classNames={{
                     base: "max-w-md",
                     body: "px-6 py-6 w-full"
                 }}
-                size="md"
-                autoFocus={false}
+                hideCloseButton
             >
                 <UI.ModalContent>
                     {(onClose) => (

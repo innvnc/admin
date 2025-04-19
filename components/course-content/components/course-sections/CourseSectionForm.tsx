@@ -1,15 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, useEffect } from 'react';
 import { addToast } from '@heroui/react';
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
 import { useAddCourseSection, useUpdateCourseSection, useGetCourseSection, useGetCourseSectionsByCourseId } from '../../hooks';
-import { CreateSectionInputs, createSectionSchema } from '../../validators';
-
 
 interface Props {
     id?: string;
@@ -23,74 +19,81 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
     const { courseSection } = useGetCourseSection(id || '');
     const { courseSections = [] } = useGetCourseSectionsByCourseId(courseId);
 
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [slug, setSlug] = useState('');
     const [isSlugDuplicate, setIsSlugDuplicate] = useState(false);
-
-    const form = useForm<CreateSectionInputs>({
-        defaultValues: {
-            title: '',
-            description: '',
-            slug: '',
-            courseId
-        },
-        resolver: zodResolver(createSectionSchema),
-    });
+    const [isFormLoaded, setIsFormLoaded] = useState(false);
+    const [errors, setErrors] = useState<{
+        title?: string;
+        description?: string;
+        slug?: string;
+    }>({});
 
     useEffect(() => {
-        form.setValue('courseId', courseId);
-    }, [courseId, form]);
-
-
-    useEffect(() => {
-        if (id && courseSection) {
-            form.setValue('title', courseSection.title);
-            form.setValue('description', courseSection.description);
-            form.setValue('slug', courseSection.slug);
+        if (id && courseSection && !isFormLoaded) {
+            setTitle(courseSection.title || '');
+            setDescription(courseSection.description || '');
+            setSlug(courseSection.slug || '');
+            setIsFormLoaded(true);
         }
-    }, [id, courseSection, form]);
+    }, [courseSection, id, isFormLoaded]);
 
     const checkSlugDuplicate = (slug: string) => {
         if (!slug) return false;
 
         const normalizedSlug = slug.toLowerCase();
-        const existingSlugs = courseSections
-            .filter(section => section.id !== id) 
-            .map(section => section.slug.toLowerCase());
-
-        return existingSlugs.includes(normalizedSlug);
+        return courseSections
+            .filter(section => section.id !== id)
+            .some(section => section.slug.toLowerCase() === normalizedSlug);
     };
 
-    const onSubmit = async (data: CreateSectionInputs) => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const newErrors: {
+            title?: string;
+            description?: string;
+            slug?: string;
+        } = {};
+
+        if (!title) newErrors.title = "El título es obligatorio";
+        if (!description) newErrors.description = "La descripción es obligatoria";
+        if (!slug) newErrors.slug = "El slug es obligatorio";
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
         if (isSlugDuplicate) {
             addToast({
                 title: 'Error',
-                description: `El slug "${data.slug}" ya existe. Por favor, utiliza un slug diferente.`,
+                description: `El slug "${slug}" ya existe. Por favor, utiliza un slug diferente.`,
                 color: 'danger',
             });
             return;
         }
 
         try {
+            const data = {
+                title,
+                description,
+                slug,
+                courseId
+            };
+
             if (id) {
-                await updateSection(id, {
-                    title: data.title,
-                    description: data.description,
-                    slug: data.slug,
-                    courseId
-                });
+                await updateSection(id, data);
             } else {
-                await addNewCourseSection({
-                    title: data.title,
-                    description: data.description,
-                    slug: data.slug,
-                    courseId
-                });
+                await addNewCourseSection(data);
             }
 
             addToast({
                 title: 'Éxito',
                 description: id
-                    ? `La sección "${data.title}" se ha actualizado correctamente.`
-                    : `La sección "${data.title}" se ha creado correctamente.`,
+                    ? `La sección "${title}" se ha actualizado correctamente.`
+                    : `La sección "${title}" se ha creado correctamente.`,
                 color: 'success',
             });
 
@@ -105,100 +108,91 @@ export const CourseSectionForm = ({ id, courseId, onClose }: Props) => {
     };
 
     const handleTitleChange = (value: string) => {
-        form.setValue('title', value);
+        setTitle(value);
+        setErrors({ ...errors, title: undefined });
 
-        if (!id) {
-            const slug = value
+        if (!id && !isFormLoaded) {
+            const newSlug = value
                 .toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
                 .replace(/[^a-z0-9\s]/g, '')
                 .replace(/\s+/g, '-');
 
-            form.setValue('slug', slug);
-            setIsSlugDuplicate(checkSlugDuplicate(slug));
+            setSlug(newSlug);
+            const isDuplicate = checkSlugDuplicate(newSlug);
+            setIsSlugDuplicate(isDuplicate);
         }
     };
 
+    const handleDescriptionChange = (value: string) => {
+        setDescription(value);
+        setErrors({ ...errors, description: undefined });
+    };
+
     const handleSlugChange = (value: string) => {
-        form.setValue('slug', value);
-        setIsSlugDuplicate(checkSlugDuplicate(value));
+        setSlug(value);
+        setErrors({ ...errors, slug: undefined });
+        const isDuplicate = checkSlugDuplicate(value);
+        setIsSlugDuplicate(isDuplicate);
     };
 
     return (
-        <UI.Form id="section-form" onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-            <div className="space-y-6 w-full">
-                <Controller
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                        <UI.Input
-                            value={field.value || ''}
-                            errorMessage={form.formState.errors.title?.message}
-                            isInvalid={Boolean(form.formState.errors.title)}
-                            label="Título"
-                            labelPlacement="outside"
-                            placeholder="Ingresa un título"
-                            onValueChange={handleTitleChange}
-                            classNames={{
-                                base: "w-full",
-                                inputWrapper: "w-full"
-                            }}
-                            fullWidth
-                            autoFocus={false}
-                        />
-                    )}
-                />
+        <form id="section-form" onSubmit={handleSubmit} className="w-full">
+            <div className="space-y-8 w-full">
+                <div>
+                    <label className="block text-sm font-medium mb-2">Título</label>
+                    <UI.Input
+                        value={title}
+                        errorMessage={errors.title}
+                        isInvalid={!!errors.title}
+                        placeholder="Ingresa un título"
+                        onValueChange={handleTitleChange}
+                        classNames={{
+                            base: "w-full",
+                            inputWrapper: "w-full"
+                        }}
+                        fullWidth
+                    />
+                </div>
 
-                <Controller
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <UI.Textarea
-                            value={field.value || ''}
-                            errorMessage={form.formState.errors.description?.message}
-                            isInvalid={Boolean(form.formState.errors.description)}
-                            label="Descripción"
-                            labelPlacement="outside"
-                            placeholder="Ingresa una descripción"
-                            onValueChange={(value) => form.setValue('description', value)}
-                            classNames={{
-                                base: "w-full",
-                                inputWrapper: "w-full"
-                            }}
-                            minRows={3}
-                            fullWidth
-                            autoFocus={false}
-                        />
-                    )}
-                />
+                <div>
+                    <label className="block text-sm font-medium mb-2">Descripción</label>
+                    <UI.Textarea
+                        value={description}
+                        errorMessage={errors.description}
+                        isInvalid={!!errors.description}
+                        placeholder="Ingresa una descripción"
+                        onValueChange={handleDescriptionChange}
+                        classNames={{
+                            base: "w-full",
+                            inputWrapper: "w-full"
+                        }}
+                        minRows={3}
+                        fullWidth
+                    />
+                </div>
 
-                <Controller
-                    control={form.control}
-                    name="slug"
-                    render={({ field }) => (
-                        <UI.Input
-                            value={field.value || ''}
-                            errorMessage={isSlugDuplicate
-                                ? "Este slug ya existe para otra sección en este curso"
-                                : form.formState.errors.slug?.message}
-                            isInvalid={isSlugDuplicate || Boolean(form.formState.errors.slug)}
-                            label="Slug"
-                            labelPlacement="outside"
-                            placeholder="slug-de-la-seccion"
-                            startContent={<Icons.IoLinkOutline className="text-default-400" size={16} />}
-                            onValueChange={handleSlugChange}
-                            classNames={{
-                                base: "w-full",
-                                inputWrapper: "w-full"
-                            }}
-                            fullWidth
-                            color={isSlugDuplicate ? "danger" : undefined}
-                            autoFocus={false}
-                        />
-                    )}
-                />
+                <div>
+                    <label className="block text-sm font-medium mb-2">Slug</label>
+                    <UI.Input
+                        value={slug}
+                        errorMessage={isSlugDuplicate
+                            ? "Este slug ya existe para otra sección en este curso"
+                            : errors.slug}
+                        isInvalid={isSlugDuplicate || !!errors.slug}
+                        placeholder="slug-de-la-seccion"
+                        startContent={<Icons.IoLinkOutline className="text-default-400" size={16} />}
+                        onValueChange={handleSlugChange}
+                        classNames={{
+                            base: "w-full",
+                            inputWrapper: "w-full"
+                        }}
+                        fullWidth
+                        color={isSlugDuplicate ? "danger" : undefined}
+                    />
+                </div>
             </div>
-        </UI.Form>
+        </form>
     );
 };
