@@ -2,7 +2,7 @@
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
-import { useState } from 'react';
+import { useState } from "react";
 
 import { CourseSectionForm } from './CourseSectionForm';
 

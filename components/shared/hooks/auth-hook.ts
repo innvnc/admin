@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { useUser } from '@clerk/nextjs';
 
 import { JwtUserPayload } from '@/interfaces';

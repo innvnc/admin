@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-import { JwtUserPayload } from '@/interfaces';
+import { JwtUserPayload } from "@/interfaces";
 
 
 

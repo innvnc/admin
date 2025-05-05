@@ -1,6 +1,6 @@
-'use client';
-import { useEffect } from 'react';
-import { useUser } from '@clerk/nextjs';
+"use client";
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 
 export const UserJwt = () => {

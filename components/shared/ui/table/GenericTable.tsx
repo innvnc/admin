@@ -1,5 +1,5 @@
-'use client';
-import { useCallback, useMemo, useState, useRef, ReactNode } from 'react';
+"use client";
+import { useCallback, useMemo, useState, useRef, ReactNode } from "react";
 import {
   Button,
   Dropdown,
@@ -16,8 +16,8 @@ import {
   TableColumn,
   TableHeader,
   TableRow
-} from '@heroui/react';
-import { Icons } from '..';
+} from "@heroui/react";
+import { Icons } from "../";
 
 export interface ColumnDefinition {
   name: string;

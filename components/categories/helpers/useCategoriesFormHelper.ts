@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 import { UseFormReturn } from 'react-hook-form';
 
 import { useAddCategory, useGetCategories, useGetCategory, useUpdateCategory } from '../hooks';

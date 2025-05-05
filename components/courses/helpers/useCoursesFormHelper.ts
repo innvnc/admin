@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { UseFormReturn } from 'react-hook-form';
 import { useAddCourse, useGetCourse, useUpdateCourse } from '../hooks';
 import { CourseInputs } from '@/components';

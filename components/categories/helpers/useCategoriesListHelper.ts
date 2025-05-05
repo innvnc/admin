@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { addToast } from '@heroui/react';
 
 import { useDeleteCategory, useGetCategories } from '../hooks';

@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import * as React from "react";
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { HeroUIProvider } from '@heroui/react';
