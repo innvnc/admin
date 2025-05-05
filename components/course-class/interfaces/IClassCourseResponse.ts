@@ -1,17 +1,16 @@
-import { CreatedBy } from '@/interfaces';
+import { CreatedBy } from "@/interfaces";
 
 export interface IClassCourseResponse {
-  creationDate:   string;
-  title:          string;
-  description:    string;
-  slug:           string;
+  creationDate: string;
+  title: string;
+  description: string;
+  slug: string;
   positionOrder?: number;
-  createdBy:      CreatedBy;
+  createdBy: CreatedBy;
   courseSection?: IClassCourseResponse;
-  id:             string;
-  status:         boolean;
-  course?:        IClassCourseResponse;
-  price?:         number;
-  isPublic?:      boolean;
+  id: string;
+  status: boolean;
+  course?: IClassCourseResponse;
+  price?: number;
+  isPublic?: boolean;
 }
-

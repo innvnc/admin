@@ -1,189 +1,192 @@
-'use client';
+"use client";
 
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { addToast } from '@heroui/react';
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addToast } from "@heroui/react";
 
-import { CourseInputs, courseSchema, UI } from '@/components';
-import { Icons } from '@/components/shared/ui';
-import { useGetCategories } from '@/components/categories/hooks';
-import { useCoursesFormHelper } from '../helpers';
+import { useCoursesFormHelper } from "../helpers";
+
+import { CourseInputs, courseSchema, UI } from "@/components";
+import { Icons } from "@/components/shared/ui";
+import { useGetCategories } from "@/components/categories/hooks";
 
 interface Props {
   id?: string;
   onClose: () => void;
-  setIsSubmitting?: ( loading: boolean ) => void;
+  setIsSubmitting?: (loading: boolean) => void;
 }
 
-export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
-  const form = useForm<CourseInputs>( {
+export const CourseForm = ({ id, onClose, setIsSubmitting }: Props) => {
+  const form = useForm<CourseInputs>({
     defaultValues: {
-      title: '',
-      slug: '',
-      description: '',
+      title: "",
+      slug: "",
+      description: "",
       price: 0,
       isPublic: false,
-      categoryIds: []
+      categoryIds: [],
     },
-    mode: 'onSubmit',
-    resolver: zodResolver( courseSchema ),
-  } );
+    mode: "onSubmit",
+    resolver: zodResolver(courseSchema),
+  });
 
-  const { handleSave } = useCoursesFormHelper( id, form );
+  const { handleSave } = useCoursesFormHelper(id, form);
   const { categories = [] } = useGetCategories();
 
-  const availableCategoryIds = categories.map( category => category.id );
+  const availableCategoryIds = categories.map((category) => category.id);
 
-  const selectedCategoryIds = form.watch( 'categoryIds' ).filter( id =>
-    availableCategoryIds.includes( id )
-  );
+  const selectedCategoryIds = form
+    .watch("categoryIds")
+    .filter((id) => availableCategoryIds.includes(id));
 
-  const onSubmit = async ( data: CourseInputs ) => {
-    setIsSubmitting?.( true );
+  const onSubmit = async (data: CourseInputs) => {
+    setIsSubmitting?.(true);
 
     try {
       const validData = {
         ...data,
-        categoryIds: data.categoryIds.filter( id => availableCategoryIds.includes( id ) )
+        categoryIds: data.categoryIds.filter((id) =>
+          availableCategoryIds.includes(id),
+        ),
       };
 
-      await handleSave( validData, onClose );
+      await handleSave(validData, onClose);
 
-      addToast( {
-        title: 'Éxito',
+      addToast({
+        title: "Éxito",
         description: id
-          ? `El curso "${ data.title }" se ha actualizado correctamente.`
-          : `El curso "${ data.title }" se ha creado correctamente.`,
-        color: 'success',
-      } );
-    } catch ( error ) {
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      console.error( `Error al guardar el curso "${ data.title }":`, errorMessage );
+          ? `El curso "${data.title}" se ha actualizado correctamente.`
+          : `El curso "${data.title}" se ha creado correctamente.`,
+        color: "success",
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Error desconocido";
 
-      addToast( {
-        title: 'Error',
-        description: `No se pudo ${ id ? 'actualizar' : 'crear' } el curso. Verifique su conexión al servidor.`,
-        color: 'danger',
-      } );
+      console.error(`Error al guardar el curso "${data.title}":`, errorMessage);
+
+      addToast({
+        title: "Error",
+        description: `No se pudo ${id ? "actualizar" : "crear"} el curso. Verifique su conexión al servidor.`,
+        color: "danger",
+      });
     } finally {
-      setIsSubmitting?.( false );
+      setIsSubmitting?.(false);
     }
   };
 
   return (
-    <UI.Form id="course-form" onSubmit={ form.handleSubmit( onSubmit ) }>
+    <UI.Form id="course-form" onSubmit={form.handleSubmit(onSubmit)}>
       <Controller
-        control={ form.control }
+        control={form.control}
         name="title"
-        render={ ( { field } ) => (
+        render={({ field }) => (
           <UI.Input
-            { ...field }
-            errorMessage={ form.formState.errors.title?.message }
-            isInvalid={ Boolean( form.formState.errors.title ) }
+            {...field}
+            errorMessage={form.formState.errors.title?.message}
+            isInvalid={Boolean(form.formState.errors.title)}
             label="Título"
             labelPlacement="outside"
             placeholder="Ingresa un título"
           />
-        ) }
+        )}
       />
 
       <Controller
-        control={ form.control }
+        control={form.control}
         name="slug"
-        render={ ( { field } ) => (
+        render={({ field }) => (
           <UI.Input
-            { ...field }
-            errorMessage={ form.formState.errors.slug?.message }
-            isInvalid={ Boolean( form.formState.errors.slug ) }
+            {...field}
+            errorMessage={form.formState.errors.slug?.message}
+            isInvalid={Boolean(form.formState.errors.slug)}
             label="Slug"
             labelPlacement="outside"
             placeholder="Ingresa un slug"
           />
-        ) }
+        )}
       />
 
       <Controller
-        control={ form.control }
+        control={form.control}
         name="description"
-        render={ ( { field } ) => (
+        render={({ field }) => (
           <UI.Textarea
-            { ...field }
-            errorMessage={ form.formState.errors.description?.message }
-            isInvalid={ Boolean( form.formState.errors.description ) }
+            {...field}
+            errorMessage={form.formState.errors.description?.message}
+            isInvalid={Boolean(form.formState.errors.description)}
             label="Descripción"
             labelPlacement="outside"
             placeholder="Ingresa una descripción"
           />
-        ) }
+        )}
       />
 
       <Controller
-        control={ form.control }
+        control={form.control}
         name="price"
-        render={ ( { field: { value, onChange, ...rest } } ) => (
+        render={({ field: { value, onChange, ...rest } }) => (
           <UI.Input
-            { ...rest }
-            value={ value?.toString() || '' }
-            type="number"
-            errorMessage={ form.formState.errors.price?.message }
-            isInvalid={ Boolean( form.formState.errors.price ) }
+            {...rest}
+            errorMessage={form.formState.errors.price?.message}
+            isInvalid={Boolean(form.formState.errors.price)}
             label="Precio"
             labelPlacement="outside"
             placeholder="Ingresa un precio"
-            onValueChange={ ( val ) => onChange( Number( val ) ) }
+            type="number"
+            value={value?.toString() || ""}
+            onValueChange={(val) => onChange(Number(val))}
           />
-        ) }
+        )}
       />
 
       <Controller
-        control={ form.control }
+        control={form.control}
         name="categoryIds"
-        render={ ( { field: { onChange } } ) => (
+        render={({ field: { onChange } }) => (
           <UI.Select
-            items={ categories }
+            errorMessage={form.formState.errors.categoryIds?.message}
+            isInvalid={Boolean(form.formState.errors.categoryIds)}
+            items={categories}
             label="Categorías"
             labelPlacement="outside"
             placeholder="Selecciona una o más categorías"
+            selectedKeys={new Set(selectedCategoryIds)}
             selectionMode="multiple"
-            selectedKeys={ new Set( selectedCategoryIds ) }
-            onSelectionChange={ ( selected ) =>
-              onChange( Array.from( selected as Set<string> ) )
+            onSelectionChange={(selected) =>
+              onChange(Array.from(selected as Set<string>))
             }
-            isInvalid={ Boolean( form.formState.errors.categoryIds ) }
-            errorMessage={ form.formState.errors.categoryIds?.message }
           >
-            { ( category ) => (
-              <UI.SelectItem key={ category.id }>
-                { category.title }
-              </UI.SelectItem>
-            ) }
+            {(category) => (
+              <UI.SelectItem key={category.id}>{category.title}</UI.SelectItem>
+            )}
           </UI.Select>
-        ) }
+        )}
       />
 
-      { id && (
+      {id && (
         <Controller
-          control={ form.control }
+          control={form.control}
           name="isPublic"
-          render={ ( { field: { value, onChange } } ) => (
+          render={({ field: { value, onChange } }) => (
             <UI.Switch
-              isSelected={ value }
-              onValueChange={ ( checked ) => onChange( checked ) }
-              color={ value ? 'success' : 'danger' }
+              color={value ? "success" : "danger"}
+              isSelected={value}
               size="lg"
-              thumbIcon={ ( { isSelected, className } ) =>
+              thumbIcon={({ isSelected, className }) =>
                 isSelected ? (
-                  <Icons.IoEyeOutline className={ className } />
+                  <Icons.IoEyeOutline className={className} />
                 ) : (
-                  <Icons.IoEyeOffOutline className={ className } />
+                  <Icons.IoEyeOffOutline className={className} />
                 )
               }
+              onValueChange={(checked) => onChange(checked)}
             >
-              { value ? 'Curso público' : 'Curso privado' }
+              {value ? "Curso público" : "Curso privado"}
             </UI.Switch>
-          ) }
+          )}
         />
-      ) }
+      )}
     </UI.Form>
   );
 };

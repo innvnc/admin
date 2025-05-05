@@ -1,10 +1,14 @@
-'use client';
+"use client";
 
-import { UI } from '@/components/shared';
-import { GenericTable } from '@/components/shared/ui';
+import {
+  CategoriesTableColumns,
+  CategoryFormLayout,
+  DeleteCategoryModal,
+} from "./components";
+import { useCategoriesListHelper } from "./helpers";
 
-import { CategoriesTableColumns, CategoryFormLayout, DeleteCategoryModal } from './components';
-import { useCategoriesListHelper } from './helpers';
+import { UI } from "@/components/shared";
+import { GenericTable } from "@/components/shared/ui";
 
 export const CategoriesList = () => {
   const {
@@ -27,49 +31,49 @@ export const CategoriesList = () => {
         <UI.Card>
           <UI.CardBody>
             <GenericTable
-              title="Categorías"
-              columns={ CategoriesTableColumns( {
+              addButtonComponent={<CategoryFormLayout name="categoría" />}
+              addButtonText="Agregar Categoría"
+              columns={CategoriesTableColumns({
                 onEdit: handleEditCategory,
                 onDelete: handleDeleteCategory,
-              } ) }
-              items={ categories || [] }
-              primaryKey="id"
-              searchFields={ [ 'title', 'slug' ] }
-              onAdd={ () => { } }
-              addButtonComponent={ <CategoryFormLayout name="categoría" /> }
-              addButtonText="Agregar Categoría"
-              noItemsMessage="No se encontraron categorías"
-              initialVisibleColumns={ [
-                'title',
-                'slug',
-                'visible',
-                'creationDate',
-                'createdBy',
-                'actions',
-              ] }
+              })}
+              initialRowsPerPage={5}
               initialSortColumn="title"
               initialSortDirection="ascending"
-              initialRowsPerPage={ 5 }
+              initialVisibleColumns={[
+                "title",
+                "slug",
+                "visible",
+                "creationDate",
+                "createdBy",
+                "actions",
+              ]}
+              items={categories || []}
+              noItemsMessage="No se encontraron categorías"
+              primaryKey="id"
+              searchFields={["title", "slug"]}
+              title="Categorías"
+              onAdd={() => {}}
             />
           </UI.CardBody>
         </UI.Card>
       </div>
 
-      { isOpen && (
+      {isOpen && (
         <CategoryFormLayout
-          id={ selectedCategoryId }
-          isOpen={ isOpen }
-          onOpenChange={ onOpenChange }
+          id={selectedCategoryId}
+          isOpen={isOpen}
           name="categoría"
+          onOpenChange={onOpenChange}
         />
-      ) }
+      )}
 
       <DeleteCategoryModal
-        isOpen={ isDeleteModalOpen }
-        isPending={ isPending }
-        onCancel={ () => setIsDeleteModalOpen( false ) }
-        onConfirm={ onConfirmDelete }
-        categoryTitle={ categoryTitle || '' }
+        categoryTitle={categoryTitle || ""}
+        isOpen={isDeleteModalOpen}
+        isPending={isPending}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onConfirm={onConfirmDelete}
       />
     </div>
   );

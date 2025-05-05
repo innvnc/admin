@@ -1,1 +1,1 @@
-export * from './useNavbarScroll';
+export * from "./useNavbarScroll";

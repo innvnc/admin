@@ -1,33 +1,32 @@
-'use client';
+"use client";
 import { useEffect } from "react";
-import { addToast } from '@heroui/react';
-
+import { addToast } from "@heroui/react";
 
 interface CustomToastProps {
-  title:                      string;
-  description?:               string;
-  timeout?:                   number;
-  hideIcon?:                  boolean;
+  title: string;
+  description?: string;
+  timeout?: number;
+  hideIcon?: boolean;
   shouldShowTimeoutProgress?: boolean;
-  variant?:                   'flat' | 'solid' | 'bordered';
-  icon?:                      React.ReactNode;
-  endContent?:                React.ReactNode;
-  promise?:                   Promise<any>;
+  variant?: "flat" | "solid" | "bordered";
+  icon?: React.ReactNode;
+  endContent?: React.ReactNode;
+  promise?: Promise<any>;
 }
 
-export const CustomToast: React.FC<CustomToastProps> = ( {
+export const CustomToast: React.FC<CustomToastProps> = ({
   title,
   description,
-  variant = 'flat',
+  variant = "flat",
   icon,
   timeout,
   shouldShowTimeoutProgress,
   endContent,
   promise,
   hideIcon,
-} ) => {
+}) => {
   const handleAddToast = () => {
-    addToast( {
+    addToast({
       title,
       description,
       icon,
@@ -37,12 +36,12 @@ export const CustomToast: React.FC<CustomToastProps> = ( {
       promise,
       hideIcon,
       variant,
-    } );
+    });
   };
 
-  useEffect( () => {
+  useEffect(() => {
     handleAddToast();
-  }, [] );
+  }, []);
 
   return null;
 };

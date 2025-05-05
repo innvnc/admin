@@ -1,13 +1,13 @@
 import React from "react";
 
-interface IconProps extends React.SVGProps<SVGSVGElement> { }
+interface IconProps extends React.SVGProps<SVGSVGElement> {}
 
 export const StatisticsCheckedSvg: React.FC<IconProps> = (props) => (
   <svg
-    width="34"
+    fill="none"
     height="30"
     viewBox="0 0 34 30"
-    fill="none"
+    width="34"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >

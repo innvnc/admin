@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { memo, useState, useCallback } from 'react';
 import { addToast } from '@heroui/react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -13,7 +13,6 @@ import { ICourseClassesResponse } from '../interfaces';
 import { ClassFormLayout } from './ClassFormLayout';
 import { DeleteClassModal } from './DeleteClassModal';
 
-
 type ClassUpdateData = {
   title: string;
   description: string;
@@ -22,7 +21,7 @@ type ClassUpdateData = {
   positionOrder?: number;
 };
 
-const SortableClass = ( { courseClass, onEdit, onDelete }: {
+const SortableClass = memo( ( { courseClass, onEdit, onDelete }: {
   courseClass: ICourseClassesResponse,
   onEdit: ( id: string ) => void,
   onDelete: ( id: string, title: string ) => void;
@@ -69,17 +68,19 @@ const SortableClass = ( { courseClass, onEdit, onDelete }: {
           </div>
         </UI.CardHeader>
         <UI.CardBody>
-          <div className="flex justify-between items-center mt-2">
-            <p className="text-small text-default-500 line-clamp-2">{ courseClass.description }</p>
-            <UI.Chip size="sm" color="primary">
-              Posición: { courseClass.positionOrder || 0 }
+          <div className="flex justify-between items-start mt-2">
+            <p className="text-small text-default-500 line-clamp-2 flex-1">{ courseClass.description }</p>
+            <UI.Chip size="sm" color="primary" className="ml-2 shrink-0">
+              { courseClass.positionOrder || 0 }
             </UI.Chip>
           </div>
         </UI.CardBody>
       </UI.Card>
     </div>
   );
-};
+} );
+
+SortableClass.displayName = 'SortableClass';
 
 export const CourseClass = ( { sectionId }: { sectionId: string; } ) => {
   const { courseClasses = [], isLoading, refetch } = useGetClasses( sectionId );
@@ -91,13 +92,17 @@ export const CourseClass = ( { sectionId }: { sectionId: string; } ) => {
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
 
   const sensors = useSensors(
-    useSensor( PointerSensor ),
+    useSensor( PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      }
+    } ),
     useSensor( KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     } )
   );
 
-  const handleDragEnd = async ( event: DragEndEvent ) => {
+  const handleDragEnd = useCallback( async ( event: DragEndEvent ) => {
     const { active, over } = event;
 
     if ( over && active.id !== over.id ) {
@@ -134,19 +139,19 @@ export const CourseClass = ( { sectionId }: { sectionId: string; } ) => {
         }
       }
     }
-  };
+  }, [ courseClasses, sectionId, updateCourseClass, refetch ] );
 
-  const handleEditClass = ( id: string ) => {
+  const handleEditClass = useCallback( ( id: string ) => {
     setSelectedClassId( id );
-  };
+  }, [] );
 
-  const handleDeleteClass = ( id: string, title: string ) => {
+  const handleDeleteClass = useCallback( ( id: string, title: string ) => {
     setClassToDelete( id );
     setClassTitle( title );
     setIsDeleteModalOpen( true );
-  };
+  }, [] );
 
-  const onConfirmDelete = async () => {
+  const onConfirmDelete = useCallback( async () => {
     if ( !classToDelete || !classTitle ) return;
 
     try {
@@ -169,7 +174,7 @@ export const CourseClass = ( { sectionId }: { sectionId: string; } ) => {
         color: 'danger',
       } );
     }
-  };
+  }, [ classToDelete, classTitle, removeClass, refetch ] );
 
   if ( isLoading ) {
     return (
@@ -182,7 +187,7 @@ export const CourseClass = ( { sectionId }: { sectionId: string; } ) => {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-md font-semibold">Clases de la sección</h3>
+        <h3 className="text-md font-semibold">Clases</h3>
         <ClassFormLayout
           sectionId={ sectionId }
           name="clase"

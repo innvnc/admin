@@ -1,2 +1,2 @@
-export type { IClassCourseResponse } from './IClassCourseResponse';
-export type { ICourseClassesResponse } from './IClassesCourseResponse';
+export type { IClassCourseResponse } from "./IClassCourseResponse";
+export type { ICourseClassesResponse } from "./IClassesCourseResponse";

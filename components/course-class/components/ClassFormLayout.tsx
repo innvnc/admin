@@ -1,8 +1,9 @@
 'use client';
-import { useState } from "react";
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
+import { useState, memo, useCallback } from 'react';
+
 import { ClassForm } from './ClassForm';
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
   triggerElement?: React.ReactNode;
 }
 
-export const ClassFormLayout = ( {
+export const ClassFormLayout = memo( ( {
   id,
   sectionId,
   isOpen: externalIsOpen,
@@ -27,16 +28,16 @@ export const ClassFormLayout = ( {
 
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
 
-  const onOpen = () => {
+  const onOpen = useCallback( () => {
     setIsSubmitting( false );
     if ( externalOnOpenChange ) {
       externalOnOpenChange( true );
     } else {
       internalDisclosure.onOpen();
     }
-  };
+  }, [ externalOnOpenChange, internalDisclosure ] );
 
-  const handleClose = () => {
+  const handleClose = useCallback( () => {
     if ( isSubmitting ) return;
 
     if ( externalOnOpenChange ) {
@@ -48,7 +49,7 @@ export const ClassFormLayout = ( {
     setTimeout( () => {
       setIsSubmitting( false );
     }, 100 );
-  };
+  }, [ isSubmitting, externalOnOpenChange, internalDisclosure ] );
 
   return (
     <>
@@ -59,7 +60,7 @@ export const ClassFormLayout = ( {
       ) : (
         <UI.Button
           onPress={ onOpen }
-          startContent={ <Icons.IoAddOutline size={ 24 } /> }
+          startContent={ <Icons.IoAddOutline size={ 20 } /> }
           variant="light"
           size="sm"
         >
@@ -68,56 +69,69 @@ export const ClassFormLayout = ( {
       ) }
 
       { isOpen && (
-        <UI.Modal backdrop="blur" isDismissable={ false } isOpen={ isOpen } onOpenChange={ handleClose }>
+        <UI.Modal
+          backdrop="opaque"
+          isOpen={ isOpen }
+          onOpenChange={ handleClose }
+          size="md"
+          scrollBehavior="inside"
+          classNames={ {
+            base: "z-50"
+          } }
+        >
           <UI.ModalContent>
-            <>
-              <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-                { id ? (
-                  <>
-                    <Icons.IoPencilOutline size={ 24 } /> Editar { name }
-                  </>
-                ) : (
-                  <>
-                    <Icons.IoAddOutline size={ 24 } /> Crear { name }
-                  </>
-                ) }
-              </UI.ModalHeader>
+            { () => (
+              <>
+                <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
+                  { id ? (
+                    <>
+                      <Icons.IoPencilOutline size={ 24 } /> Editar { name }
+                    </>
+                  ) : (
+                    <>
+                      <Icons.IoAddOutline size={ 24 } /> Crear { name }
+                    </>
+                  ) }
+                </UI.ModalHeader>
 
-              <UI.ModalBody>
-                <ClassForm
-                  id={ id }
-                  sectionId={ sectionId }
-                  onClose={ handleClose }
-                  isSubmitting={ isSubmitting }
-                  setIsSubmitting={ setIsSubmitting }
-                />
-              </UI.ModalBody>
+                <UI.ModalBody>
+                  <ClassForm
+                    id={ id }
+                    sectionId={ sectionId }
+                    onClose={ handleClose }
+                    isSubmitting={ isSubmitting }
+                    setIsSubmitting={ setIsSubmitting }
+                  />
+                </UI.ModalBody>
 
-              <UI.ModalFooter className="justify-center flex items-center space-x-3">
-                <UI.Button
-                  color="danger"
-                  onPress={ handleClose }
-                  startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }
-                  variant="light"
-                  isDisabled={ isSubmitting }
-                >
-                  Cerrar
-                </UI.Button>
+                <UI.ModalFooter className="justify-center flex items-center space-x-3">
+                  <UI.Button
+                    color="danger"
+                    onPress={ handleClose }
+                    startContent={ <Icons.IoArrowBackOutline size={ 20 } /> }
+                    variant="light"
+                    isDisabled={ isSubmitting }
+                  >
+                    Cerrar
+                  </UI.Button>
 
-                <UI.Button
-                  color="secondary"
-                  form="class-form"
-                  startContent={ isSubmitting ? null : <Icons.IoSaveOutline size={ 24 } /> }
-                  type="submit"
-                  isLoading={ isSubmitting }
-                >
-                  { isSubmitting ? "Guardando..." : "Guardar" }
-                </UI.Button>
-              </UI.ModalFooter>
-            </>
+                  <UI.Button
+                    color="secondary"
+                    form="class-form"
+                    startContent={ isSubmitting ? null : <Icons.IoSaveOutline size={ 20 } /> }
+                    type="submit"
+                    isLoading={ isSubmitting }
+                  >
+                    { isSubmitting ? "Guardando..." : "Guardar" }
+                  </UI.Button>
+                </UI.ModalFooter>
+              </>
+            ) }
           </UI.ModalContent>
         </UI.Modal>
       ) }
     </>
   );
-};
+} );
+
+ClassFormLayout.displayName = 'ClassFormLayout';

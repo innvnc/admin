@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
 
-
 export const useNavbarScroll = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const [ isScrolled, setIsScrolled ] = useState( false );
-
-  useEffect( () => {
+  useEffect(() => {
     const handleScroll = () => {
-      if ( window.scrollY > 0 ) {
-        setIsScrolled( true );
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
       } else {
-        setIsScrolled( false );
+        setIsScrolled(false);
       }
     };
 
-    window.addEventListener( 'scroll', handleScroll );
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      window.removeEventListener( 'scroll', handleScroll );
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [] );
+  }, []);
 
   return isScrolled;
 };

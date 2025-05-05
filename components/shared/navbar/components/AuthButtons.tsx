@@ -1,25 +1,28 @@
-'use client';
+"use client";
 
-import { SignInButton, SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
-import { useEffect } from "react";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useClerk,
+} from "@clerk/nextjs";
 
-import { useAuth } from '../../hooks/useAuth';
-
-
+import { useAuth } from "../../hooks/useAuth";
 
 export const AuthButtons = () => {
   const { isAuthenticated, isClient } = useAuth();
   const { signOut } = useClerk();
 
   const handleSignOut = async () => {
-    if ( typeof window !== 'undefined' ) {
-      localStorage.removeItem( 'token' );
-      window.dispatchEvent( new Event( 'storage' ) );
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      window.dispatchEvent(new Event("storage"));
     }
     await signOut();
   };
 
-  if ( !isClient ) {
+  if (!isClient) {
     return null;
   }
 
@@ -27,9 +30,7 @@ export const AuthButtons = () => {
     <div>
       <SignedOut>
         <SignInButton>
-          <button className="navbar__courses-link">
-            INICIAR SESIÓN
-          </button>
+          <button className="navbar__courses-link">INICIAR SESIÓN</button>
         </SignInButton>
       </SignedOut>
 

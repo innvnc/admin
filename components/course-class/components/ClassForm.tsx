@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo, useRef } from 'react';
 import { addToast } from '@heroui/react';
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
 import { useAddClass, useGetClass, useGetClasses, useUpdateClass } from '../hooks';
 import { ClassInputs } from '../validators';
-
 
 
 interface Props {
@@ -18,7 +17,7 @@ interface Props {
   setIsSubmitting: ( value: boolean ) => void;
 }
 
-export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitting }: Props ) => {
+export const ClassForm = memo( ( { id, sectionId, onClose, isSubmitting, setIsSubmitting }: Props ) => {
   const { addClass } = useAddClass();
   const { updateCourseClass } = useUpdateClass();
   const { courseClass } = useGetClass( id || '' );
@@ -34,6 +33,9 @@ export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitti
     slug?: string;
   }>( {} );
 
+  // Referencia para almacenar el timeout de debounce
+  const timeoutRef = useRef<NodeJS.Timeout | null>( null );
+
   useEffect( () => {
     if ( id && courseClass ) {
       setTitle( courseClass.title || '' );
@@ -42,14 +44,50 @@ export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitti
     }
   }, [ courseClass, id ] );
 
-  const checkSlugDuplicate = ( slug: string ) => {
+  const checkSlugDuplicate = useCallback( ( slug: string ) => {
     if ( !slug ) return false;
 
     const normalizedSlug = slug.toLowerCase();
     return courseClasses
       .filter( cls => cls.id !== id )
       .some( cls => cls.slug.toLowerCase() === normalizedSlug );
-  };
+  }, [ courseClasses, id ] );
+
+  const generateSlug = useCallback( ( value: string ) => {
+    return value
+      .toLowerCase()
+      .normalize( 'NFD' )
+      .replace( /[\u0300-\u036f]/g, '' )
+      .replace( /[^a-z0-9\s]/g, '' )
+      .replace( /\s+/g, '-' );
+  }, [] );
+
+  // Función personalizada de debounce
+  const debouncedUpdateSlug = useCallback( ( value: string ) => {
+    // Limpiamos el timeout previo si existe
+    if ( timeoutRef.current ) {
+      clearTimeout( timeoutRef.current );
+    }
+
+    // Creamos un nuevo timeout
+    timeoutRef.current = setTimeout( () => {
+      if ( !id ) {
+        const newSlug = generateSlug( value );
+        setSlug( newSlug );
+        const isDuplicate = checkSlugDuplicate( newSlug );
+        setIsSlugDuplicate( isDuplicate );
+      }
+    }, 300 );
+  }, [ id, generateSlug, checkSlugDuplicate ] );
+
+  // Limpiamos el timeout si el componente se desmonta
+  useEffect( () => {
+    return () => {
+      if ( timeoutRef.current ) {
+        clearTimeout( timeoutRef.current );
+      }
+    };
+  }, [] );
 
   const handleSubmit = async ( e: React.FormEvent ) => {
     e.preventDefault();
@@ -64,7 +102,6 @@ export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitti
 
     if ( !title ) newErrors.title = "El título es obligatorio";
     if ( !description ) newErrors.description = "La descripción es obligatoria";
-    if ( !slug ) newErrors.slug = "El slug es obligatorio";
 
     if ( Object.keys( newErrors ).length > 0 ) {
       setErrors( newErrors );
@@ -117,19 +154,7 @@ export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitti
   const handleTitleChange = ( value: string ) => {
     setTitle( value );
     setErrors( { ...errors, title: undefined } );
-
-    if ( !id ) {
-      const newSlug = value
-        .toLowerCase()
-        .normalize( 'NFD' )
-        .replace( /[\u0300-\u036f]/g, '' )
-        .replace( /[^a-z0-9\s]/g, '' )
-        .replace( /\s+/g, '-' );
-
-      setSlug( newSlug );
-      const isDuplicate = checkSlugDuplicate( newSlug );
-      setIsSlugDuplicate( isDuplicate );
-    }
+    debouncedUpdateSlug( value );
   };
 
   const handleDescriptionChange = ( value: string ) => {
@@ -182,27 +207,32 @@ export const ClassForm = ( { id, sectionId, onClose, isSubmitting, setIsSubmitti
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Slug</label>
-          <UI.Input
-            value={ slug }
-            errorMessage={ isSlugDuplicate
-              ? "Este slug ya existe para otra clase en esta sección"
-              : errors.slug }
-            isInvalid={ isSlugDuplicate || !!errors.slug }
-            placeholder="slug-de-la-clase"
-            startContent={ <Icons.IoLinkOutline className="text-default-400" size={ 16 } /> }
-            onValueChange={ handleSlugChange }
-            classNames={ {
-              base: "w-full",
-              inputWrapper: "w-full"
-            } }
-            fullWidth
-            color={ isSlugDuplicate ? "danger" : undefined }
-            isDisabled={ isSubmitting }
-          />
-        </div>
+        { !id && (
+          <div>
+            <label className="block text-sm font-medium mb-2">Slug (generado automáticamente)</label>
+            <UI.Input
+              value={ slug }
+              errorMessage={ isSlugDuplicate
+                ? "Este slug ya existe para otra clase en esta sección"
+                : errors.slug }
+              isInvalid={ isSlugDuplicate || !!errors.slug }
+              placeholder="slug-de-la-clase"
+              startContent={ <Icons.IoLinkOutline className="text-default-400" size={ 16 } /> }
+              onValueChange={ handleSlugChange }
+              classNames={ {
+                base: "w-full",
+                inputWrapper: "w-full"
+              } }
+              fullWidth
+              color={ isSlugDuplicate ? "danger" : undefined }
+              isDisabled={ isSubmitting }
+              isReadOnly={ true }
+            />
+          </div>
+        ) }
       </div>
     </form>
   );
-};
+} );
+
+ClassForm.displayName = 'ClassForm';
