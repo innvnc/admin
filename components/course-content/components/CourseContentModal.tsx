@@ -1,8 +1,8 @@
 'use client';
-
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
 import { CourseContentLayout } from './CourseContentLayout';
+
 
 interface Props {
   isOpen: boolean;

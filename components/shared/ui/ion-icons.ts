@@ -43,6 +43,7 @@ export {
   IoPlayCircleOutline,
   IoPlayOutline,
   IoPrintOutline,
+  IoReorderThreeOutline,
   IoSaveOutline,
   IoSchoolOutline,
   IoSearchCircleOutline,
