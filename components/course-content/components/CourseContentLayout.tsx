@@ -69,7 +69,7 @@ const SortableSection = ( { section, onEdit, onDelete }: {
         </UI.CardHeader>
         <UI.CardBody>
           <div className="flex justify-between items-center mt-2">
-            <CourseClass />
+            <CourseClass sectionId={ section.id } />
             <UI.Chip size="sm" color="primary">
               Posición: { section.positionOrder || 0 }
             </UI.Chip>

@@ -1,9 +1,11 @@
 
+interface Props {
+  sectionId: string;
+}
 
-
-export const CourseClass = () => {
+export const CourseClass = ( { sectionId }: Props ) => {
 
   return (
-    <div>CourseClass</div>
+    <div>{ sectionId }</div>
   );
 };
