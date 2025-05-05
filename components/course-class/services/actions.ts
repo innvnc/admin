@@ -3,8 +3,8 @@ import { IClassCourseResponse, ICourseClassesResponse } from '../interfaces';
 import { request } from '@/components';
 
 
-export const getClasses = (): Promise<ICourseClassesResponse[]> =>
-  request<ICourseClassesResponse[]>( '/course-classes/', 'GET' );
+export const getClassesBySecionId = ( sectionId: string ): Promise<ICourseClassesResponse[]> =>
+  request<ICourseClassesResponse[]>( `/course-classes/section/${sectionId}`, 'GET' );
 
 export const createClass = ( data: ClassInputs ): Promise<IClassCourseResponse> =>
   request<IClassCourseResponse>( '/course-classes/', 'POST', data );
