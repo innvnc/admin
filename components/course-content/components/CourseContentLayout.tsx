@@ -10,6 +10,7 @@ import { Icons } from '@/components/shared/ui';
 import { useDeleteCourseSection, useGetCourseSectionsByCourseId, useUpdateCourseSection } from '../hooks';
 import { CourseSectionFormLayout, DeleteCourseSectionModal } from './course-sections';
 import { ICourseSection } from '../interfaces';
+import { CourseClass } from '@/components/course-class';
 
 type SectionUpdateData = {
   title: string;
@@ -68,6 +69,7 @@ const SortableSection = ( { section, onEdit, onDelete }: {
         </UI.CardHeader>
         <UI.CardBody>
           <div className="flex justify-between items-center mt-2">
+            <CourseClass />
             <UI.Chip size="sm" color="primary">
               Posición: { section.positionOrder || 0 }
             </UI.Chip>
@@ -172,7 +174,9 @@ export const CourseContentLayout = ( { courseId, courseTitle }: { courseId?: str
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1">
         <div className="flex justify-between items-center mb-4">
+
           <h2 className="text-xl font-bold">Contenido del curso</h2>
+
           <CourseSectionFormLayout
             courseId={ courseId || '' }
             name="sección"
