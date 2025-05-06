@@ -3624,7 +3624,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.71.1":
+"@tanstack/query-devtools@npm:5.74.7":
+  version: 5.74.7
+  resolution: "@tanstack/query-devtools@npm:5.74.7"
+  checksum: 10c0/2c1f113d81b9645f5c90e0cfdf47bce1d3244c57e930207589403258b434680ceddb996e6d9bfcdfb02d0582be54558f5196e2e4c395767d3a85620c45fc6271
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.75.4":
+  version: 5.75.4
+  resolution: "@tanstack/react-query-devtools@npm:5.75.4"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.74.7"
+  peerDependencies:
+    "@tanstack/react-query": ^5.75.4
+    react: ^18 || ^19
+  checksum: 10c0/0a441f8076e051d437b150a5d948f193275d06bee020aec8a3dad095f584c5305a5b41ef0e87e7358e58d8a2de8f53fa3034d82f75d1a10df459477017ea3159
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.75.4":
   version: 5.75.4
   resolution: "@tanstack/react-query@npm:5.75.4"
   dependencies:
@@ -5649,7 +5668,8 @@ __metadata:
     "@react-aria/ssr": "npm:3.9.7"
     "@react-aria/visually-hidden": "npm:3.8.18"
     "@react-types/shared": "npm:3.25.0"
-    "@tanstack/react-query": "npm:^5.71.1"
+    "@tanstack/react-query": "npm:^5.75.4"
+    "@tanstack/react-query-devtools": "npm:^5.75.4"
     "@types/jsonwebtoken": "npm:^9.0.8"
     "@types/node": "npm:20.5.7"
     "@types/react": "npm:18.3.3"

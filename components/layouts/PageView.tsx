@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { UI } from '../shared';
+import { UI } from "../shared";
 
 interface PageViewProps {
 	subtitle: string;
