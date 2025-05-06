@@ -57,29 +57,39 @@ const SortableSection = ( {
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
 } ) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable( { id: section.id } );
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable( { id: section.id } );
 
   const style = {
     transform: CSS.Transform.toString( transform ),
     transition,
+    opacity: isDragging ? 0.5 : 1,
   };
 
   return (
     <div
       ref={ setNodeRef }
       style={ style }
-      { ...attributes }
-      { ...listeners }
-      className="cursor-grab active:cursor-grabbing"
     >
       <UI.Card className="w-full">
         <UI.CardHeader className="flex justify-between items-center pb-0">
           <div className="flex items-center gap-2">
-            <Icons.IoReorderThreeOutline
-              className="text-default-400"
-              size={ 20 }
-            />
+            <div
+              className="cursor-grab active:cursor-grabbing"
+              { ...listeners }
+              { ...attributes }
+            >
+              <Icons.IoReorderThreeOutline
+                className="text-default-400"
+                size={ 20 }
+              />
+            </div>
             <span className="font-medium">{ section.title }</span>
           </div>
           <div className="flex items-center gap-1">
@@ -134,9 +144,7 @@ export const CourseContentLayout = ( {
   const { updateSection, isPending: isUpdatePending } =
     useUpdateCourseSection();
 
-  const [ selectedSectionId, setSelectedSectionId ] = useState<
-    string | undefined
-  >( undefined );
+  const [ selectedSectionId, setSelectedSectionId ] = useState<string | undefined>( undefined );
 
   const [ sectionToDelete, setSectionToDelete ] = useState<string | undefined>(
     undefined,
@@ -149,7 +157,11 @@ export const CourseContentLayout = ( {
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
 
   const sensors = useSensors(
-    useSensor( PointerSensor ),
+    useSensor( PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    } ),
     useSensor( KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     } ),
@@ -159,25 +171,27 @@ export const CourseContentLayout = ( {
     const { active, over } = event;
 
     if ( over && active.id !== over.id ) {
-      const activeSection = courseSections.find(
-        ( section ) => section.id === active.id,
+      const activeIndex = courseSections.findIndex(
+        ( section ) => section.id === active.id
       );
-      const overSection = courseSections.find(
-        ( section ) => section.id === over.id,
+      const overIndex = courseSections.findIndex(
+        ( section ) => section.id === over.id
       );
 
-      if ( activeSection && overSection ) {
+      if ( activeIndex !== -1 && overIndex !== -1 ) {
+        const activeSection = courseSections[ activeIndex ];
+        const overSection = courseSections[ overIndex ];
+
         try {
           const data: SectionUpdateData = {
             title: activeSection.title,
             description: activeSection.description,
             slug: activeSection.slug,
             courseId: courseId || "",
+            positionOrder: overIndex > activeIndex
+              ? overSection.positionOrder
+              : overSection.positionOrder !== undefined ? overSection.positionOrder - 1 : 0
           };
-
-          if ( overSection.positionOrder !== undefined ) {
-            data.positionOrder = overSection.positionOrder;
-          }
 
           await updateSection( activeSection.id, data as any );
           await refetch();
@@ -188,6 +202,7 @@ export const CourseContentLayout = ( {
             color: "success",
           } );
         } catch ( error ) {
+          console.error( "Error al actualizar posición:", error );
           addToast( {
             title: "Error",
             description: "No se pudo actualizar la posición de la sección",

@@ -8,24 +8,24 @@ interface Props {
   classItem: ICourseClassesResponse;
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
-  onDragHandle?: ( e: React.MouseEvent ) => void;
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const ClassItem = ( {
   classItem,
   onEdit,
   onDelete,
-  onDragHandle,
+  dragHandleProps,
 }: Props ) => {
   return (
     <UI.Card className="w-full mb-2">
       <UI.CardBody className="py-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2 flex-1">
-            { onDragHandle && (
+            { dragHandleProps && (
               <div
                 className="cursor-grab active:cursor-grabbing text-default-400"
-                onMouseDown={ onDragHandle }
+                { ...dragHandleProps }
               >
                 <Icons.IoReorderThreeOutline size={ 20 } />
               </div>

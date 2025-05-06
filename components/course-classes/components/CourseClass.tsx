@@ -28,11 +28,10 @@ import { Icons } from "@/components/shared/ui";
 
 import { useGetClasses, useRemoveClass } from "../hooks";
 import { ICourseClassesResponse } from "../interfaces";
-import { ClassInputs } from "../validators";
 import { ClassFormModal } from "./ClassFormModal";
 import { DeleteClassModal } from "./DeleteClassModal";
 import { ClassItem } from "./ClassItem";
-import { useUpdateClassWithPosition } from "../hooks/useUpdateClassWithPosition";
+import { useUpdateClassOrder } from "../hooks/useUpdateClassOrder";
 
 interface SortableClassProps {
   classItem: ICourseClassesResponse;
@@ -41,25 +40,33 @@ interface SortableClassProps {
 }
 
 const SortableClass = ( { classItem, onEdit, onDelete }: SortableClassProps ) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable( { id: classItem.id } );
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable( { id: classItem.id } );
 
   const style = {
     transform: CSS.Transform.toString( transform ),
     transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  const dragHandleProps = {
+    ...listeners,
+    ...attributes
   };
 
   return (
-    <div
-      ref={ setNodeRef }
-      style={ style }
-      { ...attributes }
-      className="cursor-grab active:cursor-grabbing"
-    >
+    <div ref={ setNodeRef } style={ style }>
       <ClassItem
         classItem={ classItem }
         onDelete={ onDelete }
         onEdit={ onEdit }
+        dragHandleProps={ dragHandleProps }
       />
     </div>
   );
@@ -77,8 +84,7 @@ export const CourseClass = ( { sectionid }: Props ) => {
   } = useGetClasses( sectionid );
 
   const { removeClass, isPending: isDeletePending } = useRemoveClass();
-
-  const { updateClassPosition, isPending: isUpdatePending } = useUpdateClassWithPosition();
+  const { updateOrder, isPending: isUpdateOrderPending } = useUpdateClassOrder();
 
   const [ isFormModalOpen, setIsFormModalOpen ] = useState( false );
   const [ selectedClassId, setSelectedClassId ] = useState<string | undefined>(
@@ -92,7 +98,11 @@ export const CourseClass = ( { sectionid }: Props ) => {
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
 
   const sensors = useSensors(
-    useSensor( PointerSensor ),
+    useSensor( PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    } ),
     useSensor( KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     } )
@@ -102,26 +112,20 @@ export const CourseClass = ( { sectionid }: Props ) => {
     const { active, over } = event;
 
     if ( over && active.id !== over.id ) {
-      const activeClass = courseClasses.find(
+      const activeIndex = courseClasses.findIndex(
         ( classItem ) => classItem.id === active.id
       );
-      const overClass = courseClasses.find(
+      const overIndex = courseClasses.findIndex(
         ( classItem ) => classItem.id === over.id
       );
 
-      if ( activeClass && overClass ) {
+      if ( activeIndex !== -1 && overIndex !== -1 ) {
         try {
-          const data: ClassInputs & { positionOrder?: number; } = {
-            courseSectionId: sectionid,
-            title: activeClass.title,
-            description: activeClass.description,
-          };
+          const activeClassId = courseClasses[ activeIndex ].id;
+          const overClass = courseClasses[ overIndex ];
+          const newPosition = overClass.positionOrder !== undefined ? overClass.positionOrder : overIndex;
 
-          if ( overClass.positionOrder !== undefined ) {
-            data.positionOrder = overClass.positionOrder;
-          }
-
-          await updateClassPosition( activeClass.id, data );
+          await updateOrder( activeClassId, newPosition );
           await refetch();
 
           addToast( {
@@ -130,6 +134,7 @@ export const CourseClass = ( { sectionid }: Props ) => {
             color: "success",
           } );
         } catch ( error ) {
+          console.error( "Error al actualizar posición:", error );
           addToast( {
             title: "Error",
             description: "No se pudo actualizar la posición de la clase",
