@@ -1,1 +1,1 @@
-export * from "./ICoursesResponse";
+export * from './ICoursesResponse';

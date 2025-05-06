@@ -1,3 +1,4 @@
+
 export type CompanyLink = {
   href: string;
   text: string;

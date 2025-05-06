@@ -1,1 +1,1 @@
-export * from "./toolsMenu";
+export * from './toolsMenu';

@@ -1,2 +1,2 @@
-export * from "./CourseContentLayout";
-export * from "./CourseContentModal";
+export * from './CourseContentLayout';
+export * from './CourseContentModal';

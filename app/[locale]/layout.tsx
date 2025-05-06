@@ -1,11 +1,12 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
+import clsx from 'clsx';
 
-import clsx from "clsx";
+import '@/styles/globals.css';
+import { ibmPlexSans, spaceGrotesk, viewportConfig } from '@/config';
+import { Navbar, Providers, NextIntlProvider } from '@/components';
+import { ToolsMenu } from '@/components/shared/navbar/components';
 
-import "@/styles/globals.css";
-import { ibmPlexSans, spaceGrotesk, viewportConfig } from "@/config";
-import { Navbar, Providers, NextIntlProvider } from "@/components";
-import { ToolsMenu } from "@/components/shared/navbar/components";
+
 
 export const viewport = viewportConfig;
 
@@ -13,26 +14,31 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout( { children }: RootLayoutProps ) {
   return (
     <html
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${ibmPlexSans.variable}`}
       lang="es"
+      className={ `${ spaceGrotesk.variable } ${ ibmPlexSans.variable }` }
     >
-      <body className={clsx("layout")}>
+      <body className={ clsx( 'layout' ) }>
         <NextIntlProvider>
-          <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-            <Navbar />
+          <Providers themeProps={ { attribute: 'class', defaultTheme: 'light' } }>
 
+            <Navbar />
+            
             <div className="layout__container">
-              {children}
+
+
+              { children }
 
               <ToolsMenu />
+
             </div>
           </Providers>
         </NextIntlProvider>
       </body>
+
     </html>
   );
 }

@@ -1,1 +1,1 @@
-export * from "./categories-repsonse";
+export * from './categories-repsonse';

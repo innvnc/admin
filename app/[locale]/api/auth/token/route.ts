@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
-import { JwtUserPayload } from "@/interfaces";
+import { JwtUserPayload } from '@/interfaces';
 
-export async function POST(request: Request) {
+export async function POST( request: Request ) {
   try {
     const userData: JwtUserPayload = await request.json();
 
@@ -12,22 +12,21 @@ export async function POST(request: Request) {
         id: userData.id,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        email: userData.email,
+        email: userData.email
       },
-      process.env.NEXT_PUBLIC_JWT_SECRET || "",
-      { expiresIn: "1h" },
+      process.env.NEXT_PUBLIC_JWT_SECRET || '',
+      { expiresIn: '1h' }
     );
 
-    return NextResponse.json({
+    return NextResponse.json( {
       token,
-      expiresIn: 3600,
-    });
-  } catch (error) {
-    console.error("Token generation error:", error);
-
+      expiresIn: 3600
+    } );
+  } catch ( error ) {
+    console.error( 'Token generation error:', error );
     return NextResponse.json(
-      { error: "Token generation failed", details: error },
-      { status: 500 },
+      { error: 'Token generation failed', details: error },
+      { status: 500 }
     );
   }
 }

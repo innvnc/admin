@@ -1,19 +1,16 @@
-import React from "react";
+import React from 'react';
 
 interface ClockSvgProps {
   width?: number;
   height?: number;
 }
 
-export const ClockSvg: React.FC<ClockSvgProps> = ({
-  width = 14,
-  height = 14,
-}) => (
+export const ClockSvg: React.FC<ClockSvgProps> = ( { width = 14, height = 14 } ) => (
   <svg
-    fill="none"
-    height={height}
+    width={ width }
+    height={ height }
     viewBox="0 0 14 14"
-    width={width}
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

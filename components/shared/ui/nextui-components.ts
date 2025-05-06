@@ -1,4 +1,4 @@
-"use client";
+'use client';
 export {
   Avatar,
   Accordion,
@@ -48,6 +48,7 @@ export {
   Tabs,
   Textarea,
   useDisclosure,
-} from "@heroui/react";
+} from '@heroui/react';
 
-export type { Selection, SelectProps } from "@heroui/react";
+
+export type { Selection, SelectProps } from '@heroui/react';

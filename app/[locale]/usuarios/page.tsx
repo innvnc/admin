@@ -1,9 +1,13 @@
-import { metadataHome } from "./meta";
 
-import { UsersLayout } from "@/components";
+import { UsersLayout } from '@/components';
+import { metadataHome } from './meta';
+
+
 
 export const metadata = metadataHome;
 
 export default function Page() {
-  return <UsersLayout />;
+  return (
+    <UsersLayout />
+  );
 }

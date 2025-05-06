@@ -1,1 +1,1 @@
-export * from "./categorySchema";
+export * from './categorySchema';

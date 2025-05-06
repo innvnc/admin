@@ -3,15 +3,12 @@ interface IconProps {
   height?: number;
 }
 
-export const ClipCoursesSvg: React.FC<IconProps> = ({
-  width = 22,
-  height = 34,
-}) => (
+export const ClipCoursesSvg: React.FC<IconProps> = ( { width = 22, height = 34 } ) => (
   <svg
-    fill="none"
-    height={height}
+    width={ width }
+    height={ height }
     viewBox="0 0 22 34"
-    width={width}
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

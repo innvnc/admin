@@ -1,9 +1,13 @@
-import { metadataHome } from "./meta";
 
-import { AdminLayout } from "@/components";
+import { AdminLayout } from '@/components';
+import { metadataHome } from './meta';
+
+
 
 export const metadata = metadataHome;
 
 export default function Page() {
-  return <AdminLayout />;
+  return (
+    <AdminLayout />
+  );
 }

@@ -1,27 +1,19 @@
 import React from "react";
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {}
+interface IconProps extends React.SVGProps<SVGSVGElement> { }
 
-export const ShareSvg: React.FC<IconProps> = (props) => (
+export const ShareSvg: React.FC<IconProps> = ( props ) => (
   <svg
-    fill="none"
+    width="34"
     height="34"
     viewBox="0 0 34 34"
-    width="34"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
+    { ...props }
   >
     <circle cx="17" cy="17" r="16.5" stroke="#07B2A5" />
-    <mask
-      height="24"
-      id="mask0"
-      maskUnits="userSpaceOnUse"
-      style={{ maskType: "alpha" }}
-      width="24"
-      x="5"
-      y="5"
-    >
-      <rect fill="#D9D9D9" height="24" width="24" x="5" y="5" />
+    <mask id="mask0" style={ { maskType: "alpha" } } maskUnits="userSpaceOnUse" x="5" y="5" width="24" height="24">
+      <rect x="5" y="5" width="24" height="24" fill="#D9D9D9" />
     </mask>
     <g mask="url(#mask0)">
       <path
