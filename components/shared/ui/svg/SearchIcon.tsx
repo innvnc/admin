@@ -1,6 +1,3 @@
-
-
-
 export const SearchIcon = () => {
   return (
     <svg

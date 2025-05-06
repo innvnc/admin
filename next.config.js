@@ -1,5 +1,5 @@
-const createNextIntlPlugin = require( 'next-intl/plugin' );
-const withNextIntl = createNextIntlPlugin( './i18n/request.ts' );
+const createNextIntlPlugin = require( "next-intl/plugin" );
+const withNextIntl = createNextIntlPlugin( "./i18n/request.ts" );
 
 const nextConfig = {
   webpack( config, { isServer } ) {
@@ -10,6 +10,9 @@ const nextConfig = {
       };
     }
     return config;
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

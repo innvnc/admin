@@ -1,75 +1,86 @@
 "use client";
 import { useState } from "react";
 
-import { UI } from '@/components';
-import { Icons } from '@/components/shared/ui';
+import { CourseForm } from "./CourseForm";
 
-import { CourseForm } from './CourseForm';
+import { UI } from "@/components";
+import { Icons } from "@/components/shared/ui";
 
 interface Props {
   id?: string;
   isOpen?: boolean;
   name: string;
-  onOpenChange?: ( isOpen: boolean ) => void;
+  onOpenChange?: (isOpen: boolean) => void;
   triggerElement?: React.ReactNode;
 }
 
-export const CourseFormLayout = ( {
+export const CourseFormLayout = ({
   id,
   isOpen: externalIsOpen,
   name,
   onOpenChange: externalOnOpenChange,
-  triggerElement
-}: Props ) => {
+  triggerElement,
+}: Props) => {
   const internalDisclosure = UI.useDisclosure();
-  const [ isSubmitting, setIsSubmitting ] = useState( false );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
-  const onOpen = externalOnOpenChange ? () => externalOnOpenChange( true ) : internalDisclosure.onOpen;
+  const isOpen =
+    externalIsOpen !== undefined ? externalIsOpen : internalDisclosure.isOpen;
+  const onOpen = externalOnOpenChange
+    ? () => externalOnOpenChange(true)
+    : internalDisclosure.onOpen;
   const onOpenChange = externalOnOpenChange || internalDisclosure.onOpenChange;
 
   return (
     <>
-      { triggerElement ? (
-        <span className="w-full cursor-pointer" onClick={ onOpen }>
-          { triggerElement }
+      {triggerElement ? (
+        <span className="w-full cursor-pointer" onClick={onOpen}>
+          {triggerElement}
         </span>
       ) : (
         <UI.Button
-          onPress={ onOpen }
-          startContent={ <Icons.IoAddOutline size={ 24 } /> }
+          startContent={<Icons.IoAddOutline size={24} />}
           variant="light"
+          onPress={onOpen}
         >
-          Crear { name }
+          Crear {name}
         </UI.Button>
-      ) }
+      )}
 
-      <UI.Modal backdrop="blur" isDismissable={ false } isOpen={ isOpen } onOpenChange={ onOpenChange }>
+      <UI.Modal
+        backdrop="blur"
+        isDismissable={false}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <UI.ModalContent>
           <>
             <UI.ModalHeader className="flex flex-row gap-1 justify-center items-center">
-              { id ? (
+              {id ? (
                 <>
-                  <Icons.IoPencilOutline size={ 24 } /> Editar { name }
+                  <Icons.IoPencilOutline size={24} /> Editar {name}
                 </>
               ) : (
                 <>
-                  <Icons.IoAddOutline size={ 24 } /> Crear { name }
+                  <Icons.IoAddOutline size={24} /> Crear {name}
                 </>
-              ) }
+              )}
             </UI.ModalHeader>
 
             <UI.ModalBody>
-              <CourseForm id={ id } onClose={ () => onOpenChange( false ) } setIsSubmitting={ setIsSubmitting } />
-
+              <CourseForm
+                id={id}
+                setIsSubmitting={setIsSubmitting}
+                onClose={() => onOpenChange(false)}
+              />
             </UI.ModalBody>
 
             <UI.ModalFooter className="justify-center flex items-center space-x-3">
               <UI.Button
                 color="danger"
-                onPress={ () => onOpenChange( false ) }
-                startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }
+                startContent={<Icons.IoArrowBackOutline size={24} />}
                 variant="light"
+                onPress={() => onOpenChange(false)}
               >
                 Cerrar
               </UI.Button>
@@ -77,9 +88,9 @@ export const CourseFormLayout = ( {
               <UI.Button
                 color="secondary"
                 form="course-form"
-                startContent={ <Icons.IoSaveOutline size={ 24 } /> }
+                isLoading={isSubmitting}
+                startContent={<Icons.IoSaveOutline size={24} />}
                 type="submit"
-                isLoading={ isSubmitting }
               >
                 Guardar
               </UI.Button>

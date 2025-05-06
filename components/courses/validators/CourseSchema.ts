@@ -1,39 +1,42 @@
-import { z } from 'zod';
-
+import { z } from "zod";
 
 const titleValidation = z.string().min(1, {
-  message: "El título es obligatorio."
+  message: "El título es obligatorio.",
 });
 
 const slugValidation = z.string().min(1, {
-  message: "El slug es obligatorio."
+  message: "El slug es obligatorio.",
 });
 
 const descriptionValidation = z.string().min(1, {
-  message: "La descripción es obligatoria."
+  message: "La descripción es obligatoria.",
 });
 
 const priceValidation = z.number({
-  invalid_type_error: "El precio debe ser un número válido."
+  invalid_type_error: "El precio debe ser un número válido.",
 });
 
 const isPublicValidation = z.boolean({
-  invalid_type_error: "El valor público debe ser verdadero o falso."
+  invalid_type_error: "El valor público debe ser verdadero o falso.",
 });
 
-const categoryIdsValidation = z.array(z.string().uuid({
-  message: "Cada categoría debe ser un UUID válido."
-})).min(1, {
-  message: "Debe haber al menos una categoría."
-});
+const categoryIdsValidation = z
+  .array(
+    z.string().uuid({
+      message: "Cada categoría debe ser un UUID válido.",
+    }),
+  )
+  .min(1, {
+    message: "Debe haber al menos una categoría.",
+  });
 
 export const courseSchema = z.object({
-  title:        titleValidation,
-  slug:         slugValidation,
-  description:  descriptionValidation,
-  price:        priceValidation,
-  isPublic:     isPublicValidation,
-  categoryIds:  categoryIdsValidation,
+  title: titleValidation,
+  slug: slugValidation,
+  description: descriptionValidation,
+  price: priceValidation,
+  isPublic: isPublicValidation,
+  categoryIds: categoryIdsValidation,
 });
 
-export interface CourseInputs extends z.infer<typeof courseSchema> { }
+export interface CourseInputs extends z.infer<typeof courseSchema> {}

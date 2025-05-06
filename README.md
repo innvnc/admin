@@ -1,6 +1,7 @@
 # Innovance Admin
 
 ## Dev container
+
 ```bash
 docker-compose up --build
 ```
@@ -9,3 +10,6 @@ docker-compose up --build
 http://localhost:3040
 ```
 
+```
+yarn fix-all
+```

@@ -1,5 +1,6 @@
-import { CoursesList } from './components';
-import { PageView } from '../layouts';
+import { PageView } from "../layouts";
+
+import { CoursesList } from "./components";
 
 export const CoursesLayout = () => {
   return (

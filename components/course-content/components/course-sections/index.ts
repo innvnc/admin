@@ -1,3 +1,3 @@
-export * from './CourseSectionForm';
-export * from './CourseSectionFormLayout';
-export * from './DeleteCourseSectionModal';
+export * from "./CourseSectionForm";
+export * from "./CourseSectionFormLayout";
+export * from "./DeleteCourseSectionModal";

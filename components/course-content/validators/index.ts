@@ -1,1 +1,1 @@
-export * from './CourseSectionSchema';
+export * from "./CourseSectionSchema";

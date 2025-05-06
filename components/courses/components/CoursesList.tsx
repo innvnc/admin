@@ -1,18 +1,17 @@
 "use client";
 import { useMemo, useState } from "react";
 
-import { CourseContentModal } from '@/components/course-content';
-import { CourseFormLayout } from './CourseFormLayout';
-import { CoursesTableColumns } from './CoursesTableColumns';
-import { DeleteCourseModal } from './DeleteCourseModal';
-import { GenericTable, Icons } from '@/components/shared/ui';
-import { UI } from '@/components/shared';
-import { useCoursesListHelper } from '../helpers';
+import { useCoursesListHelper } from "../helpers";
 
+import { CourseFormLayout } from "./CourseFormLayout";
+import { CoursesTableColumns } from "./CoursesTableColumns";
+import { DeleteCourseModal } from "./DeleteCourseModal";
 
+import { CourseContentModal } from "@/components/course-content";
+import { GenericTable, Icons } from "@/components/shared/ui";
+import { UI } from "@/components/shared";
 
 export const CoursesList = () => {
-
   const {
     courses,
     handleDeleteCourse,
@@ -28,8 +27,8 @@ export const CoursesList = () => {
   } = useCoursesListHelper();
 
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
-  const [contentCourseId, setContentCourseId] = useState<string>('');
-  const [contentCourseTitle, setContentCourseTitle] = useState<string>('');
+  const [contentCourseId, setContentCourseId] = useState<string>("");
+  const [contentCourseTitle, setContentCourseTitle] = useState<string>("");
 
   const handleViewContent = (id: string, title: string) => {
     setContentCourseId(id);
@@ -39,35 +38,35 @@ export const CoursesList = () => {
 
   const publishedCourses = useMemo(
     () => courses?.filter((course) => course.isPublic),
-    [courses]
+    [courses],
   );
 
   const draftCourses = useMemo(
     () => courses?.filter((course) => !course.isPublic && course.status),
-    [courses]
+    [courses],
   );
 
   const deletedCourses = useMemo(
     () => courses?.filter((course) => !course.status),
-    [courses]
+    [courses],
   );
 
   const courseMenuOptions = [
     {
-      key: 'published',
-      label: 'Publicados',
+      key: "published",
+      label: "Publicados",
       icon: <Icons.IoBookmarkOutline className="text-default-500" />,
       items: publishedCourses || [],
     },
     {
-      key: 'draft',
-      label: 'Borradores',
+      key: "draft",
+      label: "Borradores",
       icon: <Icons.IoFolderOutline className="text-default-500" />,
       items: draftCourses || [],
     },
     {
-      key: 'deleted',
-      label: 'Eliminados',
+      key: "deleted",
+      label: "Eliminados",
       icon: <Icons.IoTrashOutline className="text-default-500" />,
       items: deletedCourses || [],
     },
@@ -76,7 +75,7 @@ export const CoursesList = () => {
   return (
     <div className="courses-list">
       <div className="courses-list__container">
-        <UI.Tabs aria-label="Options" isVertical>
+        <UI.Tabs isVertical aria-label="Options">
           {courseMenuOptions.map((option) => (
             <UI.Tab
               key={option.key}
@@ -90,33 +89,33 @@ export const CoursesList = () => {
               <UI.Card>
                 <UI.CardBody>
                   <GenericTable
-                    title={option.label}
+                    addButtonComponent={<CourseFormLayout name="curso" />}
+                    addButtonText="Agregar Curso"
                     columns={CoursesTableColumns({
                       onEdit: handleEditCourse,
                       onDelete: handleDeleteCourse,
                       onViewContent: handleViewContent,
                     })}
-                    items={option.items}
-                    primaryKey="id"
-                    searchFields={['title', 'slug', 'description', 'price']}
-                    onAdd={() => { }}
-                    addButtonComponent={<CourseFormLayout name="curso" />}
-                    addButtonText="Agregar Curso"
-                    noItemsMessage={`No se encontraron cursos ${option.label.toLowerCase()}`}
-                    initialVisibleColumns={[
-                      'title',
-                      'slug',
-                      'description',
-                      'price',
-                      'isPublic',
-                      'categories',
-                      'creationDate',
-                      'createdBy',
-                      'actions',
-                    ]}
+                    initialRowsPerPage={5}
                     initialSortColumn="title"
                     initialSortDirection="ascending"
-                    initialRowsPerPage={5}
+                    initialVisibleColumns={[
+                      "title",
+                      "slug",
+                      "description",
+                      "price",
+                      "isPublic",
+                      "categories",
+                      "creationDate",
+                      "createdBy",
+                      "actions",
+                    ]}
+                    items={option.items}
+                    noItemsMessage={`No se encontraron cursos ${option.label.toLowerCase()}`}
+                    primaryKey="id"
+                    searchFields={["title", "slug", "description", "price"]}
+                    title={option.label}
+                    onAdd={() => {}}
                   />
                 </UI.CardBody>
               </UI.Card>
@@ -129,24 +128,24 @@ export const CoursesList = () => {
         <CourseFormLayout
           id={selectedCourseId}
           isOpen={isOpen}
-          onOpenChange={onOpenChange}
           name="curso"
+          onOpenChange={onOpenChange}
         />
       )}
 
       <DeleteCourseModal
+        courseTitle={courseTitle || ""}
         isOpen={isDeleteModalOpen}
         isPending={isPending}
         onCancel={() => setIsDeleteModalOpen(false)}
         onConfirm={onConfirmDelete}
-        courseTitle={courseTitle || ''}
       />
 
       <CourseContentModal
-        isOpen={isContentModalOpen}
-        onClose={() => setIsContentModalOpen(false)}
         courseId={contentCourseId}
         courseTitle={contentCourseTitle}
+        isOpen={isContentModalOpen}
+        onClose={() => setIsContentModalOpen(false)}
       />
     </div>
   );

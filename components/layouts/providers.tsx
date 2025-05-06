@@ -1,48 +1,45 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import type { ThemeProviderProps } from "next-themes";
 
-import { ClerkProvider } from '@clerk/nextjs';
-import { HeroUIProvider } from '@heroui/react';
-import { ToastProvider } from '@heroui/toast';
-import {
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import type { ThemeProviderProps } from 'next-themes';
-import { usePathname, useRouter } from 'next/navigation';
+import * as React from "react";
+import { ClerkProvider } from "@clerk/nextjs";
+import { HeroUIProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
 
 export interface ProvidersProps {
   children: React.ReactNode;
   themeProps?: ThemeProviderProps;
 }
 
-declare module '@react-types/shared' {
+declare module "@react-types/shared" {
   interface RouterConfig {
     routerOptions: NonNullable<
-      Parameters<ReturnType<typeof useRouter>[ 'push' ]>[ 1 ]
+      Parameters<ReturnType<typeof useRouter>["push"]>[1]
     >;
   }
 }
 
 const queryClient = new QueryClient();
 
-export function Providers( { children, themeProps }: ProvidersProps ) {
+export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  React.useEffect( () => {
-    window.scrollTo( 0, 0 );
-  }, [ pathname ] );
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
-    <HeroUIProvider navigate={ router.push }>
-      <NextThemesProvider { ...themeProps }>
+    <HeroUIProvider navigate={router.push}>
+      <NextThemesProvider {...themeProps}>
         <ToastProvider />
         <ClerkProvider>
-          <QueryClientProvider client={ queryClient }>
-            { children }
+          <QueryClientProvider client={queryClient}>
+            {children}
           </QueryClientProvider>
         </ClerkProvider>
       </NextThemesProvider>

@@ -1,4 +1,4 @@
-import { PageView } from '.';
+import { PageView } from ".";
 
 export const NotificationsLayout = () => {
   return (
@@ -7,7 +7,8 @@ export const NotificationsLayout = () => {
         <div className="space-y-2">
           <h2 className="text-xl font-bold">Centro de Notificaciones</h2>
           <p className="text-gray-600">
-            Gestiona y visualiza todas las notificaciones enviadas a los usuarios.
+            Gestiona y visualiza todas las notificaciones enviadas a los
+            usuarios.
           </p>
         </div>
       }

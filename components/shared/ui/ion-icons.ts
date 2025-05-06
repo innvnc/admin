@@ -52,4 +52,4 @@ export {
   IoStopOutline,
   IoSunnyOutline,
   IoTrashOutline,
-} from 'react-icons/io5';
+} from "react-icons/io5";

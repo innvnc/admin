@@ -1,11 +1,24 @@
 "use client";
 
 import { useCallback, useMemo, useState, useRef, ReactNode } from "react";
+import { Button } from "@heroui/button";
+import { Input } from "@heroui/input";
+import { SortDescriptor } from "@react-types/shared";
+
 import { Icons } from "../";
-import { Button } from '@heroui/button';
-import { Input } from '@heroui/input';
-import { SortDescriptor } from '@react-types/shared';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Pagination, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '../nextui-components';
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Pagination,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "../nextui-components";
 
 export interface ColumnDefinition {
   name: string;
@@ -27,7 +40,7 @@ interface GenericTableProps<T> {
   noItemsMessage?: string;
   initialVisibleColumns?: string[];
   initialSortColumn?: string;
-  initialSortDirection?: 'ascending' | 'descending';
+  initialSortDirection?: "ascending" | "descending";
   initialRowsPerPage?: number;
 }
 
@@ -43,12 +56,12 @@ export const GenericTable = <T extends object>( {
   noItemsMessage = "No se encontraron elementos",
   initialVisibleColumns,
   initialSortColumn,
-  initialSortDirection = 'ascending',
-  initialRowsPerPage = 5
+  initialSortDirection = "ascending",
+  initialRowsPerPage = 5,
 }: GenericTableProps<T> ) => {
-  const [ filterValue, setFilterValue ] = useState( '' );
+  const [ filterValue, setFilterValue ] = useState( "" );
   const [ visibleColumns, setVisibleColumns ] = useState<Set<string>>(
-    new Set( initialVisibleColumns || columns.map( column => column.uid ) )
+    new Set( initialVisibleColumns || columns.map( ( column ) => column.uid ) ),
   );
   const [ rowsPerPage, setRowsPerPage ] = useState( initialRowsPerPage );
   const [ sortDescriptor, setSortDescriptor ] = useState<SortDescriptor>( {
@@ -62,7 +75,8 @@ export const GenericTable = <T extends object>( {
 
   const headerColumns = useMemo( () => {
     if ( visibleColumns.size === columns.length ) return columns;
-    return columns.filter( column => visibleColumns.has( column.uid ) );
+
+    return columns.filter( ( column ) => visibleColumns.has( column.uid ) );
   }, [ visibleColumns, columns ] );
 
   const filteredItems = useMemo( () => {
@@ -70,59 +84,92 @@ export const GenericTable = <T extends object>( {
 
     if ( hasSearchFilter ) {
       const searchText = filterValue.toLowerCase();
-      filteredData = filteredData.filter( item => {
+
+      filteredData = filteredData.filter( ( item ) => {
         if ( searchFields.length > 0 ) {
-          return searchFields.some( field => {
+          return searchFields.some( ( field ) => {
             const value = item[ field as keyof T ];
+
             if ( value === undefined ) return false;
 
-            if ( typeof value === 'string' ) {
+            if ( typeof value === "string" ) {
               return value.toLowerCase().includes( searchText );
-            } else if ( typeof value === 'number' ) {
+            } else if ( typeof value === "number" ) {
               return value.toString().includes( searchText );
-            } else if ( typeof value === 'boolean' ) {
-              if ( value && ( 'true'.includes( searchText ) || 'sí'.includes( searchText ) || 'si'.includes( searchText ) || 'verdadero'.includes( searchText ) ) ) {
+            } else if ( typeof value === "boolean" ) {
+              if (
+                value &&
+                ( "true".includes( searchText ) ||
+                  "sí".includes( searchText ) ||
+                  "si".includes( searchText ) ||
+                  "verdadero".includes( searchText ) )
+              ) {
                 return true;
               }
-              if ( !value && ( 'false'.includes( searchText ) || 'no'.includes( searchText ) || 'falso'.includes( searchText ) ) ) {
+              if (
+                !value &&
+                ( "false".includes( searchText ) ||
+                  "no".includes( searchText ) ||
+                  "falso".includes( searchText ) )
+              ) {
                 return true;
               }
+
               return false;
             } else if ( Array.isArray( value ) ) {
-              return value.some( v => {
-                if ( typeof v === 'string' ) {
+              return value.some( ( v ) => {
+                if ( typeof v === "string" ) {
                   return v.toLowerCase().includes( searchText );
-                } else if ( typeof v === 'object' && v !== null ) {
-                  return Object.values( v ).some( propValue =>
-                    typeof propValue === 'string' && propValue.toLowerCase().includes( searchText )
+                } else if ( typeof v === "object" && v !== null ) {
+                  return Object.values( v ).some(
+                    ( propValue ) =>
+                      typeof propValue === "string" &&
+                      propValue.toLowerCase().includes( searchText ),
                   );
                 }
+
                 return false;
               } );
-            } else if ( typeof value === 'object' && value !== null ) {
-              return Object.values( value ).some( propValue =>
-                typeof propValue === 'string' && propValue.toLowerCase().includes( searchText )
+            } else if ( typeof value === "object" && value !== null ) {
+              return Object.values( value ).some(
+                ( propValue ) =>
+                  typeof propValue === "string" &&
+                  propValue.toLowerCase().includes( searchText ),
               );
             }
+
             return false;
           } );
         } else {
-          return Object.entries( item ).some( ( [ key, value ] ) => {
+          return Object.entries( item ).some( ( [ _key, value ] ) => {
             if ( value === undefined ) return false;
 
-            if ( typeof value === 'string' ) {
+            if ( typeof value === "string" ) {
               return value.toLowerCase().includes( searchText );
-            } else if ( typeof value === 'number' ) {
+            } else if ( typeof value === "number" ) {
               return value.toString().includes( searchText );
-            } else if ( typeof value === 'boolean' ) {
-              if ( value && ( 'true'.includes( searchText ) || 'sí'.includes( searchText ) || 'si'.includes( searchText ) || 'verdadero'.includes( searchText ) ) ) {
+            } else if ( typeof value === "boolean" ) {
+              if (
+                value &&
+                ( "true".includes( searchText ) ||
+                  "sí".includes( searchText ) ||
+                  "si".includes( searchText ) ||
+                  "verdadero".includes( searchText ) )
+              ) {
                 return true;
               }
-              if ( !value && ( 'false'.includes( searchText ) || 'no'.includes( searchText ) || 'falso'.includes( searchText ) ) ) {
+              if (
+                !value &&
+                ( "false".includes( searchText ) ||
+                  "no".includes( searchText ) ||
+                  "falso".includes( searchText ) )
+              ) {
                 return true;
               }
+
               return false;
             }
+
             return false;
           } );
         }
@@ -139,19 +186,20 @@ export const GenericTable = <T extends object>( {
       const first = a[ sortDescriptor.column as keyof T ];
       const second = b[ sortDescriptor.column as keyof T ];
 
-      if ( typeof first === 'number' && typeof second === 'number' ) {
-        return sortDescriptor.direction === 'ascending'
+      if ( typeof first === "number" && typeof second === "number" ) {
+        return sortDescriptor.direction === "ascending"
           ? first - second
           : second - first;
-      } else if ( typeof first === 'boolean' && typeof second === 'boolean' ) {
-        return sortDescriptor.direction === 'ascending'
+      } else if ( typeof first === "boolean" && typeof second === "boolean" ) {
+        return sortDescriptor.direction === "ascending"
           ? Number( first ) - Number( second )
           : Number( second ) - Number( first );
       } else {
         const firstStr = String( first );
         const secondStr = String( second );
         const cmp = firstStr.localeCompare( secondStr );
-        return sortDescriptor.direction === 'ascending' ? cmp : -cmp;
+
+        return sortDescriptor.direction === "ascending" ? cmp : -cmp;
       }
     } );
   }, [ sortDescriptor, filteredItems ] );
@@ -161,74 +209,86 @@ export const GenericTable = <T extends object>( {
   const items = useMemo( () => {
     const start = ( page - 1 ) * rowsPerPage;
     const end = start + rowsPerPage;
+
     return sortedItems.slice( start, end );
   }, [ page, sortedItems, rowsPerPage ] );
 
-  const renderCell = useCallback( ( item: T, columnKey: string ) => {
-    const column = columns.find( col => col.uid === columnKey );
-    if ( column?.renderCell ) {
-      return column.renderCell( item, columnKey );
-    }
+  const renderCell = useCallback(
+    ( item: T, columnKey: string ) => {
+      const column = columns.find( ( col ) => col.uid === columnKey );
 
-    const value = item[ columnKey as keyof T ];
+      if ( column?.renderCell ) {
+        return column.renderCell( item, columnKey );
+      }
 
-    if ( typeof value === 'boolean' ) {
-      return (
-        <div className="flex justify-center">
-          { value ? (
-            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-              <Icons.IoCheckmarkOutline className="w-3.5 h-3.5 mr-1" />
-              Sí
-            </div>
-          ) : (
-            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
-              <Icons.IoCloseOutline className="w-3.5 h-3.5 mr-1" />
-              No
-            </div>
-          ) }
-        </div>
-      );
-    }
+      const value = item[ columnKey as keyof T ];
 
-    if ( Array.isArray( value ) ) {
-      return (
-        <div className="flex flex-wrap gap-1">
-          { value.map( ( item, index ) => (
-            <div
-              key={ index }
-              className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100 transition-colors"
-            >
-              { typeof item === 'object' && item !== null
-                ? ( item.title || item.name || JSON.stringify( item ) )
-                : String( item )
-              }
-            </div>
-          ) ) }
-        </div>
-      );
-    }
+      if ( typeof value === "boolean" ) {
+        return (
+          <div className="flex justify-center">
+            { value ? (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                <Icons.IoCheckmarkOutline className="w-3.5 h-3.5 mr-1" />
+                Sí
+              </div>
+            ) : (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                <Icons.IoCloseOutline className="w-3.5 h-3.5 mr-1" />
+                No
+              </div>
+            ) }
+          </div>
+        );
+      }
 
-    if ( typeof value === 'object' && value !== null ) {
-      return <p className="text-medium">{ JSON.stringify( value ) }</p>;
-    }
+      if ( Array.isArray( value ) ) {
+        return (
+          <div className="flex flex-wrap gap-1">
+            { value.map( ( item, index ) => (
+              <div
+                key={ index }
+                className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 hover:bg-blue-100 transition-colors"
+              >
+                { typeof item === "object" && item !== null
+                  ? item.title || item.name || JSON.stringify( item )
+                  : String( item ) }
+              </div>
+            ) ) }
+          </div>
+        );
+      }
 
-    return <p className="text-medium">{ String( value ) }</p>;
-  }, [ columns ] );
+      if ( typeof value === "object" && value !== null ) {
+        return <p className="text-medium">{ JSON.stringify( value ) }</p>;
+      }
+
+      return <p className="text-medium">{ String( value ) }</p>;
+    },
+    [ columns ],
+  );
 
   const onSearchChange = useCallback( ( value: string ) => {
     if ( value ) {
       setFilterValue( value );
       setPage( 1 );
     } else {
-      setFilterValue( '' );
+      setFilterValue( "" );
     }
   }, [] );
 
   const onClear = useCallback( () => {
-    setFilterValue( '' );
+    setFilterValue( "" );
     setPage( 1 );
     if ( searchInputRef.current ) {
       searchInputRef.current.focus();
+    }
+  }, [] );
+
+  // Función para manejar el cambio de selección de columnas
+  const handleSelectionChange = useCallback( ( keys: any ) => {
+    // Asegurarse de que keys es un objeto tipo Set o convertirlo a uno
+    if ( typeof keys === "object" && keys !== null ) {
+      setVisibleColumns( new Set( Array.from( keys ) ) );
     }
   }, [] );
 
@@ -245,16 +305,20 @@ export const GenericTable = <T extends object>( {
             } }
             placeholder="Buscar..."
             size="sm"
-            startContent={ <Icons.IoSearchOutline className="text-default-300" /> }
+            startContent={
+              <Icons.IoSearchOutline className="text-default-300" />
+            }
             value={ filterValue }
-            onValueChange={ onSearchChange }
             onClear={ onClear }
+            onValueChange={ onSearchChange }
           />
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
-                  endContent={ <Icons.IoChevronDownOutline className="text-small" /> }
+                  endContent={
+                    <Icons.IoChevronDownOutline className="text-small" />
+                  }
                   size="sm"
                   variant="flat"
                 >
@@ -267,7 +331,7 @@ export const GenericTable = <T extends object>( {
                 closeOnSelect={ false }
                 selectedKeys={ Array.from( visibleColumns ) }
                 selectionMode="multiple"
-                onSelectionChange={ setVisibleColumns }
+                onSelectionChange={ handleSelectionChange }
               >
                 { columns.map( ( column ) => (
                   <DropdownItem key={ column.uid } className="capitalize">
@@ -276,28 +340,30 @@ export const GenericTable = <T extends object>( {
                 ) ) }
               </DropdownMenu>
             </Dropdown>
-            { addButtonComponent || ( onAdd && (
-              <Button
-                className="bg-primary text-white"
-                endContent={ <Icons.IoAddOutline /> }
-                size="sm"
-                onPress={ onAdd }
-              >
-                { addButtonText }
-              </Button>
-            ) ) }
+            { addButtonComponent ||
+              ( onAdd && (
+                <Button
+                  className="bg-primary text-white"
+                  endContent={ <Icons.IoAddOutline /> }
+                  size="sm"
+                  onPress={ onAdd }
+                >
+                  { addButtonText }
+                </Button>
+              ) ) }
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total { filteredItems.length } { title ? title.toLowerCase() : 'elementos' }
+            Total { filteredItems.length }{ " " }
+            { title ? title.toLowerCase() : "elementos" }
           </span>
           <label className="flex items-center text-default-400 text-small">
             Filas por página:
             <select
               className="bg-transparent outline-none text-default-400 text-small ml-2"
-              onChange={ ( e ) => setRowsPerPage( Number( e.target.value ) ) }
               value={ rowsPerPage }
+              onChange={ ( e ) => setRowsPerPage( Number( e.target.value ) ) }
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -319,6 +385,7 @@ export const GenericTable = <T extends object>( {
     onAdd,
     addButtonText,
     addButtonComponent,
+    handleSelectionChange,
   ] );
 
   const bottomContent = useMemo( () => {
@@ -340,8 +407,8 @@ export const GenericTable = <T extends object>( {
   return (
     <div className="w-full">
       <Table
-        aria-label={ title || "Tabla de datos" }
         isHeaderSticky
+        aria-label={ title || "Tabla de datos" }
         bottomContent={ bottomContent }
         bottomContentPlacement="outside"
         classNames={ {
@@ -358,19 +425,16 @@ export const GenericTable = <T extends object>( {
           { ( column: any ) => (
             <TableColumn
               key={ column.uid }
-              align={ column.uid === 'actions' ? 'center' : 'start' }
+              align={ column.uid === "actions" ? "center" : "start" }
               allowsSorting={ column.sortable }
             >
               { column.name }
             </TableColumn>
           ) }
         </TableHeader>
-        <TableBody
-          emptyContent={ noItemsMessage }
-          items={ items }
-        >
+        <TableBody emptyContent={ noItemsMessage } items={ items }>
           { ( item: any ) => (
-            <TableRow key={ ( item[ primaryKey ] as any )?.toString() || 'row' }>
+            <TableRow key={ ( item[ primaryKey ] as any )?.toString() || "row" }>
               { ( columnKey: any ) => (
                 <TableCell>{ renderCell( item, columnKey.toString() ) }</TableCell>
               ) }

@@ -1,25 +1,25 @@
-import { Icons } from '@/components/shared/ui';
-import { CourseMenuTabOption } from '@/interfaces';
+import { Icons } from "@/components/shared/ui";
+import { CourseMenuTabOption } from "@/interfaces";
 
 export const getCourseMenuOptions = (): CourseMenuTabOption[] => {
   return [
     {
       key: "publicados",
-      icon: <Icons.IoEyeOutline size={ 20 } />,
+      icon: <Icons.IoEyeOutline size={20} />,
       label: "Publicados",
-      status: 'published'
+      status: "published",
     },
     {
       key: "ocultos",
-      icon: <Icons.IoEyeOffOutline size={ 20 } />,
+      icon: <Icons.IoEyeOffOutline size={20} />,
       label: "Borradores",
-      status: 'hidden'
+      status: "hidden",
     },
     {
       key: "eliminados",
-      icon: <Icons.IoTrashOutline size={ 20 } />,
+      icon: <Icons.IoTrashOutline size={20} />,
       label: "Eliminados",
-      status: 'deleted'
-    }
+      status: "deleted",
+    },
   ];
 };

@@ -1,68 +1,66 @@
 "use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
-import { UI } from '../../ui';
-import { menuItems } from '../helpers';
-import { JwtService } from '../../services';
-
-
+import { UI } from "../../ui";
+import { menuItems } from "../helpers";
+import { JwtService } from "../../services";
 
 export const ToolsMenu = () => {
-  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
-  const [ isClient, setIsClient ] = useState<boolean>( false );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
 
-  useEffect( () => {
-    setIsClient( true );
+  useEffect(() => {
+    setIsClient(true);
 
     const token = JwtService.getStoredToken();
-    setIsAuthenticated( !!token );
+
+    setIsAuthenticated(!!token);
 
     const handleStorageChange = () => {
       const token = JwtService.getStoredToken();
-      setIsAuthenticated( !!token );
+
+      setIsAuthenticated(!!token);
     };
 
-    window.addEventListener( 'storage', handleStorageChange );
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener( 'storage', handleStorageChange );
+      window.removeEventListener("storage", handleStorageChange);
     };
-  }, [] );
+  }, []);
 
-  if ( !isClient ) {
+  if (!isClient) {
     return null;
   }
 
-  if ( !isAuthenticated ) {
+  if (!isAuthenticated) {
     return null;
   }
 
   return (
     <div className="tools-menu">
       <div className="tools-menu__container">
-        { menuItems.map( ( item, index ) => (
+        {menuItems.map((item, index) => (
           <Link
-            key={ index }
-            href={ item.route }
+            key={index}
             className="tools-menu__item group"
+            href={item.route}
           >
-
             <div className="tools-menu__icon-container group-hover:bg-white/10">
               <UI.Image
-                src={ item.icon }
-                alt={ item.label }
+                alt={item.label}
                 className="tools-menu__icon group-hover:scale-125"
+                src={item.icon}
               />
             </div>
 
             <span className="tools-menu__label group-hover:opacity-100">
-              { item.label }
+              {item.label}
             </span>
           </Link>
-        ) ) }
+        ))}
       </div>
     </div>
   );
