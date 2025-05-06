@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';

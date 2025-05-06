@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { Spinner } from '@heroui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { JwtService } from '../shared/services';
 
 

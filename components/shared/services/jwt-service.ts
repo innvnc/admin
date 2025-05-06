@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { JwtUserPayload } from '../../../interfaces/auth-types';
 

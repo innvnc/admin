@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { SignInButton, SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 import { useAuth } from '../../hooks/useAuth';
 

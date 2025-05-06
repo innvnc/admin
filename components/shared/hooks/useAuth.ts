@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
 import { useClerk, useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 
 import { JwtUserPayload } from '../../../interfaces/auth-types';

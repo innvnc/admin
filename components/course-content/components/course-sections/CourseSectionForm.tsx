@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { addToast } from '@heroui/react';
 
 import { UI } from '@/components/shared';

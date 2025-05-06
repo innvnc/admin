@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { UI } from '@/components/shared';
 import { GenericTable } from '@/components/shared/ui';

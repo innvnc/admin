@@ -1,5 +1,5 @@
-'use client';
-import { useMemo, useState } from 'react';
+"use client";
+import { useMemo, useState } from "react";
 
 import { CourseContentModal } from '@/components/course-content';
 import { CourseFormLayout } from './CourseFormLayout';
