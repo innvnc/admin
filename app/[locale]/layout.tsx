@@ -9,6 +9,7 @@ import { ToolsMenu } from "@/components/shared/navbar/components";
 
 export const viewport = viewportConfig;
 
+
 interface RootLayoutProps {
   children: ReactNode;
 }
