@@ -36,7 +36,7 @@ import {
   DeleteCourseSectionModal,
 } from "./course-sections";
 
-import { CourseClass } from "@/components/course-classes";
+import { CourseClass, useGetClass } from "@/components/course-classes";
 import { UI } from "@/components/shared";
 import { Icons } from "@/components/shared/ui";
 
@@ -52,10 +52,16 @@ const SortableSection = ( {
   section,
   onEdit,
   onDelete,
+  onSelect,
+  isSelected,
+  onSelectClass,
 }: {
   section: ICourseSection;
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
+  onSelect: ( id: string ) => void;
+  isSelected: boolean;
+  onSelectClass: ( id: string ) => void;
 } ) => {
   const {
     attributes,
@@ -77,9 +83,14 @@ const SortableSection = ( {
       ref={ setNodeRef }
       style={ style }
     >
-      <UI.Card className="w-full">
+      <UI.Card
+        className={ `w-full ${ isSelected ? 'border-primary border-2' : '' }` }
+      >
         <UI.CardHeader className="flex justify-between items-center pb-0">
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={ () => onSelect( section.id ) }
+          >
             <div
               className="cursor-grab active:cursor-grabbing"
               { ...listeners }
@@ -117,7 +128,10 @@ const SortableSection = ( {
         </UI.CardHeader>
         <UI.CardBody>
           <div className="flex justify-between items-center mt-2">
-            <CourseClass sectionid={ section.id } />
+            <CourseClass
+              sectionid={ section.id }
+              onSelectClass={ onSelectClass }
+            />
           </div>
         </UI.CardBody>
       </UI.Card>
@@ -145,6 +159,7 @@ export const CourseContentLayout = ( {
     useUpdateCourseSection();
 
   const [ selectedSectionId, setSelectedSectionId ] = useState<string | undefined>( undefined );
+  const [ selectedClassId, setSelectedClassId ] = useState<string | undefined>( undefined );
 
   const [ sectionToDelete, setSectionToDelete ] = useState<string | undefined>(
     undefined,
@@ -155,6 +170,8 @@ export const CourseContentLayout = ( {
   );
 
   const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
+
+  const { courseClass, isLoading: isClassLoading } = useGetClass( selectedClassId || "" );
 
   const sensors = useSensors(
     useSensor( PointerSensor, {
@@ -223,6 +240,15 @@ export const CourseContentLayout = ( {
     setIsDeleteModalOpen( true );
   };
 
+  const handleSelectSection = ( id: string ) => {
+    setSelectedSectionId( id );
+    setSelectedClassId( undefined );
+  };
+
+  const handleSelectClass = ( id: string ) => {
+    setSelectedClassId( id );
+  };
+
   const onConfirmDelete = async () => {
     if ( !sectionToDelete || !sectionTitle ) return;
 
@@ -288,6 +314,9 @@ export const CourseContentLayout = ( {
                     section={ section }
                     onDelete={ handleDeleteSection }
                     onEdit={ handleEditSection }
+                    onSelect={ handleSelectSection }
+                    isSelected={ selectedSectionId === section.id }
+                    onSelectClass={ handleSelectClass }
                   />
                 ) ) }
               </div>
@@ -297,17 +326,111 @@ export const CourseContentLayout = ( {
       </div>
 
       <div className="md:col-span-2">
-        <UI.Card>
-          <UI.CardBody className="flex items-center justify-center min-h-64">
-            <div className="text-center">
-              <Icons.IoInformationCircleOutline className="text-5xl text-default-300 mx-auto mb-4" />
-              <p className="text-default-500">
-                Selecciona una sección para ver detalles o arrastra para
-                reordenar
+        { selectedClassId ? (
+          <UI.Card>
+            <UI.CardHeader className="pb-0">
+              <h3 className="text-lg font-semibold">
+                { courseClass?.title || "Cargando clase..." }
+              </h3>
+            </UI.CardHeader>
+            <UI.CardBody>
+              { isClassLoading ? (
+                <div className="flex justify-center items-center h-40">
+                  <UI.Spinner color="primary" size="lg" />
+                </div>
+              ) : courseClass ? (
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">ID de la clase:</p>
+                    <p className="font-medium">{ courseClass.id }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Título:</p>
+                    <p className="font-medium">{ courseClass.title }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Descripción:</p>
+                    <p>{ courseClass.description || "Sin descripción" }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Posición:</p>
+                    <p>{ courseClass.positionOrder || 0 }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Slug:</p>
+                    <p className="break-words">{ courseClass.slug || "Sin slug" }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Fecha de creación:</p>
+                    <p>{ new Date( courseClass.creationDate ).toLocaleString( 'es-ES' ) }</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-default-500 mb-1">Estado:</p>
+                    <UI.Chip color={ courseClass.status ? "success" : "warning" }>
+                      { courseClass.status ? "Activo" : "Inactivo" }
+                    </UI.Chip>
+                  </div>
+                  { courseClass.isPublic !== undefined && (
+                    <div>
+                      <p className="text-sm text-default-500 mb-1">Visibilidad:</p>
+                      <UI.Chip color={ courseClass.isPublic ? "success" : "warning" }>
+                        { courseClass.isPublic ? "Público" : "Privado" }
+                      </UI.Chip>
+                    </div>
+                  ) }
+                  { courseClass.price !== undefined && (
+                    <div>
+                      <p className="text-sm text-default-500 mb-1">Precio:</p>
+                      <p>{ courseClass.price } USD</p>
+                    </div>
+                  ) }
+                  { courseClass.createdBy && (
+                    <div>
+                      <p className="text-sm text-default-500 mb-1">Creado por:</p>
+                      <p>{ courseClass.createdBy.name || courseClass.createdBy.username || "Desconocido" }</p>
+                    </div>
+                  ) }
+                </div>
+              ) : (
+                <div className="text-center">
+                  <Icons.IoInformationCircleOutline className="text-5xl text-default-300 mx-auto mb-4" />
+                  <p className="text-default-500">
+                    No se pudo cargar la información de la clase
+                  </p>
+                </div>
+              ) }
+            </UI.CardBody>
+          </UI.Card>
+        ) : selectedSectionId ? (
+          <UI.Card>
+            <UI.CardHeader className="pb-0">
+              <h3 className="text-lg font-semibold">
+                { courseSections.find( section => section.id === selectedSectionId )?.title || "Sección seleccionada" }
+              </h3>
+            </UI.CardHeader>
+            <UI.CardBody>
+              <p className="text-default-500 mb-4">
+                Selecciona una clase para ver sus detalles
               </p>
-            </div>
-          </UI.CardBody>
-        </UI.Card>
+              <CourseClass
+                sectionid={ selectedSectionId }
+                onSelectClass={ handleSelectClass }
+              />
+            </UI.CardBody>
+          </UI.Card>
+        ) : (
+          <UI.Card>
+            <UI.CardBody className="flex items-center justify-center min-h-64">
+              <div className="text-center">
+                <Icons.IoInformationCircleOutline className="text-5xl text-default-300 mx-auto mb-4" />
+                <p className="text-default-500">
+                  Selecciona una sección para ver detalles o arrastra para
+                  reordenar
+                </p>
+              </div>
+            </UI.CardBody>
+          </UI.Card>
+        ) }
       </div>
 
       { selectedSectionId && (

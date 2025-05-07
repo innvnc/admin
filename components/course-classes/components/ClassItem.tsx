@@ -1,41 +1,48 @@
 "use client";
 
+import { ICourseClassesResponse } from "../interfaces";
 import { UI } from "@/components/shared";
 import { Icons } from "@/components/shared/ui";
-import { ICourseClassesResponse } from "../interfaces";
 
-interface Props {
+interface ClassItemProps {
   classItem: ICourseClassesResponse;
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
-  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
+  onSelect?: ( id: string ) => void;
+  isSelected?: boolean;
+  dragHandleProps?: any;
 }
 
 export const ClassItem = ( {
   classItem,
   onEdit,
   onDelete,
+  onSelect,
+  isSelected = false,
   dragHandleProps,
-}: Props ) => {
+}: ClassItemProps ) => {
   return (
-    <UI.Card className="w-full mb-2">
-      <UI.CardBody className="py-3">
+    <UI.Card
+      className={ `w-full mb-2 ${ isSelected ? 'border-primary border-2' : '' }` }
+    >
+      <UI.CardBody className="py-2 px-3">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2 flex-1">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={ () => onSelect && onSelect( classItem.id ) }
+          >
             { dragHandleProps && (
               <div
-                className="cursor-grab active:cursor-grabbing text-default-400"
+                className="cursor-grab active:cursor-grabbing"
                 { ...dragHandleProps }
               >
-                <Icons.IoReorderThreeOutline size={ 20 } />
+                <Icons.IoReorderThreeOutline
+                  className="text-default-400"
+                  size={ 18 }
+                />
               </div>
             ) }
-            <div className="flex flex-col">
-              <span className="font-medium">{ classItem.title }</span>
-              <p className="text-xs text-gray-500 line-clamp-1">
-                { classItem.description }
-              </p>
-            </div>
+            <span className="font-medium">{ classItem.title }</span>
           </div>
           <div className="flex items-center gap-1">
             <UI.Button
@@ -55,11 +62,9 @@ export const ClassItem = ( {
             >
               <Icons.IoTrashOutline className="text-danger" size={ 16 } />
             </UI.Button>
-            { classItem.positionOrder !== undefined && (
-              <UI.Chip color="primary" size="sm">
-                Posición: { classItem.positionOrder }
-              </UI.Chip>
-            ) }
+            <UI.Chip color="primary" size="sm">
+              Posición: { classItem.positionOrder || 0 }
+            </UI.Chip>
           </div>
         </div>
       </UI.CardBody>

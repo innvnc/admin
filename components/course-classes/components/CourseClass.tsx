@@ -37,9 +37,17 @@ interface SortableClassProps {
   classItem: ICourseClassesResponse;
   onEdit: ( id: string ) => void;
   onDelete: ( id: string, title: string ) => void;
+  onSelect?: ( id: string ) => void;
+  isSelected?: boolean;
 }
 
-const SortableClass = ( { classItem, onEdit, onDelete }: SortableClassProps ) => {
+const SortableClass = ( {
+  classItem,
+  onEdit,
+  onDelete,
+  onSelect,
+  isSelected = false
+}: SortableClassProps ) => {
   const {
     attributes,
     listeners,
@@ -66,6 +74,8 @@ const SortableClass = ( { classItem, onEdit, onDelete }: SortableClassProps ) =>
         classItem={ classItem }
         onDelete={ onDelete }
         onEdit={ onEdit }
+        onSelect={ onSelect }
+        isSelected={ isSelected }
         dragHandleProps={ dragHandleProps }
       />
     </div>
@@ -74,9 +84,10 @@ const SortableClass = ( { classItem, onEdit, onDelete }: SortableClassProps ) =>
 
 interface Props {
   sectionid: string;
+  onSelectClass?: ( id: string ) => void;
 }
 
-export const CourseClass = ( { sectionid }: Props ) => {
+export const CourseClass = ( { sectionid, onSelectClass }: Props ) => {
   const {
     courseClasses = [],
     isLoading,
@@ -161,6 +172,12 @@ export const CourseClass = ( { sectionid }: Props ) => {
     setIsFormModalOpen( true );
   };
 
+  const handleSelectClass = ( id: string ) => {
+    if ( onSelectClass ) {
+      onSelectClass( id );
+    }
+  };
+
   const onConfirmDelete = async () => {
     if ( !classToDelete || !classTitle ) return;
 
@@ -232,6 +249,8 @@ export const CourseClass = ( { sectionid }: Props ) => {
                   classItem={ classItem }
                   onDelete={ handleDeleteClass }
                   onEdit={ handleEditClass }
+                  onSelect={ handleSelectClass }
+                  isSelected={ false }
                 />
               ) ) }
             </div>
