@@ -62,9 +62,6 @@ export const ClassItem = ( {
             >
               <Icons.IoTrashOutline className="text-danger" size={ 16 } />
             </UI.Button>
-            <UI.Chip color="primary" size="sm">
-              Posición: { classItem.positionOrder || 0 }
-            </UI.Chip>
           </div>
         </div>
       </UI.CardBody>

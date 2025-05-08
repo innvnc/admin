@@ -206,7 +206,6 @@ export const CourseClass = ( { sectionid, onSelectClass }: Props ) => {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">Clases</h3>
         <UI.Button
           size="sm"
           color="primary"

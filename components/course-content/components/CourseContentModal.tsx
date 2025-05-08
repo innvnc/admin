@@ -30,7 +30,7 @@ export const CourseContentModal = ( {
             <UI.ModalHeader className="flex flex-row justify-between items-center">
               <div className="flex items-center gap-2">
                 <Icons.IoListOutline size={ 24 } />
-                <span>Contenido del curso: { courseTitle }</span>
+                <span>{ courseTitle }</span>
               </div>
               <UI.Button
                 isIconOnly
