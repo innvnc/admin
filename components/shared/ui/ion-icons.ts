@@ -43,6 +43,7 @@ export {
   IoPlayCircleOutline,
   IoPlayOutline,
   IoPrintOutline,
+  IoReaderOutline,
   IoReorderThreeOutline,
   IoSaveOutline,
   IoSchoolOutline,
@@ -52,4 +53,5 @@ export {
   IoStopOutline,
   IoSunnyOutline,
   IoTrashOutline,
+  IoVideocamOutline,
 } from "react-icons/io5";
