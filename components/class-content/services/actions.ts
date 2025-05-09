@@ -3,6 +3,7 @@ import { ClassContentInputs } from "../validators";
 
 import { request } from "@/components";
 
+
 export const createClassContent = (
   data: ClassContentInputs,
 ): Promise<IClassContentResponse> =>
