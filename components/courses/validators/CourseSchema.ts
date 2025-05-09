@@ -31,12 +31,12 @@ const categoryIdsValidation = z
   });
 
 export const courseSchema = z.object({
-  title: titleValidation,
-  slug: slugValidation,
-  description: descriptionValidation,
-  price: priceValidation,
-  isPublic: isPublicValidation,
   categoryIds: categoryIdsValidation,
+  description: descriptionValidation,
+  isPublic:    isPublicValidation,
+  price:       priceValidation,
+  slug:        slugValidation,
+  title:       titleValidation,
 });
 
 export interface CourseInputs extends z.infer<typeof courseSchema> {}
