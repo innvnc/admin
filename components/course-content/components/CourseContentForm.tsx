@@ -1,9 +1,10 @@
-
-import { Icons } from '@/components/shared/ui';
 import { Tabs, Tab, Card, CardBody } from '@heroui/react';
+
 import { ClassSlide } from './class-slides';
 import { ClassText } from './ClassText';
 import { ClassVideo } from './ClassVideo';
+import { Icons } from '@/components/shared/ui';
+
 
 
 interface Props {
