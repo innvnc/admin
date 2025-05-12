@@ -1,13 +1,18 @@
 'use client';
+import { useAddClass, useUpdateClass } from '@/components/course-classes';
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
+
 
 
 interface Props {
   idClass: string | undefined;
 }
 
-export const CourseClassVideoForm = ( { idClass }: Props ) => {
+export const CourseClassContentVideoForm = ( { idClass }: Props ) => {
+
+  
+
   return (
     <div className="m-3">
       <UI.Button
