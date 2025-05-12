@@ -3,6 +3,7 @@ import { Tabs, Tab, Card, CardBody } from '@heroui/react';
 import { ClassSlide } from './class-slides';
 import { ClassText } from './ClassText';
 import { ClassVideo } from './ClassVideo';
+import { CourseClassVideoForm } from './course-class-forms';
 import { Icons } from '@/components/shared/ui';
 
 
@@ -27,6 +28,9 @@ export const CourseContentForm = ( { idClass }: Props ) => {
         >
           <Card>
             <CardBody>
+              <div className="inline-block">
+                <CourseClassVideoForm idClass={ idClass } />
+              </div>
               <div style={ { position: 'relative', paddingTop: '56.25%' } }>
                 <ClassVideo />
               </div>
@@ -64,6 +68,6 @@ export const CourseContentForm = ( { idClass }: Props ) => {
           </Card>
         </Tab>
       </Tabs>
-    </div >
+    </div>
   );
 };
