@@ -1,20 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getClassContentsByClassId } from "../services";
+import { getClassContentById } from "../services";
 
-export const useGetClassContentByClassId = ( courseClassId: string ) => {
+export const useGetClassContentById = ( id: string ) => {
   const {
     isLoading,
     isFetching,
     isError,
     error,
-    data: classContents,
-    refetch,
+    data: classContent,
   } = useQuery( {
-    queryKey: [ "classContents", courseClassId ],
-    queryFn: () => getClassContentsByClassId( courseClassId ),
-    enabled: !!courseClassId,
-    refetchOnWindowFocus: false,
+    queryKey: [ "classContent", id ],
+    queryFn: () => getClassContentById( id ),
+    enabled: !!id,
   } );
 
   return {
@@ -22,7 +20,6 @@ export const useGetClassContentByClassId = ( courseClassId: string ) => {
     isFetching,
     isError,
     error,
-    classContents,
-    refetch,
+    classContent,
   };
 };
