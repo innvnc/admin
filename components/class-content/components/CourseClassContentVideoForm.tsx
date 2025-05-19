@@ -5,11 +5,12 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast } from "@heroui/react";
 
-
 import { UI } from '@/components/shared';
 import { Icons } from '@/components/shared/ui';
 import { ClassContentInputs, classContentSchema } from '../validators';
 import { useClassContentFormHelper } from '../helpers';
+import { useGetClassContentByClassId } from '../hooks';
+
 
 interface Props {
   idClass: string;
@@ -17,8 +18,10 @@ interface Props {
 }
 
 export const CourseClassContentVideoForm = ( { idClass, idClassContent }: Props ) => {
+
   const [ isSubmitting, setIsSubmitting ] = useState( false );
   const internalDisclosure = UI.useDisclosure();
+  const { classContents } = useGetClassContentByClassId( idClass );
 
   const form = useForm<ClassContentInputs>( {
     defaultValues: {
@@ -71,6 +74,10 @@ export const CourseClassContentVideoForm = ( { idClass, idClassContent }: Props 
       >
         Nuevo video
       </UI.Button>
+
+      { classContents?.map( ( classContent ) => (
+        <div key={ classContent.id }>{ classContent.content }</div>
+      ) ) }
 
       <UI.Modal
         backdrop="blur"

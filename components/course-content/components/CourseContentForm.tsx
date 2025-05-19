@@ -9,10 +9,10 @@ import { Icons } from '@/components/shared/ui';
 
 
 interface Props {
-  idClass: string | undefined;
+  idClass: string;
 }
 
-export const CourseContentForm = ( { idClass }: Props ) => {
+export const CourseContentForm = ( { idClass = "" }: Props ) => {
 
   return (
     <div className="flex justify-center flex-col">
