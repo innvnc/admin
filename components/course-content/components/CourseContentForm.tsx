@@ -3,9 +3,8 @@ import { Tabs, Tab, Card, CardBody } from '@heroui/react';
 import { ClassSlide } from './class-slides';
 import { ClassText } from './ClassText';
 import { ClassVideo } from './ClassVideo';
-import { CourseClassContentVideoForm } from '@/components/class-content';
+import { CourseClassContentVideoForm, useGetClassContentByClassId } from '@/components/class-content';
 import { Icons } from '@/components/shared/ui';
-
 
 
 interface Props {
@@ -13,6 +12,9 @@ interface Props {
 }
 
 export const CourseContentForm = ( { idClass = "" }: Props ) => {
+
+  const { classContents } = useGetClassContentByClassId( idClass );
+  const videoContent = classContents?.find( content => content.contentType === 'video' );
 
   return (
     <div className="flex justify-center flex-col">
@@ -42,7 +44,7 @@ export const CourseContentForm = ( { idClass = "" }: Props ) => {
                   <CourseClassContentVideoForm idClass={ idClass } />
                 </div>
                 <div style={ { position: 'relative', paddingTop: '56.25%' } }>
-                  <ClassVideo />
+                  { videoContent && <ClassVideo idVideo={ videoContent.content } /> }
                 </div>
               </CardBody>
             </Card>
