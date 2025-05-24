@@ -25,7 +25,7 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
   const createEditModalDisclosure = UI.useDisclosure();
   const deleteModalDisclosure = UI.useDisclosure();
 
-  const { classContents, refetch: refetchClassContents } = useGetClassContentByClassId(idClass);
+  const { classContents, refetch: refetchClassContents, isLoading: isLoadingClassContents } = useGetClassContentByClassId(idClass);
   const { deleteClassContentById, isPending: isDeleting } = useDeleteClassContent();
 
 
@@ -132,49 +132,62 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
     }
   };
 
+  const videoItems = classContents?.filter(cc => cc.contentType === 'video');
+  const hasExistingVideos = videoItems && videoItems.length > 0;
+
   return (
     <div className="space-y-4">
-      <UI.Button
-        size="md"
-        startContent={<Icons.IoAddOutline size={24} />}
-        variant="ghost"
-        onPress={handleOpenCreateModal}
-      >
-        Nuevo video
-      </UI.Button>
 
-      <div className="space-y-3"> {/* Contenedor para la lista de controles de video */}
-        {classContents?.filter(cc => cc.contentType === 'video').map((classContent) => (
-          <div key={classContent.id} className="flex items-center justify-end p-2 bg-gray-100 rounded-md shadow-sm">
-            {/* Aquí ya no se muestra el ID ni el reproductor de video, solo los controles */}
-            <div className="flex items-center space-x-1">
-              <UI.Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                onPress={() => handleOpenEditModal(classContent.id)}
-                aria-label="Editar video"
-              >
-                <Icons.IoPencilOutline size={20} />
-              </UI.Button>
-              <UI.Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                color="danger"
-                onPress={() => handleOpenDeleteModal(classContent.id)}
-                aria-label="Eliminar video"
-              >
-                <Icons.IoTrashOutline size={20} />
-              </UI.Button>
+      {!isLoadingClassContents && !hasExistingVideos && (
+        <UI.Button
+          size="md"
+          startContent={<Icons.IoAddOutline size={24} />}
+          variant="ghost"
+          onPress={handleOpenCreateModal}
+        >
+          Nuevo video
+        </UI.Button>
+      )}
+
+      {isLoadingClassContents && (
+        <p className="text-sm text-gray-500 py-4 text-center">Cargando videos...</p>
+      )}
+
+      {!isLoadingClassContents && hasExistingVideos && (
+        <div className="space-y-3">
+          {videoItems?.map((classContent) => (
+            <div key={classContent.id} className="flex items-center justify-end p-2 bg-gray-100 rounded-md shadow-sm">
+              <div className="flex items-center space-x-1">
+                <UI.Button
+                  isIconOnly
+                  size="sm"
+                  variant="light"
+                  onPress={() => handleOpenEditModal(classContent.id)}
+                  aria-label="Editar video"
+                >
+                  <Icons.IoPencilOutline size={20} />
+                </UI.Button>
+                <UI.Button
+                  isIconOnly
+                  size="sm"
+                  variant="light"
+                  color="danger"
+                  onPress={() => handleOpenDeleteModal(classContent.id)}
+                  aria-label="Eliminar video"
+                >
+                  <Icons.IoTrashOutline size={20} />
+                </UI.Button>
+              </div>
             </div>
-          </div>
-        )
-        )}
-        {classContents?.filter(cc => cc.contentType === 'video').length === 0 && (
-          <p className="text-sm text-gray-500 py-4 text-center">No hay videos asignados a esta clase.</p>
-        )}
-      </div>
+          )
+          )}
+        </div>
+      )}
+
+
+      {!isLoadingClassContents && !hasExistingVideos && (
+        <p className="text-sm text-gray-500 py-4 text-center">No hay videos asignados a esta clase.</p>
+      )}
 
 
       <UI.Modal
