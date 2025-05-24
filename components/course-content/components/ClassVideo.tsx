@@ -6,7 +6,7 @@ export const ClassVideo = ( { idVideo }: Props ) => {
   return (
     <div>
       <iframe
-        src={ `https://iframe.mediadelivery.net/embed/423063/${ idVideo }?autoplay=true&loop=false&muted=false&preload=true&responsive=true` }
+        src={ `https://iframe.mediadelivery.net/embed/430509/${ idVideo }?autoplay=true&loop=false&muted=false&preload=true&responsive=true` }
         loading="lazy"
         style={ {
           border: 0,
@@ -21,3 +21,4 @@ export const ClassVideo = ( { idVideo }: Props ) => {
     </div>
   );
 };
+

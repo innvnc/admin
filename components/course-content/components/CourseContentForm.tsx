@@ -40,12 +40,15 @@ export const CourseContentForm = ( { idClass = "" }: Props ) => {
           >
             <Card>
               <CardBody>
+                
                 <div className="inline-block">
                   <CourseClassContentVideoForm idClass={ idClass } />
                 </div>
+
                 <div style={ { position: 'relative', paddingTop: '56.25%' } }>
                   { videoContent && <ClassVideo idVideo={ videoContent.content } /> }
                 </div>
+
               </CardBody>
             </Card>
           </Tab>
