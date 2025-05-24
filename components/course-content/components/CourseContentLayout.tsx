@@ -49,7 +49,7 @@ type SectionUpdateData = {
   positionOrder?: number;
 };
 
-const SortableSection = ( {
+const SortableSection = ({
   section,
   onEdit,
   onDelete,
@@ -58,12 +58,12 @@ const SortableSection = ( {
   onSelectClass,
 }: {
   section: ICourseSection;
-  onEdit: ( id: string ) => void;
-  onDelete: ( id: string, title: string ) => void;
-  onSelect: ( id: string ) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
+  onSelect: (id: string) => void;
   isSelected: boolean;
-  onSelectClass: ( id: string ) => void;
-} ) => {
+  onSelectClass: (id: string) => void;
+}) => {
   const {
     attributes,
     listeners,
@@ -71,64 +71,64 @@ const SortableSection = ( {
     transform,
     transition,
     isDragging
-  } = useSortable( { id: section.id } );
+  } = useSortable({ id: section.id });
 
   const style = {
-    transform: CSS.Transform.toString( transform ),
+    transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
 
   return (
     <div
-      ref={ setNodeRef }
-      style={ style }
+      ref={setNodeRef}
+      style={style}
     >
       <UI.Card
-        className={ `w-full ${ isSelected ? 'border-primary border-2' : '' }` }
+        className={`w-full ${isSelected ? 'border-primary border-2' : ''}`}
       >
         <UI.CardHeader className="flex justify-between items-center pb-0">
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={ () => onSelect( section.id ) }
+            onClick={() => onSelect(section.id)}
           >
             <div
               className="cursor-grab active:cursor-grabbing"
-              { ...listeners }
-              { ...attributes }
+              {...listeners}
+              {...attributes}
             >
               <Icons.IoReorderThreeOutline
                 className="text-default-400"
-                size={ 20 }
+                size={20}
               />
             </div>
-            <span className="font-medium">{ section.title }</span>
+            <span className="font-medium">{section.title}</span>
           </div>
           <div className="flex items-center gap-1">
             <UI.Button
               isIconOnly
               size="sm"
               variant="light"
-              onPress={ () => onEdit( section.id ) }
+              onPress={() => onEdit(section.id)}
             >
-              <Icons.IoPencilOutline className="text-default-500" size={ 16 } />
+              <Icons.IoPencilOutline className="text-default-500" size={16} />
             </UI.Button>
             <UI.Button
               isIconOnly
               color="danger"
               size="sm"
               variant="light"
-              onPress={ () => onDelete( section.id, section.title ) }
+              onPress={() => onDelete(section.id, section.title)}
             >
-              <Icons.IoTrashOutline className="text-danger" size={ 16 } />
+              <Icons.IoTrashOutline className="text-danger" size={16} />
             </UI.Button>
           </div>
         </UI.CardHeader>
         <UI.CardBody>
           <div className="flex justify-between items-center mt-2">
             <CourseClass
-              sectionid={ section.id }
-              onSelectClass={ onSelectClass }
+              sectionid={section.id}
+              onSelectClass={onSelectClass}
             />
           </div>
         </UI.CardBody>
@@ -137,18 +137,18 @@ const SortableSection = ( {
   );
 };
 
-export const CourseContentLayout = ( {
+export const CourseContentLayout = ({
   courseId,
   courseTitle,
 }: {
   courseId?: string;
   courseTitle?: string;
-} ) => {
+}) => {
   const {
     courseSections = [],
     isLoading,
     refetch,
-  } = useGetCourseSectionsByCourseId( courseId || "" );
+  } = useGetCourseSectionsByCourseId(courseId || "");
 
   const { courseSectionDelete, isPending: isDeletePending } =
     useDeleteCourseSection();
@@ -156,46 +156,46 @@ export const CourseContentLayout = ( {
   const { updateSection, isPending: isUpdatePending } =
     useUpdateCourseSection();
 
-  const [ selectedSectionId, setSelectedSectionId ] = useState<string | undefined>( undefined );
-  const [ selectedClassId, setSelectedClassId ] = useState<string | undefined>( undefined );
+  const [selectedSectionId, setSelectedSectionId] = useState<string | undefined>(undefined);
+  const [selectedClassId, setSelectedClassId] = useState<string | undefined>(undefined);
 
-  const [ sectionToDelete, setSectionToDelete ] = useState<string | undefined>(
+  const [sectionToDelete, setSectionToDelete] = useState<string | undefined>(
     undefined,
   );
 
-  const [ sectionTitle, setSectionTitle ] = useState<string | undefined>(
+  const [sectionTitle, setSectionTitle] = useState<string | undefined>(
     undefined,
   );
 
-  const [ isDeleteModalOpen, setIsDeleteModalOpen ] = useState( false );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { courseClass, isLoading: isClassLoading } = useGetClass( selectedClassId || "" );
+  const { courseClass, isLoading: isClassLoading } = useGetClass(selectedClassId || "");
 
   const sensors = useSensors(
-    useSensor( PointerSensor, {
+    useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
-    } ),
-    useSensor( KeyboardSensor, {
+    }),
+    useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    } ),
+    }),
   );
 
-  const handleDragEnd = async ( event: DragEndEvent ) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if ( over && active.id !== over.id ) {
+    if (over && active.id !== over.id) {
       const activeIndex = courseSections.findIndex(
-        ( section ) => section.id === active.id
+        (section) => section.id === active.id
       );
       const overIndex = courseSections.findIndex(
-        ( section ) => section.id === over.id
+        (section) => section.id === over.id
       );
 
-      if ( activeIndex !== -1 && overIndex !== -1 ) {
-        const activeSection = courseSections[ activeIndex ];
-        const overSection = courseSections[ overIndex ];
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const activeSection = courseSections[activeIndex];
+        const overSection = courseSections[overIndex];
 
         try {
           const data: SectionUpdateData = {
@@ -208,67 +208,67 @@ export const CourseContentLayout = ( {
               : overSection.positionOrder !== undefined ? overSection.positionOrder - 1 : 0
           };
 
-          await updateSection( activeSection.id, data as any );
+          await updateSection(activeSection.id, data as any);
           await refetch();
 
-          addToast( {
+          addToast({
             title: "Éxito",
             description: "Posición actualizada correctamente",
             color: "success",
-          } );
-        } catch ( error ) {
-          console.error( "Error al actualizar posición:", error );
-          addToast( {
+          });
+        } catch (error) {
+          console.error("Error al actualizar posición:", error);
+          addToast({
             title: "Error",
             description: "No se pudo actualizar la posición de la sección",
             color: "danger",
-          } );
+          });
         }
       }
     }
   };
 
-  const handleEditSection = ( id: string ) => {
-    setSelectedSectionId( id );
+  const handleEditSection = (id: string) => {
+    setSelectedSectionId(id);
   };
 
-  const handleDeleteSection = ( id: string, title: string ) => {
-    setSectionToDelete( id );
-    setSectionTitle( title );
-    setIsDeleteModalOpen( true );
+  const handleDeleteSection = (id: string, title: string) => {
+    setSectionToDelete(id);
+    setSectionTitle(title);
+    setIsDeleteModalOpen(true);
   };
 
-  const handleSelectSection = ( id: string ) => {
-    setSelectedSectionId( id );
-    setSelectedClassId( undefined );
+  const handleSelectSection = (id: string) => {
+    setSelectedSectionId(id);
+    setSelectedClassId(undefined);
   };
 
-  const handleSelectClass = ( id: string ) => {
-    setSelectedClassId( id );
+  const handleSelectClass = (id: string) => {
+    setSelectedClassId(id);
   };
 
   const onConfirmDelete = async () => {
-    if ( !sectionToDelete || !sectionTitle ) return;
+    if (!sectionToDelete || !sectionTitle) return;
 
     try {
-      await courseSectionDelete( sectionToDelete );
+      await courseSectionDelete(sectionToDelete);
       await refetch();
 
-      addToast( {
+      addToast({
         title: "Éxito",
-        description: `La sección "${ sectionTitle }" ha sido eliminada correctamente.`,
+        description: `La sección "${sectionTitle}" ha sido eliminada correctamente.`,
         color: "success",
-      } );
+      });
 
-      setIsDeleteModalOpen( false );
-      setSectionToDelete( undefined );
-      setSectionTitle( undefined );
-    } catch ( error ) {
-      addToast( {
+      setIsDeleteModalOpen(false);
+      setSectionToDelete(undefined);
+      setSectionTitle(undefined);
+    } catch (error) {
+      addToast({
         title: "Error",
-        description: `Hubo un problema al eliminar la sección "${ sectionTitle }".`,
+        description: `Hubo un problema al eliminar la sección "${sectionTitle}".`,
         color: "danger",
-      } );
+      });
     }
   };
 
@@ -276,10 +276,10 @@ export const CourseContentLayout = ( {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1">
         <div className="flex justify-between items-center mb-4">
-          <CourseSectionFormLayout courseId={ courseId || "" } name="sección" />
+          <CourseSectionFormLayout courseId={courseId || ""} name="sección" />
         </div>
 
-        { isLoading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-40">
             <UI.Spinner color="primary" size="lg" />
           </div>
@@ -296,49 +296,49 @@ export const CourseContentLayout = ( {
           </UI.Card>
         ) : (
           <DndContext
-            collisionDetection={ closestCenter }
-            sensors={ sensors }
-            onDragEnd={ handleDragEnd }
+            collisionDetection={closestCenter}
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={ courseSections.map( ( section ) => ( { id: section.id } ) ) }
-              strategy={ verticalListSortingStrategy }
+              items={courseSections.map((section) => ({ id: section.id }))}
+              strategy={verticalListSortingStrategy}
             >
               <div className="space-y-2">
-                { courseSections.map( ( section ) => (
+                {courseSections.map((section) => (
                   <SortableSection
-                    key={ section.id }
-                    section={ section }
-                    onDelete={ handleDeleteSection }
-                    onEdit={ handleEditSection }
-                    onSelect={ handleSelectSection }
-                    isSelected={ selectedSectionId === section.id }
-                    onSelectClass={ handleSelectClass }
+                    key={section.id}
+                    section={section}
+                    onDelete={handleDeleteSection}
+                    onEdit={handleEditSection}
+                    onSelect={handleSelectSection}
+                    isSelected={selectedSectionId === section.id}
+                    onSelectClass={handleSelectClass}
                   />
-                ) ) }
+                ))}
               </div>
             </SortableContext>
           </DndContext>
-        ) }
+        )}
       </div>
 
       <div className="md:col-span-2">
-        { selectedClassId ? (
+        {selectedClassId ? (
           <UI.Card>
             <UI.CardHeader className="pb-0">
               <h3 className="text-lg font-semibold">
-                { courseClass?.title || "Cargando clase..." }
+                {courseClass?.title || "Cargando clase..."}
               </h3>
             </UI.CardHeader>
             <UI.CardBody>
-              <CourseContentForm idClass={ courseClass?.id } />
+              <CourseContentForm idClass={courseClass?.id || ''} />
             </UI.CardBody>
           </UI.Card>
         ) : selectedSectionId ? (
           <UI.Card>
             <UI.CardHeader className="pb-0">
               <h3 className="text-lg font-semibold">
-                { courseSections.find( section => section.id === selectedSectionId )?.title || "Sección seleccionada" }
+                {courseSections.find(section => section.id === selectedSectionId)?.title || "Sección seleccionada"}
               </h3>
             </UI.CardHeader>
             <UI.CardBody>
@@ -346,8 +346,8 @@ export const CourseContentLayout = ( {
                 Selecciona una clase para ver sus detalles
               </p>
               <CourseClass
-                sectionid={ selectedSectionId }
-                onSelectClass={ handleSelectClass }
+                sectionid={selectedSectionId}
+                onSelectClass={handleSelectClass}
               />
             </UI.CardBody>
           </UI.Card>
@@ -362,27 +362,27 @@ export const CourseContentLayout = ( {
               </div>
             </UI.CardBody>
           </UI.Card>
-        ) }
+        )}
       </div>
 
-      { selectedSectionId && (
+      {selectedSectionId && (
         <CourseSectionFormLayout
-          courseId={ courseId || "" }
-          id={ selectedSectionId }
-          isOpen={ !!selectedSectionId }
+          courseId={courseId || ""}
+          id={selectedSectionId}
+          isOpen={!!selectedSectionId}
           name="sección"
-          onOpenChange={ ( isOpen ) => {
-            if ( !isOpen ) setSelectedSectionId( undefined );
-          } }
+          onOpenChange={(isOpen) => {
+            if (!isOpen) setSelectedSectionId(undefined);
+          }}
         />
-      ) }
+      )}
 
       <DeleteCourseSectionModal
-        isOpen={ isDeleteModalOpen }
-        isPending={ isDeletePending }
-        sectionTitle={ sectionTitle || "" }
-        onCancel={ () => setIsDeleteModalOpen( false ) }
-        onConfirm={ onConfirmDelete }
+        isOpen={isDeleteModalOpen}
+        isPending={isDeletePending}
+        sectionTitle={sectionTitle || ""}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onConfirm={onConfirmDelete}
       />
     </div>
   );
