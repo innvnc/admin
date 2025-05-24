@@ -2,7 +2,7 @@
 
 import { addToast } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react"; // Asegúrate de importar useEffect
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Icons } from '@/components/shared/ui';
@@ -14,7 +14,6 @@ import { ClassContentInputs, classContentSchema } from '../validators';
 
 interface Props {
   idClass: string;
-  // idClassContent?: string; // Parece no usarse, se podría limpiar si no es necesario en el componente padre
 }
 
 export const CourseClassContentVideoForm = ({ idClass }: Props) => {
@@ -64,8 +63,7 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
       form.reset({
         content: contentToEdit.content,
         contentType: contentToEdit.contentType as "video" | "slides" | "text",
-        courseClassId: contentToEdit.courseClass.id, // Asegúrate que sea el ID de la clase del curso, no del contenido.
-        // Si classContent.courseClass.id es correcto, está bien.
+        courseClassId: contentToEdit.courseClass.id,
       });
       setSelectedClassContentIdForForm(contentId);
       createEditModalDisclosure.onOpen();
@@ -109,25 +107,21 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
 
     try {
       await handleSave(data, () => {
-        createEditModalDisclosure.onClose(); // Esto llamará al useEffect y limpiará selectedClassContentIdForForm
+        createEditModalDisclosure.onClose();
         refetchClassContents();
       });
 
       addToast({
         title: "Éxito",
-        description: selectedClassContentIdForForm // Aún se puede usar para el mensaje antes de que useEffect lo limpie
+        description: selectedClassContentIdForForm
           ? `El video se ha actualizado correctamente.`
           : `El video se ha creado correctamente.`,
         color: "success",
       });
-      // setSelectedClassContentIdForForm(undefined); // El useEffect ahora maneja esto al cerrar el modal.
-      // Si se deja, no hay problema, solo es redundante si el modal se cierra inmediatamente.
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Error desconocido";
-
       console.error(`Error al guardar el video:`, errorMessage);
-
       addToast({
         title: "Error",
         description: `No se pudo ${selectedClassContentIdForForm ? "actualizar" : "crear"} el video. Verifique su conexión al servidor.`,
@@ -149,14 +143,11 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
         Nuevo video
       </UI.Button>
 
-      <div className="space-y-3">
+      <div className="space-y-3"> {/* Contenedor para la lista de controles de video */}
         {classContents?.filter(cc => cc.contentType === 'video').map((classContent) => (
-          <div
-            key={classContent.id}
-            className="flex items-center justify-between p-3 border rounded-md shadow-sm bg-white"
-          >
-            <span className="text-sm truncate" title={classContent.content}>{classContent.content}</span>
-            <div className="flex items-center space-x-2">
+          <div key={classContent.id} className="flex items-center justify-end p-2 bg-gray-100 rounded-md shadow-sm">
+            {/* Aquí ya no se muestra el ID ni el reproductor de video, solo los controles */}
+            <div className="flex items-center space-x-1">
               <UI.Button
                 isIconOnly
                 size="sm"
@@ -178,9 +169,10 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
               </UI.Button>
             </div>
           </div>
-        ))}
+        )
+        )}
         {classContents?.filter(cc => cc.contentType === 'video').length === 0 && (
-          <p className="text-sm text-gray-500">No hay videos asignados a esta clase.</p>
+          <p className="text-sm text-gray-500 py-4 text-center">No hay videos asignados a esta clase.</p>
         )}
       </div>
 
@@ -190,7 +182,6 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
         isDismissable={false}
         isOpen={createEditModalDisclosure.isOpen}
         onOpenChange={createEditModalDisclosure.onOpenChange}
-      // onClose prop removida para evitar el error
       >
         <UI.ModalContent>
           <>
@@ -218,7 +209,7 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
                       isInvalid={Boolean(form.formState.errors.content)}
                       label="URL del video"
                       labelPlacement="outside"
-                      placeholder="Ingresa la URL del video"
+                      placeholder="Ingresa la URL del video (Ej: YouTube, Vimeo, o enlace directo .mp4)"
                     />
                   )}
                 />
@@ -231,7 +222,7 @@ export const CourseClassContentVideoForm = ({ idClass }: Props) => {
                 startContent={<Icons.IoArrowBackOutline size={24} />}
                 variant="light"
                 onPress={() => {
-                  createEditModalDisclosure.onClose(); // Esto también activará el useEffect para limpiar el ID
+                  createEditModalDisclosure.onClose();
                 }}
               >
                 Cerrar
