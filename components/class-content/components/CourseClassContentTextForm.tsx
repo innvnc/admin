@@ -7,9 +7,10 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Icons } from '@/components/shared/ui';
 import { UI } from '@/components/shared';
-import { useGetClassContentByClassId, useDeleteClassContent, ClassContentInputs, classContentSchema } from '@/components/class-content';
-import { RichTextEditor } from '@/components/class-content/components/RichTextEditor';
-import { useClassContentFormHelper } from '@/components/class-content/helpers';
+import { useClassContentFormHelper } from '../helpers';
+import { useDeleteClassContent, useGetClassContentByClassId } from '../hooks';
+import { ClassContentInputs, classContentSchema } from '../validators';
+import { RichTextEditor } from './RichTextEditor';
 
 
 
@@ -17,7 +18,7 @@ interface Props {
   idClass: string;
 }
 
-export const ClassText = ( { idClass }: Props ) => {
+export const CourseClassContentTextForm = ( { idClass }: Props ) => {
 
   const [ isSubmitting, setIsSubmitting ] = useState( false );
   const [ selectedClassContentIdForForm, setSelectedClassContentIdForForm ] = useState<string | undefined>( undefined );

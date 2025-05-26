@@ -40,7 +40,7 @@ export const CourseContentForm = ( { idClass = "" }: Props ) => {
           >
             <Card>
               <CardBody>
-                
+
                 <div className="inline-block">
                   <CourseClassContentVideoForm idClass={ idClass } />
                 </div>
@@ -63,10 +63,11 @@ export const CourseContentForm = ( { idClass = "" }: Props ) => {
           >
             <Card>
               <CardBody>
-                <ClassText />
+                <ClassText idClass={ idClass } />
               </CardBody>
             </Card>
           </Tab>
+
           <Tab
             key="Slides"
             title={
