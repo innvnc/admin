@@ -12,4 +12,5 @@ export interface ICoursesResponse {
   isPublic: boolean;
   categories: CategoriesResponse[];
   createdBy: CreatedBy;
+  courseUnderConstruction: boolean;
 }

@@ -20,6 +20,10 @@ const isPublicValidation = z.boolean({
   invalid_type_error: "El valor público debe ser verdadero o falso.",
 });
 
+const courseUnderConstructionValidation = z.boolean({
+  invalid_type_error: "El valor de curso en construcción debe ser verdadero o falso.",
+});
+
 const categoryIdsValidation = z
   .array(
     z.string().uuid({
@@ -31,12 +35,13 @@ const categoryIdsValidation = z
   });
 
 export const courseSchema = z.object({
-  categoryIds: categoryIdsValidation,
-  description: descriptionValidation,
-  isPublic:    isPublicValidation,
-  price:       priceValidation,
-  slug:        slugValidation,
-  title:       titleValidation,
+  categoryIds:             categoryIdsValidation,
+  description:             descriptionValidation,
+  isPublic:                isPublicValidation,
+  price:                   priceValidation,
+  slug:                    slugValidation,
+  title:                   titleValidation,
+  courseUnderConstruction: courseUnderConstructionValidation,
 });
 
 export interface CourseInputs extends z.infer<typeof courseSchema> {}

@@ -14,44 +14,46 @@ export const useCoursesFormHelper = (
 ) => {
   const { addNewCourse } = useAddCourse();
   const { updateCourse } = useUpdateCourse();
-  const { course, isLoading } = useGetCourse(id || "");
+  const { course, isLoading } = useGetCourse( id || "" );
   const { categories = [] } = useGetCategories();
 
-  useEffect(() => {
-    if (id && course && !isLoading) {
-      const availableCategoryIds = categories.map((category) => category.id);
+  useEffect( () => {
+    if ( id && course && !isLoading ) {
+      const availableCategoryIds = categories.map( ( category ) => category.id );
       const validCategoryIds =
         course.categories
-          ?.map((c: { id: string }) => c.id)
-          .filter((catId) => availableCategoryIds.includes(catId)) || [];
+          ?.map( ( c: { id: string; } ) => c.id )
+          .filter( ( catId ) => availableCategoryIds.includes( catId ) ) || [];
 
-      form.reset({
+      form.reset( {
         title: course.title,
         slug: course.slug,
         description: course.description,
         price: course.price,
         isPublic: course.isPublic,
         categoryIds: validCategoryIds,
-      });
+        courseUnderConstruction: course.courseUnderConstruction,
+      } );
     }
 
-    if (!id) {
-      form.reset({
+    if ( !id ) {
+      form.reset( {
         title: "",
         slug: "",
         description: "",
         price: 0,
         isPublic: false,
         categoryIds: [],
-      });
+        courseUnderConstruction: false,
+      } );
     }
-  }, [course, isLoading, form, id, categories]);
+  }, [ course, isLoading, form, id, categories ] );
 
-  const handleSave = async (data: CourseInputs, onClose: () => void) => {
-    if (id) {
-      await updateCourse(id, data);
+  const handleSave = async ( data: CourseInputs, onClose: () => void ) => {
+    if ( id ) {
+      await updateCourse( id, data );
     } else {
-      await addNewCourse(data);
+      await addNewCourse( data );
     }
     onClose();
   };
