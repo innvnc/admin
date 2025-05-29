@@ -5,8 +5,8 @@ import { UseFormReturn } from "react-hook-form";
 
 import { useAddCourse, useGetCourse, useUpdateCourse } from "../hooks";
 
-import { CourseInputs } from "@/components";
-import { useGetCategories } from "@/components/categories/hooks";
+import { CourseInputs, useGetCategories } from "@/components";
+
 
 export const useCoursesFormHelper = (
   id: string | undefined,
@@ -44,7 +44,7 @@ export const useCoursesFormHelper = (
         price: 0,
         isPublic: false,
         categoryIds: [],
-        courseUnderConstruction: false,
+        courseUnderConstruction: true,
       } );
     }
   }, [ course, isLoading, form, id, categories ] );

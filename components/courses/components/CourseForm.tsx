@@ -25,7 +25,7 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
       price: 0,
       isPublic: false,
       categoryIds: [],
-      courseUnderConstruction: false,
+      courseUnderConstruction: true,
     },
     mode: "onSubmit",
     resolver: zodResolver( courseSchema ),
