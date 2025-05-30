@@ -12,7 +12,7 @@ export const UsersLayout = () => {
           </p>
         </div>
       }
-      imageUrl="https://i.imgur.com/Y6T1ctb.png"
+      imageUrl="https://i.imgur.com/xdgcsQ3.png"
       subtitle="Controla y administra los usuarios de la plataforma"
       title="Panel de Usuarios"
     />

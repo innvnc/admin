@@ -12,7 +12,7 @@ export const SalesLayout = () => {
           </p>
         </div>
       }
-      imageUrl="https://i.imgur.com/TSxxmZF.png"
+      imageUrl="https://i.imgur.com/XRs17cF.png"
       subtitle="Monitorea las ventas y el rendimiento financiero"
       title="Panel de Ventas"
     />

@@ -12,7 +12,7 @@ export const NotificationsLayout = () => {
           </p>
         </div>
       }
-      imageUrl="https://i.imgur.com/awfTxzg.png"
+      imageUrl="https://i.imgur.com/WMJ5UdB.png"
       subtitle="Administra las notificaciones y alertas del sistema"
       title="Panel de Notificaciones"
     />

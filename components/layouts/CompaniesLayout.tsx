@@ -11,7 +11,7 @@ export const CompaniesLayout = () => {
           </p>
         </div>
       }
-      imageUrl="https://i.imgur.com/sf4QSy6.png"
+      imageUrl="https://i.imgur.com/r85Wz7s.png"
       subtitle="Administra los datos de las empresas registradas"
       title="Panel de Empresas"
     />

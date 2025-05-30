@@ -11,7 +11,7 @@ export const ContactLayout = () => {
           </p>
         </div>
       }
-      imageUrl="https://i.imgur.com/BfKrsvl.png"
+      imageUrl="https://i.imgur.com/ODZmoSU.png"
       subtitle="Revisa y gestiona los mensajes entrantes"
       title="Panel de Contacto"
     />
