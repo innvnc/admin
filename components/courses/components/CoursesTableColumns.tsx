@@ -1,6 +1,6 @@
 import { ColumnDefinition, Icons } from "@/components/shared/ui";
-import { ICoursesResponse } from "@/interfaces";
 import { UI } from "@/components/shared";
+import { ICoursesResponse } from '../interfaces/ICoursesResponse';
 
 interface Props {
   onEdit: ( id: string ) => void;
@@ -41,6 +41,22 @@ export const CoursesTableColumns = ( {
       sortable: true,
       renderCell: ( item: ICoursesResponse ) => (
         <span>${ item.price.toFixed( 2 ) }</span>
+      ),
+    },
+    {
+      name: "DURACIÓN",
+      uid: "estimatedDuration",
+      sortable: false,
+      renderCell: ( item: ICoursesResponse ) => (
+        <span>{ item.estimatedDuration }</span>
+      ),
+    },
+    {
+      name: "NIVEL",
+      uid: "difficultyLevel",
+      sortable: false,
+      renderCell: ( item: ICoursesResponse ) => (
+        <span>{ item.difficultyLevel }</span>
       ),
     },
     {

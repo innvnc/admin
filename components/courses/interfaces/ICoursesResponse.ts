@@ -13,4 +13,6 @@ export interface ICoursesResponse {
   categories: CategoriesResponse[];
   createdBy: CreatedBy;
   courseUnderConstruction: boolean;
+  estimatedDuration: string;
+  difficultyLevel: "Básica" | "Intermedia" | "Avanzada";
 }

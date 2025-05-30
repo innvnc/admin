@@ -1,4 +1,5 @@
-import { Category } from "./category";
+import { CategoriesResponse } from '@/components/categories/interfaces';
+
 
 export interface ICoursesResponse {
   id: string;
@@ -9,11 +10,12 @@ export interface ICoursesResponse {
   description: string;
   price: number;
   isPublic: boolean;
-  courseUnderConstruction: boolean;
+  categories: CategoriesResponse[];
   createdBy: CreatedBy;
-  categories: Category[];
+  courseUnderConstruction: boolean;
+  estimatedDuration: string;
+  difficultyLevel: "Básica" | "Intermedia" | "Avanzada";
 }
-
 export interface CreatedBy {
   id: string;
   creationDate: string;

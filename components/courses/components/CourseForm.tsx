@@ -10,6 +10,12 @@ import { CourseInputs, courseSchema, UI } from "@/components";
 import { Icons } from "@/components/shared/ui";
 import { useGetCategories } from "@/components/categories/hooks";
 
+const dificultadOptions = [
+  { value: "Básica", label: "Básica" },
+  { value: "Intermedia", label: "Intermedia" },
+  { value: "Avanzada", label: "Avanzada" },
+];
+
 interface Props {
   id?: string;
   onClose: () => void;
@@ -26,6 +32,8 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
       isPublic: false,
       categoryIds: [],
       courseUnderConstruction: true,
+      estimatedDuration: "1hs",
+      difficultyLevel: "Básica",
     },
     mode: "onSubmit",
     resolver: zodResolver( courseSchema ),
@@ -160,6 +168,45 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
           >
             { ( category ) => (
               <UI.SelectItem key={ category.id }>{ category.title }</UI.SelectItem>
+            ) }
+          </UI.Select>
+        ) }
+      />
+
+      <Controller
+        control={ form.control }
+        name="estimatedDuration"
+        render={ ( { field } ) => (
+          <UI.Input
+            { ...field }
+            errorMessage={ form.formState.errors.estimatedDuration?.message }
+            isInvalid={ Boolean( form.formState.errors.estimatedDuration ) }
+            label="Duración estimada"
+            labelPlacement="outside"
+            placeholder="Ej: 1hs, 2hs, 45min"
+          />
+        ) }
+      />
+
+      <Controller
+        control={ form.control }
+        name="difficultyLevel"
+        render={ ( { field } ) => (
+          <UI.Select
+            errorMessage={ form.formState.errors.difficultyLevel?.message }
+            isInvalid={ Boolean( form.formState.errors.difficultyLevel ) }
+            items={ dificultadOptions }
+            label="Nivel de dificultad"
+            labelPlacement="outside"
+            placeholder="Selecciona el nivel"
+            selectedKeys={ new Set( [ field.value ] ) }
+            selectionMode="single"
+            onSelectionChange={ ( selected ) =>
+              field.onChange( Array.from( selected )[ 0 ] )
+            }
+          >
+            { ( option ) => (
+              <UI.SelectItem key={ option.value }>{ option.label }</UI.SelectItem>
             ) }
           </UI.Select>
         ) }

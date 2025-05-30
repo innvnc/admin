@@ -5,7 +5,8 @@ import { UseFormReturn } from "react-hook-form";
 
 import { useAddCourse, useGetCourse, useUpdateCourse } from "../hooks";
 
-import { CourseInputs, useGetCategories } from "@/components";
+import { CourseInputs } from "@/components";
+import { useGetCategories } from "@/components/categories/hooks";
 
 
 export const useCoursesFormHelper = (
@@ -33,6 +34,8 @@ export const useCoursesFormHelper = (
         isPublic: course.isPublic,
         categoryIds: validCategoryIds,
         courseUnderConstruction: course.courseUnderConstruction,
+        estimatedDuration: course.estimatedDuration,
+        difficultyLevel: course.difficultyLevel,
       } );
     }
 
@@ -45,6 +48,8 @@ export const useCoursesFormHelper = (
         isPublic: false,
         categoryIds: [],
         courseUnderConstruction: true,
+        estimatedDuration: "1hs",
+        difficultyLevel: "Básica",
       } );
     }
   }, [ course, isLoading, form, id, categories ] );

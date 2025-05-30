@@ -24,6 +24,15 @@ const courseUnderConstructionValidation = z.boolean({
   invalid_type_error: "El valor de curso en construcción debe ser verdadero o falso.",
 });
 
+const estimatedDurationValidation = z.string().min(1, {
+  message: "La duración estimada es obligatoria.",
+});
+
+const difficultyLevelValidation = z.enum(["Básica", "Intermedia", "Avanzada"], {
+  required_error: "El nivel de dificultad es obligatorio.",
+  invalid_type_error: "Nivel de dificultad inválido.",
+});
+
 const categoryIdsValidation = z
   .array(
     z.string().uuid({
@@ -42,6 +51,8 @@ export const courseSchema = z.object({
   slug:                    slugValidation,
   title:                   titleValidation,
   courseUnderConstruction: courseUnderConstructionValidation,
+  estimatedDuration:       estimatedDurationValidation,
+  difficultyLevel:         difficultyLevelValidation,
 });
 
 export interface CourseInputs extends z.infer<typeof courseSchema> {}
