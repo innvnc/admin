@@ -1,7 +1,7 @@
 "use client";
 
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { JwtUserPayload } from "../../../interfaces/auth-types";
 import { JwtService } from "../services";
@@ -9,39 +9,40 @@ import { JwtService } from "../services";
 export const useAuth = () => {
   const { user, isLoaded } = useUser();
   const { signOut } = useClerk();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
+  const [ isAuthenticating, setIsAuthenticating ] = useState<boolean>( false );
+  const [ isClient, setIsClient ] = useState<boolean>( false );
+  const intervalRef = useRef<NodeJS.Timeout | null>( null );
 
-  useEffect(() => {
-    setIsClient(true);
+  useEffect( () => {
+    setIsClient( true );
 
     const token = JwtService.getStoredToken();
 
-    setIsAuthenticated(!!token);
+    setIsAuthenticated( !!token );
 
     const handleStorageChange = () => {
       const token = JwtService.getStoredToken();
 
-      setIsAuthenticated(!!token);
+      setIsAuthenticated( !!token );
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener( "storage", handleStorageChange );
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener( "storage", handleStorageChange );
     };
-  }, []);
+  }, [] );
 
-  useEffect(() => {
+  useEffect( () => {
     const setupUserAuth = async () => {
-      if (!isLoaded || !user || isAuthenticating) return;
+      if ( !isLoaded || !user || isAuthenticating ) return;
 
       const token = JwtService.getStoredToken();
 
-      if (!token) {
+      if ( !token ) {
         try {
-          setIsAuthenticating(true);
+          setIsAuthenticating( true );
 
           const userData: JwtUserPayload = {
             id: user.id,
@@ -50,27 +51,58 @@ export const useAuth = () => {
             email: user.primaryEmailAddress?.emailAddress || "",
           };
 
-          const { token } = await JwtService.createUserToken(userData);
+          const { token } = await JwtService.createUserToken( userData );
 
-          JwtService.storeToken(token);
-        } catch (error) {
-          console.error("Authentication setup failed:", error);
+          JwtService.storeToken( token );
+        } catch ( error ) {
+          console.error( "Authentication setup failed:", error );
         } finally {
-          setIsAuthenticating(false);
+          setIsAuthenticating( false );
         }
       }
     };
 
     setupUserAuth();
-  }, [user, isLoaded, isAuthenticating]);
+  }, [ user, isLoaded, isAuthenticating ] );
 
-  useEffect(() => {
-    if (!isLoaded) return;
+  useEffect( () => {
+    if ( !isLoaded || !user ) return;
 
-    if (!user && JwtService.getStoredToken()) {
+    if ( intervalRef.current ) {
+      clearInterval( intervalRef.current );
+      intervalRef.current = null;
+    }
+
+    const token = JwtService.getStoredToken();
+    if ( token ) {
+      const renewToken = async () => {
+        try {
+          await JwtService.validateTokenWithBackend( token );
+        } catch ( error ) {
+          console.error( "Token renewal failed:", error );
+        }
+      };
+
+      renewToken();
+
+      intervalRef.current = setInterval( renewToken, 5 * 60 * 1000 );
+    }
+
+    return () => {
+      if ( intervalRef.current ) {
+        clearInterval( intervalRef.current );
+        intervalRef.current = null;
+      }
+    };
+  }, [ isLoaded, user ] );
+
+  useEffect( () => {
+    if ( !isLoaded ) return;
+
+    if ( !user && JwtService.getStoredToken() ) {
       JwtService.removeToken();
     }
-  }, [user, isLoaded]);
+  }, [ user, isLoaded ] );
 
   return {
     isAuthenticated: !!JwtService.getStoredToken(),
