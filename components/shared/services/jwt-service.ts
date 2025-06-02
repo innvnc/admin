@@ -33,7 +33,7 @@ export class JwtService {
   static async validateTokenWithBackend(token: string): Promise<any> {
     try {
       const response = await fetch(
-        `${this.BACKEND_URL}/api/auth/validate-token`,
+        `${this.BACKEND_URL}/auth/validate-token`,
         {
           method: "POST",
           headers: {
