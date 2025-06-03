@@ -1,3 +1,4 @@
+
 export interface ICourseInstructor {
   id:                string;
   isActive:          boolean;
