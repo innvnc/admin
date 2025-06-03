@@ -10,6 +10,11 @@ export const menuItems = [
     route: "/categorias",
   },
   {
+    icon: "https://i.imgur.com/YbxblKG.png",
+    label: "Diplomaturas",
+    route: "/diplomaturas",
+  },
+  {
     icon: "https://i.imgur.com/ZYTwu3z.png",
     label: "Instructores",
     route: "/instructores",
