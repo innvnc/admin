@@ -8,16 +8,18 @@ import { ICourseInstructor } from '../interfaces';
 
 
 export const useGetCourseInstructorByCourseId = ( courseId: string ) => {
+
   const {
-    isLoading,
-    isFetching,
-    isError,
-    error,
     data: courseInstructor,
+    error,
+    isError,
+    isFetching,
+    isLoading,
   } = useQuery<ICourseInstructor, Error>( {
     queryKey: [ 'courseInstructor', courseId ],
     queryFn: () => getCourseInstructorByCourseId( courseId ),
     refetchOnWindowFocus: false,
+    enabled: !!courseId,
   } );
 
   return {
@@ -27,4 +29,5 @@ export const useGetCourseInstructorByCourseId = ( courseId: string ) => {
     isError,
     error,
   };
+
 };

@@ -1,14 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast } from "@heroui/react";
 
 import { useCoursesFormHelper } from "../helpers";
+import { InstructorSelectorModal } from "./InstructorSelectorModal";
 
 import { CourseInputs, courseSchema, UI } from "@/components";
 import { Icons } from "@/components/shared/ui";
 import { useGetCategories } from "@/components/categories/hooks";
+import { useGetCourseInstructorByCourseId } from "@/components/instructors/hooks";
 
 const dificultadOptions = [
   { value: "Básica", label: "Básica" },
@@ -48,44 +51,37 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
     .watch( "categoryIds" )
     .filter( ( id ) => availableCategoryIds.includes( id ) );
 
-  const onSubmit = async ( data: CourseInputs ) => {
-    setIsSubmitting?.( true );
-
-    try {
-      const validData = {
-        ...data,
-        categoryIds: data.categoryIds.filter( ( id ) =>
-          availableCategoryIds.includes( id ),
-        ),
-      };
-
-      await handleSave( validData, onClose );
-
-      addToast( {
-        title: "Éxito",
-        description: id
-          ? `El curso "${ data.title }" se ha actualizado correctamente.`
-          : `El curso "${ data.title }" se ha creado correctamente.`,
-        color: "success",
-      } );
-    } catch ( error ) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Error desconocido";
-
-      console.error( `Error al guardar el curso "${ data.title }":`, errorMessage );
-
-      addToast( {
-        title: "Error",
-        description: `No se pudo ${ id ? "actualizar" : "crear" } el curso. Verifique su conexión al servidor.`,
-        color: "danger",
-      } );
-    } finally {
-      setIsSubmitting?.( false );
-    }
-  };
+  const [ isModalOpen, setIsModalOpen ] = useState( false );
+  const { courseInstructor: currentInstructors } = useGetCourseInstructorByCourseId( id || "" );
 
   return (
-    <UI.Form id="course-form" onSubmit={ form.handleSubmit( onSubmit ) }>
+    <UI.Form id="course-form" onSubmit={ form.handleSubmit( async ( data ) => {
+      setIsSubmitting?.( true );
+      try {
+        const validData = {
+          ...data,
+          categoryIds: data.categoryIds.filter( ( id ) =>
+            availableCategoryIds.includes( id )
+          ),
+        };
+        await handleSave( validData, onClose );
+        addToast( {
+          title: "Éxito",
+          description: id
+            ? `El curso "${ data.title }" se ha actualizado correctamente.`
+            : `El curso "${ data.title }" se ha creado correctamente.`,
+          color: "success",
+        } );
+      } catch ( error ) {
+        addToast( {
+          title: "Error",
+          description: `No se pudo ${ id ? "actualizar" : "crear" } el curso. Verifique su conexión al servidor.`,
+          color: "danger",
+        } );
+      } finally {
+        setIsSubmitting?.( false );
+      }
+    } ) }>
       <Controller
         control={ form.control }
         name="title"
@@ -172,6 +168,53 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
           </UI.Select>
         ) }
       />
+
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-medium mb-1">Instructores</label>
+        <div className="flex flex-wrap gap-2 mb-2">
+          { id ? (
+            Array.isArray( currentInstructors ) && currentInstructors.length > 0 ? (
+              currentInstructors.map( ( ins ) => (
+                <div
+                  key={ ins.id }
+                  className="flex items-center bg-default-100 rounded-xl px-2 py-1 gap-2"
+                >
+                  <img
+                    src={ ins.profilePictureUrl }
+                    alt={ ins.fullName }
+                    className="w-7 h-7 rounded-full border object-cover"
+                  />
+                  <span className="text-sm">{ ins.fullName }</span>
+                  <span className="text-xs text-default-500">{ ins.profesionalTitle }</span>
+                </div>
+              ) )
+            ) : (
+              <span className="text-default-400">No hay instructores asociados</span>
+            )
+          ) : (
+            <span className="text-default-400">Primero guarda el nuevo curso para poder agregar instructores</span>
+          ) }
+          { id && (
+            <button
+              type="button"
+              onClick={ () => setIsModalOpen( true ) }
+              className="flex items-center gap-1 px-2 py-1 bg-primary-50 hover:bg-primary-100 rounded-xl text-primary-600 border border-primary-200 cursor-pointer transition"
+            >
+              <Icons.IoPeopleOutline size={ 18 } />
+              <span className="text-sm">Administrar instructores</span>
+            </button>
+          ) }
+        </div>
+      </div>
+
+      { id && (
+        <InstructorSelectorModal
+          isOpen={ isModalOpen }
+          onClose={ () => setIsModalOpen( false ) }
+          courseId={ id }
+        />
+      ) }
+
 
       <Controller
         control={ form.control }

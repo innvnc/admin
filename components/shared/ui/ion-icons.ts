@@ -42,6 +42,7 @@ export {
   IoMoonOutline,
   IoNotificationsOutline,
   IoPencilOutline,
+  IoPeopleOutline,
   IoPlayCircleOutline,
   IoPlayOutline,
   IoPrintOutline,

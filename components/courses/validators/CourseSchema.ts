@@ -43,6 +43,10 @@ const categoryIdsValidation = z
     message: "Debe haber al menos una categoría.",
   });
 
+const instructorIdsValidation = z
+  .array(z.string().uuid({ message: "Cada instructor debe ser un UUID válido." }))
+  .optional();
+
 export const courseSchema = z.object({
   categoryIds:             categoryIdsValidation,
   description:             descriptionValidation,
@@ -53,6 +57,7 @@ export const courseSchema = z.object({
   courseUnderConstruction: courseUnderConstructionValidation,
   estimatedDuration:       estimatedDurationValidation,
   difficultyLevel:         difficultyLevelValidation,
+  instructorIds:           instructorIdsValidation,
 });
 
 export interface CourseInputs extends z.infer<typeof courseSchema> {}
