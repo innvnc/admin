@@ -37,7 +37,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <ToastProvider />
-        <ClerkProvider>
+        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <QueryClientProvider client={queryClient}>
             {children}
           </QueryClientProvider>
