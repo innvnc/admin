@@ -1,6 +1,6 @@
 import { ColumnDefinition, Icons } from "@/components/shared/ui";
 import { UI } from "@/components/shared";
-import { ICoursesResponse } from '../interfaces/ICoursesResponse';
+import { ICoursesResponse } from "../interfaces/ICoursesResponse";
 
 interface Props {
   onEdit: ( id: string ) => void;
@@ -69,6 +69,13 @@ export const CoursesTableColumns = ( {
             <Icons.IoEyeOutline className="text-success-500" size={ 20 } />
           ) : (
             <Icons.IoEyeOffOutline className="text-danger-500" size={ 20 } />
+          ) }
+          { item.diplomaProgram && (
+            <Icons.IoSchoolOutline
+              className="text-primary-500"
+              size={ 20 }
+              title="Diplomatura"
+            />
           ) }
           { item.courseUnderConstruction && (
             <Icons.IoConstructOutline

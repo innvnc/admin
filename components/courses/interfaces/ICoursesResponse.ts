@@ -10,6 +10,8 @@ export interface ICoursesResponse {
   description: string;
   price: number;
   isPublic: boolean;
+  diplomaProgram: boolean;
+
   categories: CategoriesResponse[];
   createdBy: CreatedBy;
   courseUnderConstruction: boolean;
