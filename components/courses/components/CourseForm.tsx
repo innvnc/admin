@@ -37,6 +37,7 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
       courseUnderConstruction: true,
       estimatedDuration: "1hs",
       difficultyLevel: "Básica",
+      diplomaProgram: false,
     },
     mode: "onSubmit",
     resolver: zodResolver( courseSchema ),
@@ -55,33 +56,34 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
   const { courseInstructor: currentInstructors } = useGetCourseInstructorByCourseId( id || "" );
 
   return (
-    <UI.Form id="course-form" onSubmit={ form.handleSubmit( async ( data ) => {
-      setIsSubmitting?.( true );
-      try {
-        const validData = {
-          ...data,
-          categoryIds: data.categoryIds.filter( ( id ) =>
-            availableCategoryIds.includes( id )
-          ),
-        };
-        await handleSave( validData, onClose );
-        addToast( {
-          title: "Éxito",
-          description: id
-            ? `El curso "${ data.title }" se ha actualizado correctamente.`
-            : `El curso "${ data.title }" se ha creado correctamente.`,
-          color: "success",
-        } );
-      } catch ( error ) {
-        addToast( {
-          title: "Error",
-          description: `No se pudo ${ id ? "actualizar" : "crear" } el curso. Verifique su conexión al servidor.`,
-          color: "danger",
-        } );
-      } finally {
-        setIsSubmitting?.( false );
-      }
-    } ) }>
+    <UI.Form
+      id="course-form"
+      onSubmit={ form.handleSubmit( async ( data ) => {
+        setIsSubmitting?.( true );
+        try {
+          const validData = {
+            ...data,
+            categoryIds: data.categoryIds.filter( ( id ) => availableCategoryIds.includes( id ) ),
+          };
+          await handleSave( validData, onClose );
+          addToast( {
+            title: "Éxito",
+            description: id
+              ? `El curso "${ data.title }" se ha actualizado correctamente.`
+              : `El curso "${ data.title }" se ha creado correctamente.`,
+            color: "success",
+          } );
+        } catch ( error ) {
+          addToast( {
+            title: "Error",
+            description: `No se pudo ${ id ? "actualizar" : "crear" } el curso. Verifique su conexión al servidor.`,
+            color: "danger",
+          } );
+        } finally {
+          setIsSubmitting?.( false );
+        }
+      } ) }
+    >
       <Controller
         control={ form.control }
         name="title"
@@ -215,7 +217,6 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
         />
       ) }
 
-
       <Controller
         control={ form.control }
         name="estimatedDuration"
@@ -252,6 +253,38 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
               <UI.SelectItem key={ option.value }>{ option.label }</UI.SelectItem>
             ) }
           </UI.Select>
+        ) }
+      />
+
+      <Controller
+        control={ form.control }
+        name="diplomaProgram"
+        render={ ( { field: { value, onChange } } ) => (
+          <UI.Switch
+            color={ value ? "success" : "default" }
+            isSelected={ value }
+            size="lg"
+            thumbIcon={ ( { isSelected, className } ) =>
+              isSelected ? (
+                <Icons.IoSchoolOutline className={ className } />
+              ) : (
+                <Icons.IoSchoolOutline className={ className } />
+              )
+            }
+            onValueChange={ ( checked ) => onChange( checked ) }
+          >
+            { value ? (
+              <span className="flex items-center gap-1">
+                <Icons.IoSchoolOutline className="text-primary-500" />
+                Diplomatura
+              </span>
+            ) : (
+              <span className="flex items-center gap-1">
+                <Icons.IoSchoolOutline className="text-default-400" />
+                No es diplomatura
+              </span>
+            ) }
+          </UI.Switch>
         ) }
       />
 

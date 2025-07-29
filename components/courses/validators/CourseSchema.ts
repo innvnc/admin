@@ -33,6 +33,10 @@ const difficultyLevelValidation = z.enum(["Básica", "Intermedia", "Avanzada"], 
   invalid_type_error: "Nivel de dificultad inválido.",
 });
 
+const diplomaProgramValidation = z.boolean({
+  invalid_type_error: "El valor de diplomatura debe ser verdadero o falso.",
+});
+
 const categoryIdsValidation = z
   .array(
     z.string().uuid({
@@ -58,6 +62,7 @@ export const courseSchema = z.object({
   estimatedDuration:       estimatedDurationValidation,
   difficultyLevel:         difficultyLevelValidation,
   instructorIds:           instructorIdsValidation,
+  diplomaProgram:          diplomaProgramValidation,
 });
 
 export interface CourseInputs extends z.infer<typeof courseSchema> {}

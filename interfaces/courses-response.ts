@@ -1,6 +1,5 @@
 import { CategoriesResponse } from '@/components/categories/interfaces';
 
-
 export interface ICoursesResponse {
   id: string;
   status: boolean;
@@ -15,7 +14,9 @@ export interface ICoursesResponse {
   courseUnderConstruction: boolean;
   estimatedDuration: string;
   difficultyLevel: "Básica" | "Intermedia" | "Avanzada";
+  diplomaProgram: boolean;
 }
+
 export interface CreatedBy {
   id: string;
   creationDate: string;
