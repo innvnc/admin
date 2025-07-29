@@ -26,7 +26,7 @@ export const RichTextEditor = (
     <div className="flex flex-col space-y-2">
 
       { label && (
-        <label className="font-medium text-gray-700">
+        <label className="font-medium">
           { label }
         </label>
       ) }
@@ -34,7 +34,7 @@ export const RichTextEditor = (
       <div className="relative">
         { ( !value || value === "<br>" ) && placeholder && (
           <div
-            className="absolute top-0 left-0 px-4 py-2 text-gray-400 pointer-events-none select-none"
+            className="absolute top-0 left-0 px-4 py-2 pointer-events-none select-none"
           >
             { placeholder }
           </div>
