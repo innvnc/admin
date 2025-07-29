@@ -12,6 +12,7 @@ import { CourseInputs, courseSchema, UI } from "@/components";
 import { Icons } from "@/components/shared/ui";
 import { useGetCategories } from "@/components/categories/hooks";
 import { useGetCourseInstructorByCourseId } from "@/components/instructors/hooks";
+import { useGetCourse } from "@/components/courses/hooks";
 
 const dificultadOptions = [
   { value: "Básica", label: "Básica" },
@@ -54,6 +55,25 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
 
   const [ isModalOpen, setIsModalOpen ] = useState( false );
   const { courseInstructor: currentInstructors } = useGetCourseInstructorByCourseId( id || "" );
+
+  const { course } = useGetCourse( id || "" );
+
+  useEffect( () => {
+    if ( id && course ) {
+      form.reset( {
+        title: course.title,
+        slug: course.slug,
+        description: course.description,
+        price: course.price,
+        isPublic: course.isPublic,
+        categoryIds: course.categories.map( ( cat ) => cat.id ),
+        courseUnderConstruction: course.courseUnderConstruction,
+        estimatedDuration: course.estimatedDuration,
+        difficultyLevel: course.difficultyLevel,
+        diplomaProgram: course.diplomaProgram,
+      } );
+    }
+  }, [ id, course ] );
 
   return (
     <UI.Form
