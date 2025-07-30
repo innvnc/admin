@@ -188,6 +188,8 @@ export const ClassText = ( { idClass }: Props ) => {
         isDismissable={ false }
         isOpen={ createEditModalDisclosure.isOpen }
         onOpenChange={ createEditModalDisclosure.onOpenChange }
+        size="full"
+        scrollBehavior="inside"
       >
         <UI.ModalContent>
           <>
