@@ -7,8 +7,8 @@ import { ibmPlexSans, spaceGrotesk, viewportConfig } from "@/config";
 import { Navbar, Providers, NextIntlProvider } from "@/components";
 import { ToolsMenu } from "@/components/shared/navbar/components";
 
-export const viewport = viewportConfig;
 
+export const viewport = viewportConfig;
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -28,7 +28,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
             <div className="layout__container">
               {children}
-
               <ToolsMenu />
             </div>
           </Providers>
