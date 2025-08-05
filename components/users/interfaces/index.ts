@@ -1,0 +1,1 @@
+export type { IUsersResponse } from './IUsersResponse';
