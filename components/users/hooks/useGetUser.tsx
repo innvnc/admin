@@ -1,4 +1,3 @@
-// useGetUser.tsx
 import { useQuery } from "@tanstack/react-query";
 
 import { getUser } from "../services";

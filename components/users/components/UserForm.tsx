@@ -18,7 +18,7 @@ interface Props {
 
 export const UserForm = ( { id, onClose }: Props ) => {
   const form = useForm<UserInputs>( {
-    defaultValues: { name: "", lastName: "", roles: [], slug: "" },
+    defaultValues: { name: "", lastName: "", roles: [ "user" ], slug: "" },
     mode: "onSubmit",
     resolver: zodResolver( userSchema ),
   } );
@@ -103,15 +103,16 @@ export const UserForm = ( { id, onClose }: Props ) => {
         control={ form.control }
         name="roles"
         render={ ( { field } ) => (
-          <UI.CheckboxGroup
-            label="Roles"
-            value={ field.value }
-            onValueChange={ ( value ) => field.onChange( value ) }
-            orientation="horizontal"
-          >
-            <UI.Checkbox value="admin">Administrador</UI.Checkbox>
-            {/* <UI.Checkbox value="user">Usuario</UI.Checkbox> */}
-          </UI.CheckboxGroup>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium">Administrador</label>
+            <UI.Switch
+              color="success"
+              isSelected={ field.value.includes( "admin" ) }
+              onValueChange={ ( isSelected ) => {
+                field.onChange( isSelected ? [ "user", "admin" ] : [ "user" ] );
+              } }
+            />
+          </div>
         ) }
       />
 
