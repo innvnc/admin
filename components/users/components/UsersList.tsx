@@ -1,11 +1,12 @@
-// UsersList.tsx
 "use client";
 
 
 import { GenericTable } from "@/components/shared/ui";
 import { UI } from "@/components/shared";
 import { useUsersListHelper } from '../helpers';
-import { DeleteUserModal, UserFormLayout, UsersTableColumns } from './';
+import { DeleteUserModal } from './DeleteUserModal';
+import { UserFormLayout } from './UserFormLayout';
+import { UsersTableColumns } from './UsersTableColumns';
 
 
 export const UsersList = () => {
@@ -41,6 +42,7 @@ export const UsersList = () => {
               initialVisibleColumns={ [
                 "name",
                 "lastName",
+                "username",
                 "slug",
                 "roles",
                 "actions",

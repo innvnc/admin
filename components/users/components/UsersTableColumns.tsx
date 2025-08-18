@@ -26,6 +26,7 @@ export const UsersTableColumns = ( {
     {
       name: "USERNAME",
       uid: "username",
+      searchable: true,
       sortable: true,
     },
     {
