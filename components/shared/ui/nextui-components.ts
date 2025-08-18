@@ -1,8 +1,8 @@
 "use client";
 export {
-  Avatar,
   Accordion,
   AccordionItem,
+  Avatar,
   Badge,
   Button,
   Calendar,
@@ -11,6 +11,7 @@ export {
   CardFooter,
   CardHeader,
   Checkbox,
+  CheckboxGroup,
   Chip,
   cn,
   Divider,
