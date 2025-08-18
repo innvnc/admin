@@ -1,15 +1,15 @@
 "use client";
-
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast } from "@heroui/react";
 
-
 import { UserInputs, userSchema } from "../validators";
 import { UI } from "@/components";
 import { useUserFormHelper } from '../helpers';
 import { useGetUserById } from '../hooks';
+
+
 
 interface Props {
   id?: string;
@@ -25,8 +25,6 @@ export const UserForm = ( { id, onClose }: Props ) => {
 
   const { handleSave } = useUserFormHelper( id, form );
   const { user } = useGetUserById( id || "" );
-  console.log( { id } );
-  console.log( { user } );
 
   useEffect( () => {
     if ( id && user ) {
@@ -112,7 +110,7 @@ export const UserForm = ( { id, onClose }: Props ) => {
             orientation="horizontal"
           >
             <UI.Checkbox value="admin">Administrador</UI.Checkbox>
-            <UI.Checkbox value="user">Usuario</UI.Checkbox>
+            {/* <UI.Checkbox value="user">Usuario</UI.Checkbox> */}
           </UI.CheckboxGroup>
         ) }
       />

@@ -8,5 +8,5 @@ export interface IUsersResponse {
   slug:         string;
   name:         string;
   lastName:     string;
-   roles:       ( "user" | "admin" )[];
+  roles: ( "user" | "admin" )[];
 }
