@@ -40,7 +40,7 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
       difficultyLevel: "Básica",
       diplomaProgram: false,
     },
-    mode: "onSubmit",
+    mode: "onChange",
     resolver: zodResolver( courseSchema ),
   } );
 
@@ -57,6 +57,23 @@ export const CourseForm = ( { id, onClose, setIsSubmitting }: Props ) => {
   const { courseInstructor: currentInstructors } = useGetCourseInstructorByCourseId( id || "" );
 
   const { course } = useGetCourse( id || "" );
+
+  const titleValue = form.watch( "title" );
+
+  useEffect( () => {
+    if ( titleValue && !id ) {
+      const generatedSlug = titleValue
+        .toLowerCase()
+        .normalize( "NFD" )
+        .replace( /[\u0300-\u036f]/g, "" )
+        .replace( /[^a-z0-9\s-]/g, "" )
+        .replace( /\s+/g, "-" )
+        .replace( /-+/g, "-" )
+        .trim();
+
+      form.setValue( "slug", generatedSlug );
+    }
+  }, [ titleValue, id, form ] );
 
   useEffect( () => {
     if ( id && course ) {

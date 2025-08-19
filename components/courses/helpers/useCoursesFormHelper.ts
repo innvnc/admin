@@ -36,6 +36,7 @@ export const useCoursesFormHelper = (
         courseUnderConstruction: course.courseUnderConstruction,
         estimatedDuration: course.estimatedDuration,
         difficultyLevel: course.difficultyLevel,
+        diplomaProgram: course.diplomaProgram,
       } );
     }
 
@@ -50,6 +51,7 @@ export const useCoursesFormHelper = (
         courseUnderConstruction: true,
         estimatedDuration: "1hs",
         difficultyLevel: "Básica",
+        diplomaProgram: false,
       } );
     }
   }, [ course, isLoading, form, id, categories ] );
