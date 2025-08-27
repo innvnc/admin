@@ -14,8 +14,8 @@ const descriptionValidation = z.string().min(1, {
 
 export const classSchema = z.object({
   courseSectionId: courseSectionIdValidation,
-  title: titleValidation,
-  description: descriptionValidation,
+  title:           titleValidation,
+  description:     descriptionValidation,
 });
 
 export interface ClassInputs extends z.infer<typeof classSchema> {}

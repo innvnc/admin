@@ -1,1 +1,1 @@
-export * from "./classSchema";
+export * from './classSchema';
