@@ -1,3 +1,4 @@
+'use client';
 import { PageView } from "../layouts";
 import { CompaniesList } from './CompaniesList';
 import { useGetCompanies } from './hooks';
