@@ -1,14 +1,9 @@
 'use client';
+
 import { PageView } from "../layouts";
-import { CompaniesList } from './CompaniesList';
-import { useGetCompanies } from './hooks';
+import { CompaniesList } from "./CompaniesList";
 
 export const CompaniesLayout = () => {
-
-  const { companies } = useGetCompanies();
-
-  console.log( { companies } );
-
   return (
     <PageView
       content={ <CompaniesList /> }
