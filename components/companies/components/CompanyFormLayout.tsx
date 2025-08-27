@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
+
+import { CompanyForm } from "./CompanyForm";
 import { UI } from "@/components";
 import { Icons } from "@/components/shared/ui";
-import { CompanyForm } from './CompanyForm';
 
 interface Props {
   id?: string;
@@ -17,6 +21,8 @@ export const CompanyFormLayout = ( {
   onOpenChange: externalOnOpenChange,
   triggerElement,
 }: Props ) => {
+  const [ isSaving, setIsSaving ] = useState( false );
+
   const internalDisclosure = UI.useDisclosure();
 
   const isOpen =
@@ -64,12 +70,13 @@ export const CompanyFormLayout = ( {
               </UI.ModalHeader>
 
               <UI.ModalBody>
-                <CompanyForm id={ id } onClose={ onClose } />
+                <CompanyForm id={ id } onClose={ onClose } onSavingChange={ setIsSaving } />
               </UI.ModalBody>
 
               <UI.ModalFooter className="justify-center flex items-center space-x-3">
                 <UI.Button
                   color="danger"
+                  isDisabled={ isSaving }
                   startContent={ <Icons.IoArrowBackOutline size={ 24 } /> }
                   variant="light"
                   onPress={ onClose }
@@ -80,6 +87,8 @@ export const CompanyFormLayout = ( {
                 <UI.Button
                   color="secondary"
                   form="company-form"
+                  isDisabled={ isSaving }
+                  isLoading={ isSaving }
                   startContent={ <Icons.IoSaveOutline size={ 24 } /> }
                   type="submit"
                 >

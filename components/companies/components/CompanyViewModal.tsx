@@ -1,6 +1,8 @@
+"use client";
+
+import { useGetCompany } from "../hooks";
 import { UI } from "@/components";
 import { Icons } from "@/components/shared/ui";
-import { useGetCompany } from "../hooks";
 
 interface Props {
   id?: string;
@@ -9,7 +11,7 @@ interface Props {
 }
 
 export const CompanyViewModal = ( { id, isOpen, onClose }: Props ) => {
-  const { company } = useGetCompany( id || "" );
+  const { company, isLoading } = useGetCompany( id || "" );
 
   return (
     <UI.Modal isOpen={ isOpen } onOpenChange={ onClose }>
@@ -20,13 +22,55 @@ export const CompanyViewModal = ( { id, isOpen, onClose }: Props ) => {
         </UI.ModalHeader>
 
         <UI.ModalBody>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <UI.Input isReadOnly label="Nombre" labelPlacement="outside" value={ company?.name ?? "" } />
-            <UI.Input isReadOnly label="Correo electrónico" labelPlacement="outside" value={ company?.email ?? "" } />
-            <UI.Input isReadOnly label="Teléfono" labelPlacement="outside" value={ company?.phone ?? "" } />
-            <UI.Input isReadOnly label="Dirección" labelPlacement="outside" value={ company?.address ?? "" } />
-          </div>
-          <UI.Textarea isReadOnly label="Descripción" labelPlacement="outside" value={ company?.description ?? "" } />
+          { isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <UI.Spinner color="secondary" label="Cargando empresa..." />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-default-200 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Icons.IoIdCardOutline className="text-default-500" size={ 20 } />
+                  <span className="text-sm text-default-500">Nombre</span>
+                </div>
+                <div className="text-base font-semibold">{ company?.name ?? "-" }</div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-2xl border border-default-200 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Icons.IoMailOutline className="text-default-500" size={ 20 } />
+                    <span className="text-sm text-default-500">Correo electrónico</span>
+                  </div>
+                  <div className="text-base">{ company?.email ?? "-" }</div>
+                </div>
+
+                <div className="rounded-2xl border border-default-200 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Icons.IoCallOutline className="text-default-500" size={ 20 } />
+                    <span className="text-sm text-default-500">Teléfono</span>
+                  </div>
+                  <div className="text-base">{ company?.phone ?? "-" }</div>
+                </div>
+
+                <div className="rounded-2xl border border-default-200 p-4 md:col-span-2">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Icons.IoLocationOutline className="text-default-500" size={ 20 } />
+                    <span className="text-sm text-default-500">Dirección</span>
+                  </div>
+                  <div className="text-base">{ company?.address ?? "-" }</div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-default-200 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Icons.IoDocumentTextOutline className="text-default-500" size={ 20 } />
+                  <span className="text-sm text-default-500">Descripción</span>
+                </div>
+                <div className="text-base whitespace-pre-wrap">{ company?.description ?? "-" }</div>
+              </div>
+            </div>
+          ) }
         </UI.ModalBody>
 
         <UI.ModalFooter className="flex flex-row justify-center space-x-2">

@@ -16,8 +16,8 @@ export const useCompaniesFormHelper = (
   id: string | undefined,
   form: UseFormReturn<CompanyInputs>,
 ) => {
-  const { addNewCompany } = useAddCompany();
-  const { companyUpdate } = useUpdateCompany();
+  const { addNewCompany, isPending: isAddPending } = useAddCompany();
+  const { companyUpdate, isPending: isUpdatePending } = useUpdateCompany();
   const { company } = useGetCompany( id || "" );
   const { companies = [] } = useGetCompanies();
 
@@ -52,9 +52,12 @@ export const useCompaniesFormHelper = (
     onClose();
   };
 
+  const isSaving = id ? isUpdatePending : isAddPending;
+
   return {
-    handleSave,
-    validateUniqueName,
     existingNames,
+    handleSave,
+    isSaving,
+    validateUniqueName,
   };
 };

@@ -1,22 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast } from "@heroui/react";
 
-import { UI } from "@/components";
-import { Icons } from "@/components/shared/ui";
+import { addToast } from "@heroui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+
 import { useCompaniesFormHelper } from "../helpers";
 import { useGetCompany } from "../hooks";
 import { CompanyInputs, companySchema } from "../validators";
+import { UI } from "@/components";
+import { Icons } from "@/components/shared/ui";
 
 interface Props {
   id?: string;
   onClose: () => void;
+  onSavingChange?: ( saving: boolean ) => void;
 }
 
-export const CompanyForm = ( { id, onClose }: Props ) => {
+export const CompanyForm = ( { id, onClose, onSavingChange }: Props ) => {
   const form = useForm<CompanyInputs>( {
     defaultValues: {
       address: "",
@@ -29,8 +31,12 @@ export const CompanyForm = ( { id, onClose }: Props ) => {
     resolver: zodResolver( companySchema ),
   } );
 
-  const { handleSave, validateUniqueName, existingNames } = useCompaniesFormHelper( id, form );
+  const { handleSave, validateUniqueName, existingNames, isSaving } = useCompaniesFormHelper( id, form );
   const { company } = useGetCompany( id || "" );
+
+  useEffect( () => {
+    if ( onSavingChange ) onSavingChange( Boolean( isSaving ) );
+  }, [ isSaving, onSavingChange ] );
 
   useEffect( () => {
     if ( id && company ) {
