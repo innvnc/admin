@@ -7,13 +7,12 @@ import { CompanyInputs } from '../validators';
 
 export const createCompany = ( data: CompanyInputs ): Promise<CompaniesResponse> => request<CompaniesResponse>( "/categories/", "POST", data );
 
+export const deleteCompany = ( id: string ): Promise<void> => request( `/companies/${ id }`, "DELETE" );
+
 export const getCompanies = (): Promise<CompaniesResponse[]> => request<CompaniesResponse[]>( "/companies/", "GET" );
 
-export const getCompanieById = ( id: string ): Promise<CompaniesResponse> => request<CompaniesResponse>( `/companies/${ id }`, "GET" );
+export const getCompanyById = ( id: string ): Promise<CompaniesResponse> => request<CompaniesResponse>( `/companies/${ id }`, "GET" );
 
-export const deleteCompanie = ( id: string ): Promise<void> => request( `/companies/${ id }`, "DELETE" );
-
-
-
+export const updateCompany = ( id: string, data: CompanyInputs ): Promise<CompaniesResponse> => request<CompaniesResponse>( `/companies/${ id }`, "PATCH", data );
 
 
