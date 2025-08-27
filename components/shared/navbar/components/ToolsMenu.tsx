@@ -5,7 +5,9 @@ import Link from "next/link";
 import { menuItems, useAuthTokenRefresh } from "../helpers";
 import { UI } from "../../ui";
 
+
 export const ToolsMenu = () => {
+
   const { isAuthenticated, isClient } = useAuthTokenRefresh();
 
   if ( !isClient ) {

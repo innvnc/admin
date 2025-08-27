@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { JwtService } from "../../services";
 
+
 export const useAuthTokenRefresh = () => {
+  
   const [ isAuthenticated, setIsAuthenticated ] = useState<boolean>( false );
   const [ isClient, setIsClient ] = useState<boolean>( false );
 
