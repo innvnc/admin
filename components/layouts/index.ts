@@ -1,4 +1,3 @@
-export * from "./CompaniesLayout";
 export * from "./ContactLayout";
 export * from "./next-intl-provider";
 export * from "./NotificationsLayout";
