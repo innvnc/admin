@@ -1,66 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
+import { menuItems, useAuthTokenRefresh } from "../helpers";
 import { UI } from "../../ui";
-import { menuItems } from "../helpers";
-import { JwtService } from "../../services";
 
 export const ToolsMenu = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState<boolean>(false);
+  const { isAuthenticated, isClient } = useAuthTokenRefresh();
 
-  useEffect(() => {
-    setIsClient(true);
-
-    const token = JwtService.getStoredToken();
-
-    setIsAuthenticated(!!token);
-
-    const handleStorageChange = () => {
-      const token = JwtService.getStoredToken();
-
-      setIsAuthenticated(!!token);
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  if (!isClient) {
+  if ( !isClient ) {
     return null;
   }
 
-  if (!isAuthenticated) {
+  if ( !isAuthenticated ) {
     return null;
   }
 
   return (
     <div className="tools-menu">
       <div className="tools-menu__container">
-        {menuItems.map((item, index) => (
+        { menuItems.map( ( item, index ) => (
           <Link
-            key={index}
+            key={ index }
             className="tools-menu__item group"
-            href={item.route}
+            href={ item.route }
           >
             <div className="tools-menu__icon-container group-hover:bg-white/10">
               <UI.Image
-                alt={item.label}
+                alt={ item.label }
                 className="tools-menu__icon group-hover:scale-125"
-                src={item.icon}
+                src={ item.icon }
               />
             </div>
 
             <span className="tools-menu__label group-hover:opacity-100">
-              {item.label}
+              { item.label }
             </span>
           </Link>
-        ))}
+        ) ) }
       </div>
     </div>
   );
